@@ -9,10 +9,12 @@ class Carrera extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    protected $table = 'carrera';
     protected $fillable = [ 'nombre', 'estado' ];
-    protected $timestamps = false;
+    protected $primaryKey = 'id_carrera';
 
     public function facultad(){
-        return $this->belongsTo( facultad::class );
+        return $this->belongsTo( Facultad::class );
     }
 }

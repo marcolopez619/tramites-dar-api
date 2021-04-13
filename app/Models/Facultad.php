@@ -9,17 +9,14 @@ class Facultad extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    protected $table = 'facultad';
     protected $fillable = [ 'nombre', 'estado' ];
-    protected $timestamps = false;
-
-    public function universidad()
-    {
-        return $this->belongsTo( Universidad::class );
-    }
+    protected $primaryKey = 'id_facultad';
 
     public function carrera()
     {
-        return $this->hasMany( Carrera::class );
+        return $this->hasMany( Carrera::class, 'id_facultad' );
     }
 
 }

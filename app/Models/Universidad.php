@@ -9,8 +9,11 @@ class Universidad extends Model
 {
     use HasFactory;
 
+
+    public $timestamps = false;
+    protected $table = 'universidad';
     protected $fillable = [ 'nombre', 'estado' ];
-    protected $timestamps = false;
+    protected $primaryKey = 'id_universidad';
 
     /**
      * Añade la relacion 1:N
@@ -19,6 +22,6 @@ class Universidad extends Model
      */
     public function facultad()
     {
-        return $this->hasMany( Facultad::class );
+        return $this->hasMany( Facultad::class, 'id_universidad' );
     }
 }
