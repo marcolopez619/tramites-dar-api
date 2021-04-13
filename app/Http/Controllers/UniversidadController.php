@@ -7,6 +7,7 @@ use App\Models\Facultad;
 use App\Models\Universidad;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class UniversidadController extends Controller
 {
@@ -59,6 +60,32 @@ class UniversidadController extends Controller
             'message' => 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ], Response::HTTP_OK );
+
+    }
+
+    public function getFacultadesYcarreras($idUniversidad){
+
+        $Data = DB::table('universidad')
+            ->join( 'facultad', 'facultad.id_universidad', '=' , 'universidad.id_universidad' )
+            ->join( 'carrera' , 'carrera.id_facultad' , '=' , 'facultad.id_facultad' )
+            ->where( 'universidad.id_universidad', '=' , $idUniversidad )
+            ->get();
+
+        if( !$Data->isEmpty() ){
+            return response()->json( [
+                'data'    => $Data,
+                'message' => 'SE ENCONTRARON RESULTADOS',
+                'error'   => null
+            ], Response::HTTP_OK );
+        }
+        else{
+            return response()->json( [
+                'data'    => null,
+                'message' => 'NO SE ENCONTRARON RESULTADOS',
+                'error'   => null
+            ], Response::HTTP_OK );
+        }
+
 
     }
 }
