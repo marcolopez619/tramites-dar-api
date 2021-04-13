@@ -18,5 +18,7 @@ use App\Http\Controllers\UniversidadController;
 
 
 Route::post( '/universidad' , [UniversidadController::class, 'addUniversidad' ]);
+Route::get( '/universidad' , [UniversidadController::class, 'getListUniversidad' ]);
+
 Route::post( '/facultad' , [UniversidadController::class, 'addFacultad' ]);
 Route::post( '/carrera' , [UniversidadController::class, 'addCarrera' ]);

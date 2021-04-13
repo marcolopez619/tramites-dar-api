@@ -50,4 +50,15 @@ class UniversidadController extends Controller
             'error'   => null
         ], Response::HTTP_CREATED );
     }
+
+    public function getListUniversidad(){
+        $listaUniversidades = Universidad::all();
+
+        return response()->json( [
+            'data'    => $listaUniversidades,
+            'message' => 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+
+    }
 }
