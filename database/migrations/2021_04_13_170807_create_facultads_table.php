@@ -17,7 +17,10 @@ class CreateFacultadsTable extends Migration
             $table->id('id_facultad');
             $table->string('nombre');
             $table->integer('estado');
-            // $table->integer('id_universidad');
+            // Crea el campo para la llave foranea.
+            $table->bigInteger('id_universidad');
+            // Crea la llave foranea mediante codigo.
+            $table->foreign('id_universidad')->references('id_universidad')->on('universidad')->onDelete('cascade');
         });
     }
 

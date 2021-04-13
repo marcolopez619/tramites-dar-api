@@ -10,5 +10,9 @@ class Carrera extends Model
     use HasFactory;
 
     protected $fillable = [ 'nombre', 'estado' ];
-    protected $timestamps = false
+    protected $timestamps = false;
+
+    public function facultad(){
+        return $this->belongsTo( facultad::class );
+    }
 }

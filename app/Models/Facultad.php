@@ -10,5 +10,16 @@ class Facultad extends Model
     use HasFactory;
 
     protected $fillable = [ 'nombre', 'estado' ];
-    protected $timestamps = false
+    protected $timestamps = false;
+
+    public function universidad()
+    {
+        return $this->belongsTo( Universidad::class );
+    }
+
+    public function carrera()
+    {
+        return $this->hasMany( Carrera::class );
+    }
+
 }
