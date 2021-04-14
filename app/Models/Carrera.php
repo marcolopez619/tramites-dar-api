@@ -17,4 +17,8 @@ class Carrera extends Model
     public function facultad(){
         return $this->belongsTo( Facultad::class );
     }
+
+    public function estudiante(){
+        return $this->belongsToMany( Estudiante::class, 'estudiante_carrera', 'id_carrera' );
+    }
 }

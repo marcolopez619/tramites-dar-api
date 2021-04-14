@@ -13,9 +13,13 @@ class CreateHabilitacionTramitesTable extends Migration
      */
     public function up()
     {
-        Schema::create('habilitacion_tramites', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('habilitacion_tramite', function (Blueprint $table) {
+            $table->id( 'id_hab_tramite' );
+            $table->date( 'fecha_inicial' );
+            $table->date( 'fecha_final' );
+            $table->integer( 'estado' );
+            $table->integer( 'gestion' );
+            $table->integer( 'id_tramite' );
         });
     }
 
@@ -26,6 +30,6 @@ class CreateHabilitacionTramitesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('habilitacion_tramites');
+        Schema::dropIfExists('habilitacion_tramite');
     }
 }

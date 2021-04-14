@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Anulacion extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+    protected $table = 'anulacion';
+    protected $fillable = ['fecha_solicitud', 'motivo' ];
+    protected $primaryKey = 'id_anulacion';
 }

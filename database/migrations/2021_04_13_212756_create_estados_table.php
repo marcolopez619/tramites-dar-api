@@ -13,9 +13,9 @@ class CreateEstadosTable extends Migration
      */
     public function up()
     {
-        Schema::create('estados', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('estado', function (Blueprint $table) {
+            $table->id( 'id_estado' );
+            $table->string( 'descripcion' )
         });
     }
 
@@ -26,6 +26,6 @@ class CreateEstadosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estados');
+        Schema::dropIfExists('estado');
     }
 }

@@ -13,9 +13,9 @@ class CreateEntidadsTable extends Migration
      */
     public function up()
     {
-        Schema::create('entidads', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('entidad', function (Blueprint $table) {
+            $table->id('id_entidad');
+            $table->string( 'descripcion' )
         });
     }
 
@@ -26,6 +26,6 @@ class CreateEntidadsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entidads');
+        Schema::dropIfExists('entidad');
     }
 }

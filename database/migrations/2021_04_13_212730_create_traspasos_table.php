@@ -13,9 +13,17 @@ class CreateTraspasosTable extends Migration
      */
     public function up()
     {
-        Schema::create('traspasos', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('traspaso', function (Blueprint $table) {
+            $table->id( 'id_traspaso' );
+            $table->integer( 'id_univ_destino' );
+            $table->integer( 'id_carrera_destino' );
+            $table->string( 'descripcion' );
+            $table->integer( 'anio_ingreso' );
+            $table->integer( 'materias_aprobadas' );
+            $table->integer( 'materias_reprobadas' );
+            $table->date('fecha_solicitud');
+            $table->string( 'motivo' );
+            $table->integer( 'id_estudiante' );  //* llave foranea
         });
     }
 
@@ -26,6 +34,6 @@ class CreateTraspasosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('traspasos');
+        Schema::dropIfExists('traspaso');
     }
 }

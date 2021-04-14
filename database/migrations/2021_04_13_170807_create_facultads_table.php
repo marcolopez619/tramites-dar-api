@@ -31,6 +31,6 @@ class CreateFacultadsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('facultads');
+        Schema::dropIfExists('facultad');
     }
 }

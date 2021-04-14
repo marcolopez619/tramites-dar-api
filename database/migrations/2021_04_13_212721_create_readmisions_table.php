@@ -13,9 +13,13 @@ class CreateReadmisionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('readmisions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('readmision', function (Blueprint $table) {
+            $table->id( 'id_readmision' );
+            $table->integer( 'id_carrera' );
+            $table->date('fecha_solicitud');
+            $table->string( 'motivo' );
+            $table->integer( 'id_suspencion' ); //* llave foranea
+            $table->integer( 'id_estudiante'); //* llave foranea
         });
     }
 
@@ -26,6 +30,6 @@ class CreateReadmisionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('readmisions');
+        Schema::dropIfExists('readmision');
     }
 }

@@ -13,9 +13,16 @@ class CreateEstudiantesTable extends Migration
      */
     public function up()
     {
-        Schema::create('estudiantes', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('estudiante', function (Blueprint $table) {
+            $table->id('id_estudiante');
+            $table->integer('ru');
+            $table->string( 'ci' );
+            $table->string( 'complemento' );
+            $table->string( 'paterno' );
+            $table->string( 'materno' );
+            $table->string( 'nombres' );
+            $table->date( 'fecha_nacimiento' );
+            $table->boolean( 'sexo' );
         });
     }
 
@@ -26,6 +33,6 @@ class CreateEstudiantesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estudiantes');
+        Schema::dropIfExists('estudiante');
     }
 }

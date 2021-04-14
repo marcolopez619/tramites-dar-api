@@ -13,9 +13,14 @@ class CreateSuspencionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('suspencions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('suspencion', function (Blueprint $table) {
+            $table->id( 'id_suspencion' );
+            $table->integer( 'id_carrera' );
+            $table->integer( 'tiempo_solicitado' );
+            $table->string( 'descripcion' );
+            $table->date('fecha_solicitud');
+            $table->string( 'motivo' );
+            $table->integer('id_estudiante');
         });
     }
 
@@ -26,6 +31,6 @@ class CreateSuspencionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('suspencions');
+        Schema::dropIfExists('suspencion');
     }
 }

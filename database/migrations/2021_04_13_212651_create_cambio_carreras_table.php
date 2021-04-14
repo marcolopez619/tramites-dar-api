@@ -13,9 +13,13 @@ class CreateCambioCarrerasTable extends Migration
      */
     public function up()
     {
-        Schema::create('cambio_carreras', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('cambio_carrera', function (Blueprint $table) {
+            $table->id( 'id_cambio_carrera' );
+            $table->integer( 'id_carrera_origen' );
+            $table->integer( 'id_carrera_destino' );
+            $table->date('fecha_solicitud');
+            $table->string( 'motivo' );
+            $table->integer('id_estudiante');
         });
     }
 
@@ -26,6 +30,6 @@ class CreateCambioCarrerasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cambio_carreras');
+        Schema::dropIfExists('cambio_carrera');
     }
 }

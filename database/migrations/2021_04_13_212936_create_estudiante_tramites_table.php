@@ -13,9 +13,17 @@ class CreateEstudianteTramitesTable extends Migration
      */
     public function up()
     {
-        Schema::create('estudiante_tramites', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('estudiante_tramite', function (Blueprint $table) {
+            $table->id( 'id_estudiante_tramite' );
+            $table->integer( 'id_estudiante' );
+            $table->integer( 'id_tramite' );
+            $table->integer( 'id_estado' );
+            $table->integer( 'id_entidad' );
+            $table->date( 'fecha' );
+            $table->string( 'observaciones' );
+
+            $table->foreign( 'id_estudiante' )->references( 'id_estudiante' )->on( 'estudiante' )->onDelete( 'cascade' );
+            $table->foreign( 'id_tramite' )->references( 'id_tramite' )->on( 'tramite' )->onDelete( 'cascade' );
         });
     }
 
@@ -26,6 +34,6 @@ class CreateEstudianteTramitesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estudiante_tramites');
+        Schema::dropIfExists('estudiante_tramite');
     }
 }

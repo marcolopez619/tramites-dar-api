@@ -13,9 +13,12 @@ class CreateAnulacionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('anulacions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('anulacion', function (Blueprint $table) {
+            $table->id('id_anulacion');
+            $table->date('fecha_solicitud');
+            $table->string( 'motivo' );
+            $table->integer('id_estudiante');
+
         });
     }
 
@@ -26,6 +29,6 @@ class CreateAnulacionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('anulacions');
+        Schema::dropIfExists('anulacion');
     }
 }

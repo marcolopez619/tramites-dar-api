@@ -13,9 +13,9 @@ class CreateTramitesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tramites', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('tramite', function (Blueprint $table) {
+            $table->id( 'id_tramite' );
+            $table->string( 'descripcion' );
         });
     }
 
@@ -26,6 +26,6 @@ class CreateTramitesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tramites');
+        Schema::dropIfExists('tramite');
     }
 }
