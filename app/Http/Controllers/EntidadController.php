@@ -15,11 +15,11 @@ class EntidadController extends Controller
      */
     public function index()
     {
-        $listaEntidades  = Entidad::all();
+        $listaEntidades  = Entidad::orderBy( 'id_entidad' )->get();
 
         return response()->json( [
-            'data'    => $listaEntidades,
-            'message' => 'SE ENCONTRARON RESULTADOS',
+            'data'    => $listaEntidades->isEmpty() ? null : $listaEntidades,
+            'message' => $listaEntidades->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS': 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ], Response::HTTP_OK );
     }
