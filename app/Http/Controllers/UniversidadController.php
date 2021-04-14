@@ -61,6 +61,19 @@ class UniversidadController extends Controller
         ], Response::HTTP_CREATED );
     }
 
+    public function updateFacultad(Request $request ){
+        $facultad = Facultad::find( $request->input( 'idFacultad' ) );
+        $facultad->nombre = $request->input( 'nombre' );
+        $facultad->estado = $request->input( 'estado' );
+        $facultad->save();
+
+        return response()->json( [
+            'data'    => $facultad,
+            'message' => 'ACTUALIZACION CORRECTA',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
     public function addCarrera( Request $request ){
         $facultad = Facultad::find( $request->input('idFacultad'));
 
@@ -74,6 +87,19 @@ class UniversidadController extends Controller
             'message' => 'INSERCION CORRECTA',
             'error'   => null
         ], Response::HTTP_CREATED );
+    }
+
+    public function updateCarrera( Request $request ){
+        $carrera = Carrera::find( $request->input( 'idCarrera' ));
+        $carrera->nombre = $request->input( 'nombre' );
+        $carrera->estado = $request->input( 'estado' );
+        $carrera->save();
+
+        return response()->json( [
+            'data'    => $carrera,
+            'message' => 'ACTUALIZACION CORRECTA',
+            'error'   => null
+        ], Response::HTTP_OK );
     }
 
 

@@ -22,7 +22,9 @@ Route::post( '/universidad' , [UniversidadController::class, 'addUniversidad' ])
 Route::patch( '/universidad' , [UniversidadController::class, 'updateUniversidad' ]);
 
 
-Route::get( '/carreras/{idUniversidad}' , [UniversidadController::class, 'getFacultadesYcarreras' ]);
-
 Route::post( '/facultad' , [UniversidadController::class, 'addFacultad' ]);
+Route::patch( '/facultad' , [UniversidadController::class, 'updateFacultad' ]);
 Route::post( '/carrera' , [UniversidadController::class, 'addCarrera' ]);
+Route::patch( '/carrera' , [UniversidadController::class, 'updateCarrera' ]);
+
+Route::get( '/carreras/{idUniversidad}' , [UniversidadController::class, 'getFacultadesYcarreras' ]);
