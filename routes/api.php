@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EntidadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UniversidadController;
@@ -28,3 +29,5 @@ Route::post( '/carrera' , [UniversidadController::class, 'addCarrera' ]);
 Route::patch( '/carrera' , [UniversidadController::class, 'updateCarrera' ]);
 
 Route::get( '/carreras/{idUniversidad}' , [UniversidadController::class, 'getFacultadesYcarreras' ]);
+
+Route::resource( '/entidad', EntidadController::class );
