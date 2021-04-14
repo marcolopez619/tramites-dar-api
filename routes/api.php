@@ -4,6 +4,7 @@ use App\Http\Controllers\EntidadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UniversidadController;
+use App\Http\Controllers\HabilitacionTramiteController;
 
 
 /*
@@ -38,3 +39,10 @@ Route::get( '/carreras/{idUniversidad}' , [UniversidadController::class, 'getFac
 //** ENTIDADES **/
 Route::resource( '/entidad', EntidadController::class );
 Route::patch( '/entidad', [EntidadController::class, 'update' ] );
+
+
+//** HABILITACION DE TRAMITES **/
+Route::get( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'getListHabilitacionTramite' ] );
+Route::post( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'addHabilitacionTramite' ] );
+Route::patch( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'updateHabilitacionTramite' ] );
+
