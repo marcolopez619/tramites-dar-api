@@ -17,8 +17,11 @@ use App\Http\Controllers\UniversidadController;
 */
 
 
-Route::post( '/universidad' , [UniversidadController::class, 'addUniversidad' ]);
 Route::get( '/universidad' , [UniversidadController::class, 'getListUniversidad' ]);
+Route::post( '/universidad' , [UniversidadController::class, 'addUniversidad' ]);
+Route::patch( '/universidad' , [UniversidadController::class, 'updateUniversidad' ]);
+
+
 Route::get( '/carreras/{idUniversidad}' , [UniversidadController::class, 'getFacultadesYcarreras' ]);
 
 Route::post( '/facultad' , [UniversidadController::class, 'addFacultad' ]);

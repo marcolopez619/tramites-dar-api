@@ -11,6 +11,17 @@ use Illuminate\Support\Facades\DB;
 
 class UniversidadController extends Controller
 {
+    public function getListUniversidad(){
+        $listaUniversidades = Universidad::all();
+
+        return response()->json( [
+            'data'    => $listaUniversidades,
+            'message' => 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+
+    }
+
     public function addUniversidad(Request $request){
         $univCreada = Universidad::create( $request->all() );
 
@@ -20,6 +31,19 @@ class UniversidadController extends Controller
             'error'   => null
         ], Response::HTTP_CREATED );
 
+    }
+
+    public function updateUniversidad(Request $request ){
+        $universidad = Universidad::find( $request->input( 'idUniversidad' ));
+        $universidad->nombre = $request->input( 'nombre' );
+        $universidad->estado = $request->input( 'estado' );
+        $universidad->save();
+
+        return response()->json( [
+            'data'    => $universidad,
+            'message' => 'ACTUALIZACION CORRECTA',
+            'error'   => null
+        ], Response::HTTP_OK );
     }
 
     public function addFacultad( Request $request ){
@@ -52,16 +76,7 @@ class UniversidadController extends Controller
         ], Response::HTTP_CREATED );
     }
 
-    public function getListUniversidad(){
-        $listaUniversidades = Universidad::all();
 
-        return response()->json( [
-            'data'    => $listaUniversidades,
-            'message' => 'SE ENCONTRARON RESULTADOS',
-            'error'   => null
-        ], Response::HTTP_OK );
-
-    }
 
     public function getFacultadesYcarreras($idUniversidad){
 
