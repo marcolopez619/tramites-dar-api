@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UniversidadController;
 use App\Http\Controllers\HabilitacionTramiteController;
-
+use App\Http\Controllers\TramiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +39,12 @@ Route::get( '/carreras/{idUniversidad}' , [UniversidadController::class, 'getFac
 //** ENTIDADES **/
 Route::resource( '/entidad', EntidadController::class );
 Route::patch( '/entidad', [EntidadController::class, 'update' ] );
+
+
+//** TRAMITES **/
+Route::get( '/tramite', [ TramiteController::class, 'getListaTramite' ] );
+Route::post( '/tramite', [ TramiteController::class, 'addTramite' ] );
+Route::patch( '/tramite', [ TramiteController::class, 'updateTramite' ] );
 
 
 //** HABILITACION DE TRAMITES **/
