@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AnulacionController;
 use App\Http\Controllers\EntidadController;
+use App\Http\Controllers\EstudianteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UniversidadController;
@@ -52,3 +54,12 @@ Route::get( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'ge
 Route::post( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'addHabilitacionTramite' ] );
 Route::patch( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'updateHabilitacionTramite' ] );
 
+
+//** ESTUDIANTE **/
+Route::post( '/estudiante', [EstudianteController::class, 'addEstudiante' ] );
+// Route::get( '/estudiante/{idEstudiante}', [EstudianteController::class, 'getInformacionEstudiante' ] );
+
+
+//** ANULACIONES **/
+// Route::get( '/anulacion/{idEstudiante}', [ AnulacionController::class, 'getListaAnulacion' ] );
+// Route::post( '/anulacion', [ AnulacionController::class, 'addAnulacion' ] );

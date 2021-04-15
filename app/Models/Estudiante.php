@@ -35,7 +35,7 @@ class Estudiante extends Model
     }
 
     public function carrera(){
-        return $this->belongsToMany( Carrera::class, 'estudiante_carrera', 'id_estudiante' );
+        return $this->belongsToMany( Carrera::class, 'estudiante_carrera', 'id_estudiante', 'id_carrera' );
     }
 
     public function tramite(){

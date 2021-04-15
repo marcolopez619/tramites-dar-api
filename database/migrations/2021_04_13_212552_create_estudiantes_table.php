@@ -17,9 +17,9 @@ class CreateEstudiantesTable extends Migration
             $table->id('id_estudiante');
             $table->integer('ru');
             $table->string( 'ci' );
-            $table->string( 'complemento' );
-            $table->string( 'paterno' );
-            $table->string( 'materno' );
+            $table->string( 'complemento' )->nullable();
+            $table->string( 'paterno' )->nullable();
+            $table->string( 'materno' )->nullable();
             $table->string( 'nombres' );
             $table->date( 'fecha_nacimiento' );
             $table->boolean( 'sexo' );
