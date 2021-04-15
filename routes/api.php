@@ -57,7 +57,7 @@ Route::patch( '/habilitacion/tramite', [ HabilitacionTramiteController::class, '
 
 //** ESTUDIANTE **/
 Route::post( '/estudiante', [EstudianteController::class, 'addEstudiante' ] );
-// Route::get( '/estudiante/{idEstudiante}', [EstudianteController::class, 'getInformacionEstudiante' ] );
+Route::get( '/estudiante/{idEstudiante}', [EstudianteController::class, 'getInformacionEstudiante' ] );
 
 
 //** ANULACIONES **/
