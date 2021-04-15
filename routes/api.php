@@ -61,5 +61,5 @@ Route::get( '/estudiante/{idEstudiante}', [EstudianteController::class, 'getInfo
 
 
 //** ANULACIONES **/
-// Route::get( '/anulacion/{idEstudiante}', [ AnulacionController::class, 'getListaAnulacion' ] );
-// Route::post( '/anulacion', [ AnulacionController::class, 'addAnulacion' ] );
+Route::get( '/anulacion/{idEstudiante}', [ AnulacionController::class, 'getListaAnulacion' ] );
+Route::post( '/anulacion', [ AnulacionController::class, 'addAnulacion' ] );

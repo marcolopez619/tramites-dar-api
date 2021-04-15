@@ -39,7 +39,7 @@ class Estudiante extends Model
     }
 
     public function tramite(){
-        return $this->belongsToMany( Tramite::class, 'estudiante_tramite', 'id_tramite');
+        return $this->belongsToMany( Tramite::class, 'estudiante_tramite', 'id_estudiante', 'id_tramite');
     }
 
 
