@@ -24,6 +24,8 @@ class CreateEstudianteTramitesTable extends Migration
 
             $table->foreign( 'id_estudiante' )->references( 'id_estudiante' )->on( 'estudiante' )->onDelete( 'cascade' );
             $table->foreign( 'id_tramite' )->references( 'id_tramite' )->on( 'tramite' )->onDelete( 'cascade' );
+            $table->foreign( 'id_estado' )->references( 'id_estado' )->on( 'estado' )->onDelete( 'cascade' );
+            $table->foreign( 'id_entidad' )->references( 'id_entidad' )->on( 'entidad' )->onDelete( 'cascade' );
         });
     }
 

@@ -19,6 +19,7 @@ class CreateAnulacionsTable extends Migration
             $table->string( 'motivo' );
             $table->integer('id_estudiante');
 
+            $table->foreign('id_estudiante')->references( 'id_estudiante' )->on( 'estudiante' )->onDelete('cascade');
         });
     }
 

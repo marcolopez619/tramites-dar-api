@@ -20,6 +20,8 @@ class CreateCambioCarrerasTable extends Migration
             $table->date('fecha_solicitud');
             $table->string( 'motivo' );
             $table->integer('id_estudiante');
+
+            $table->foreign('id_estudiante')->references( 'id_estudiante' )->on( 'estudiante' )->onDelete('cascade');
         });
     }
 

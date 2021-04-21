@@ -23,7 +23,9 @@ class CreateTraspasosTable extends Migration
             $table->integer( 'materias_reprobadas' );
             $table->date('fecha_solicitud');
             $table->string( 'motivo' );
-            $table->integer( 'id_estudiante' );  //* llave foranea
+            $table->integer( 'id_estudiante' );
+
+            $table->foreign('id_estudiante')->references( 'id_estudiante' )->on( 'estudiante' )->onDelete('cascade');
         });
     }
 
