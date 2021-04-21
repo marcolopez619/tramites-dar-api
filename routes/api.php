@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UniversidadController;
 use App\Http\Controllers\HabilitacionTramiteController;
+use App\Http\Controllers\SuspencionController;
 use App\Http\Controllers\TramiteController;
 use App\Models\CambioCarrera;
 
@@ -69,3 +70,7 @@ Route::post( '/anulacion', [ AnulacionController::class, 'addAnulacion' ] );
 //** CAMBIO DE CARRERA **/
 Route::get( '/cambio/{idEstudiante}', [ CambioCarreraController::class, 'getListaCambioCarrera' ] );
 Route::post( '/cambio', [ CambioCarreraController::class, 'addCambioCarrera' ] );
+
+//** SUSPENCIONES **/
+Route::get( '/suspencion/{idEstudiante}', [ SuspencionController::class, 'getListaSuspenciones' ] );
+Route::post( '/suspencion', [ SuspencionController::class, 'addSuspencion' ] );

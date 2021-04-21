@@ -15,6 +15,6 @@ class Suspencion extends Model
     protected $primaryKey = 'id_suspencion';
 
     public function readmision(){
-        return $this->hasOne( Readmision::class, 'id_suspencion' )
+        return $this->hasOne( Readmision::class, 'id_suspencion' );
     }
 }
