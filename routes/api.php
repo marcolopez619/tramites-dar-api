@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnulacionController;
+use App\Http\Controllers\CambioCarreraController;
 use App\Http\Controllers\EntidadController;
 use App\Http\Controllers\EstudianteController;
 use Illuminate\Http\Request;
@@ -8,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UniversidadController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\TramiteController;
+use App\Models\CambioCarrera;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,3 +65,7 @@ Route::get( '/estudiante/{idEstudiante}', [EstudianteController::class, 'getInfo
 //** ANULACIONES **/
 Route::get( '/anulacion/{idEstudiante}', [ AnulacionController::class, 'getListaAnulacion' ] );
 Route::post( '/anulacion', [ AnulacionController::class, 'addAnulacion' ] );
+
+//** CAMBIO DE CARRERA **/
+Route::get( '/cambio/{idEstudiante}', [ CambioCarreraController::class, 'getListaCambioCarrera' ] );
+Route::post( '/cambio', [ CambioCarreraController::class, 'addCambioCarrera' ] );
