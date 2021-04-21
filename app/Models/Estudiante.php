@@ -34,6 +34,10 @@ class Estudiante extends Model
         return $this->hasMany( Traspaso::class, 'id_estudiante' );
     }
 
+    public function transferencia(){
+        return $this->hasMany( transferencia::class, 'id_estudiante' );
+    }
+
     public function carrera(){
         return $this->belongsToMany( Carrera::class, 'estudiante_carrera', 'id_estudiante', 'id_carrera' );
     }
