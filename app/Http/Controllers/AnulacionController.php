@@ -3,14 +3,53 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anulacion;
-use App\Models\EstudianteTramite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\EstudianteTramite;
+use Illuminate\Support\Facades\DB;
 
 class AnulacionController extends Controller
 {
-    public function getListaAnulacion()
+    public function getListaAnulacion($idEstudiante)
     {
+        $arrayCamposSelect = [
+            'estudiante.id_estudiante as idEstudiante',
+            'estudiante.ru',
+            'estudiante.ci',
+            'estudiante.complemento',
+            'estudiante.paterno',
+            'estudiante.materno',
+            'estudiante.nombres',
+            'estudiante.fecha_nacimiento AS fechaNacimiento',
+            'estudiante.sexo',
+
+            'anulacion.id_anulacion AS idAnulacion',
+            'anulacion.fecha_solicitud AS fechaSolicitud',
+            'anulacion.motivo',
+
+            'estudiante_tramite.fecha AS fechaProceso',
+            'estudiante_tramite.observaciones',
+
+            'tramite.id_tramite AS idTramite',
+            'tramite.descripcion AS tipoTramite',
+            'estado.descripcion AS estado'
+        ];
+
+        $estudiante = DB::table('estudiante')
+            ->join('anulacion', 'estudiante.id_estudiante', '=', 'anulacion.id_estudiante')
+            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
+            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+            ->select( $arrayCamposSelect )
+            ->where('estudiante.id_estudiante', '=', $idEstudiante)
+            ->get();
+
+        return response()->json([
+            'data'    => $estudiante->isEmpty() ? null : $estudiante,
+            'message' => $estudiante->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ]);
+
     }
 
     public function addAnulacion(Request $request)
