@@ -15,6 +15,6 @@ class Readmision extends Model
     protected $primaryKey = 'id_readmision';
 
     public function suspencion(){
-        return $this->belongsTo( Suspencion::class );
+        return $this->belongsTo( Suspencion::class, 'id_suspencion' );
     }
 }

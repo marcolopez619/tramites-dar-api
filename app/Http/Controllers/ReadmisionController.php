@@ -37,7 +37,9 @@ class ReadmisionController extends Controller
             'estado.descripcion AS estado'
         ];
 
-        $estudiante = DB::table('estudiante')
+
+
+        $dataComplementaria = DB::table('estudiante')
             ->join('readmision', 'readmision.id_estudiante', '=', 'estudiante.id_estudiante')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
@@ -47,9 +49,15 @@ class ReadmisionController extends Controller
             ->where( 'estudiante_tramite.id_tramite' , '=' , 4 ) // FIXME: Dato quemado el tipo de tramite.
             ->get();
 
+        if (!$dataComplementaria->isEmpty()) {
+            //** Busca la suspencion de la readmision encontrada
+            $readmision = Readmision::find( $dataComplementaria[ 0 ]->idReadmision )->suspencion;
+            $dataComplementaria[ 0 ]->readmisioin = $readmision;
+        }
+
         return response()->json([
-            'data'    => $estudiante->isEmpty() ? null : $estudiante,
-            'message' => $estudiante->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'data'    => $dataComplementaria->isEmpty() ? null : $dataComplementaria,
+            'message' => $dataComplementaria->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ]);
 
