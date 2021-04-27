@@ -1,11 +1,13 @@
 <?php
 
+use App\Models\Traspaso;
 use Illuminate\Http\Request;
 use App\Models\CambioCarrera;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntidadController;
 use App\Http\Controllers\TramiteController;
 use App\Http\Controllers\AnulacionController;
+use App\Http\Controllers\TraspasosController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\ReadmisionController;
 use App\Http\Controllers\SuspencionController;
@@ -81,6 +83,10 @@ Route::post( '/suspencion', [ SuspencionController::class, 'addSuspencion' ] );
 Route::get( '/readmision/{idEstudiante}', [ ReadmisionController::class, 'getListaReadmisiones' ] );
 Route::post( '/readmision', [ ReadmisionController::class, 'addReadmision' ] );
 
-//** READMISIONES **/
+//** TRANSFERENCIAS **/
 Route::get( '/transferencia/{idEstudiante}', [ TransferenciaController::class, 'getListaTransferencia' ] );
 Route::post( '/transferencia', [ TransferenciaController::class, 'addTransferencia' ] );
+
+//** TRASPASOS **/
+Route::get( '/traspaso/{idEstudiante}', [ TraspasosController::class, 'getListaTraspaso' ] );
+Route::post( '/traspaso', [ TraspasosController::class, 'addTraspaso' ] );
