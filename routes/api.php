@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\AnulacionController;
-use App\Http\Controllers\CambioCarreraController;
-use App\Http\Controllers\EntidadController;
-use App\Http\Controllers\EstudianteController;
 use Illuminate\Http\Request;
+use App\Models\CambioCarrera;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UniversidadController;
-use App\Http\Controllers\HabilitacionTramiteController;
+use App\Http\Controllers\EntidadController;
+use App\Http\Controllers\TramiteController;
+use App\Http\Controllers\AnulacionController;
+use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\ReadmisionController;
 use App\Http\Controllers\SuspencionController;
-use App\Http\Controllers\TramiteController;
-use App\Models\CambioCarrera;
+use App\Http\Controllers\UniversidadController;
+use App\Http\Controllers\CambioCarreraController;
+use App\Http\Controllers\TransferenciaController;
+use App\Http\Controllers\HabilitacionTramiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,3 +80,7 @@ Route::post( '/suspencion', [ SuspencionController::class, 'addSuspencion' ] );
 //** READMISIONES **/
 Route::get( '/readmision/{idEstudiante}', [ ReadmisionController::class, 'getListaReadmisiones' ] );
 Route::post( '/readmision', [ ReadmisionController::class, 'addReadmision' ] );
+
+//** READMISIONES **/
+Route::get( '/transferencia/{idEstudiante}', [ TransferenciaController::class, 'getListaTransferencia' ] );
+Route::post( '/transferencia', [ TransferenciaController::class, 'addTransferencia' ] );
