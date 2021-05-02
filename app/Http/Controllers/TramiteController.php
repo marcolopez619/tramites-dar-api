@@ -7,11 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\HabilitacionTramite;
 use App\Models\Tramite;
+use Illuminate\Support\Facades\DB;
 
 class TramiteController extends Controller
 {
     public function getListaTramite(){
-        $listaTramites = Tramite::all()->sortBy( 'descripcion' );
+        $selectColumns = [
+            "tramite.id_tramite as idTramite",
+            "tramite.descripcion as descripcionTramite"
+        ];
+
+        // $listaTramites = Tramite::select()->sortBy( 'descripcion' );
+        $listaTramites = DB::table( 'tramite' )->select( $selectColumns )->orderBy( 'descripcion', 'ASC' )->get();
+
 
         return response()->json( [
             'data'    => $listaTramites->isEmpty() ? null : $listaTramites,
