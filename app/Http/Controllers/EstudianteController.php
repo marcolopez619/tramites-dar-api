@@ -42,6 +42,7 @@ class EstudianteController extends Controller
     public function getInformacionEstudiante($idEstudiante)
     {
         $arrayCamposSelect = [
+            'facultad.id_facultad AS idFacultad',
             'facultad.nombre AS facultad',
             'carrera.id_carrera AS idCarrera',
             'carrera.nombre AS carrera',
@@ -52,6 +53,7 @@ class EstudianteController extends Controller
             'estudiante.paterno',
             'estudiante.materno',
             'estudiante.nombres',
+             // DB::raw("estudiante.paterno || ' ' || estudiante.materno || ' ' || estudiante.nombres AS nombreCompleto" ),
             'estudiante.fecha_nacimiento AS fechaNacimiento',
             'estudiante.sexo'
         ];
@@ -64,8 +66,12 @@ class EstudianteController extends Controller
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->get();
 
+            if ( !$estudiante->isEmpty() ) {
+                $estudiante[ 0 ]->nombreCompleto = $estudiante[ 0 ]->paterno.' '.$estudiante[ 0 ]->materno.' '.$estudiante[ 0 ]->nombres;
+            }
+
         return response()->json([
-            'data'    => $estudiante->isEmpty() ? null : $estudiante,
+            'data'    => $estudiante->isEmpty() ? null : $estudiante[ 0 ],
             'message' => $estudiante->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ]);
