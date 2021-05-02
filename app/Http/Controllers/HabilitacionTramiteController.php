@@ -65,6 +65,7 @@ class HabilitacionTramiteController extends Controller
             $habilitacion->fecha_final   = $request->input( 'fechaFinal' );
             $habilitacion->estado        = $request->input( 'estado' );
             $habilitacion->gestion       = $request->input( 'gestion' );
+            $habilitacion->id_tramite    = $request->input( 'idTramite' );
             $habilitacion->save();
 
             return response()->json( [
