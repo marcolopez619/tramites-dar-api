@@ -13,8 +13,20 @@ class HabilitacionTramiteController extends Controller
 
     public function getListHabilitacionTramite(){
 
+        $selectColumns = [
+            'tramite.id_tramite AS idTramite',
+            'tramite.descripcion AS descripcionTramite',
+            'habilitacion_tramite.id_hab_tramite AS idHabilitacionTramite',
+            'habilitacion_tramite.fecha_inicial AS fechaInicial',
+            'habilitacion_tramite.fecha_final AS fechaFinal',
+            'habilitacion_tramite.estado',
+            'habilitacion_tramite.gestion'
+        ];
+
         $listaHabilitaciones = DB::table( 'tramite' )
                                 ->join( 'habilitacion_tramite', 'tramite.id_tramite' , '=' , 'habilitacion_tramite.id_tramite' )
+                                ->select( $selectColumns )
+                                ->orderBy( 'habilitacion_tramite.fecha_inicial' , 'DESC' )
                                 ->get();
 
         return response()->json( [
