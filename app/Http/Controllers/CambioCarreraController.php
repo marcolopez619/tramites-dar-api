@@ -48,6 +48,7 @@ class CambioCarreraController extends Controller
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_tramite.id_tramite' , '=' , 2 ) // FIXME: Dato quemado el tipo de tramite.
+            ->distinct()
             ->get();
 
         return response()->json([
