@@ -106,27 +106,32 @@ class UniversidadController extends Controller
 
     public function getFacultadesYcarreras($idUniversidad){
 
+        $selectColumns = [
+            "universidad.id_universidad AS idUniversidad",
+
+            "facultad.id_facultad AS idFacultad",
+            "facultad.nombre AS facultad",
+            "facultad.estado AS estadofacultad",
+
+
+            "carrera.id_carrera AS idCarrera",
+            "carrera.nombre AS carrera",
+            "carrera.estado AS estadoCarrera",
+        ];
+
         $Data = DB::table('universidad')
             ->join( 'facultad', 'facultad.id_universidad', '=' , 'universidad.id_universidad' )
             ->join( 'carrera' , 'carrera.id_facultad' , '=' , 'facultad.id_facultad' )
+            ->select( $selectColumns )
             ->where( 'universidad.id_universidad', '=' , $idUniversidad )
+            ->orderBy( 'carrera.nombre' , 'ASC' )
             ->get();
 
-        if( !$Data->isEmpty() ){
-            return response()->json( [
-                'data'    => $Data,
-                'message' => 'SE ENCONTRARON RESULTADOS',
-                'error'   => null
-            ], Response::HTTP_OK );
-        }
-        else{
-            return response()->json( [
-                'data'    => null,
-                'message' => 'NO SE ENCONTRARON RESULTADOS',
-                'error'   => null
-            ], Response::HTTP_OK );
-        }
-
+        return response()->json( [
+            'data'    => $Data->isEmpty() ? null : $Data,
+            'message' => $Data->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
 
     }
 }
