@@ -27,21 +27,31 @@ class AnulacionController extends Controller
             'anulacion.fecha_solicitud AS fechaSolicitud',
             'anulacion.motivo',
 
+            'carrera.nombre AS carrera',
+
             'estudiante_tramite.fecha AS fechaProceso',
             'estudiante_tramite.observaciones',
 
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tipoTramite',
-            'estado.descripcion AS estado'
+
+            'estado.id_estado AS estado'
+            // 'estado.descripcion AS estado'
         ];
 
         $estudiante = DB::table('estudiante')
             ->join('anulacion', 'estudiante.id_estudiante', '=', 'anulacion.id_estudiante')
+
+            ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
+            ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
+            ->where( 'estudiante_tramite.id_tramite', '=' , 1 ) // FIXME: DATOS QUEMADO
+            ->distinct()
             ->get();
 
         return response()->json([
