@@ -14,7 +14,7 @@ class CambioCarreraController extends Controller
     public function getListaCambioCarrera($idEstudiante)
     {
         $arrayCamposSelect = [
-            'estudiante.id_estudiante as idEstudiante',
+            /* 'estudiante.id_estudiante as idEstudiante',
             'estudiante.ru',
             'estudiante.ci',
             'estudiante.complemento',
@@ -22,11 +22,13 @@ class CambioCarreraController extends Controller
             'estudiante.materno',
             'estudiante.nombres',
             'estudiante.fecha_nacimiento AS fechaNacimiento',
-            'estudiante.sexo',
+            'estudiante.sexo', */
 
             'cambio_carrera.id_cambio_carrera AS idCambioCarrera',
             'cambio_carrera.id_carrera_origen AS idCarreraOrigen',
+            DB::raw("( select carrera.nombre AS carreraOrigen  from carrera WHERE carrera.id_carrera = cambio_carrera.id_carrera_origen)" ),
             'cambio_carrera.id_carrera_destino AS idCarreraDestino',
+            DB::raw("( select carrera.nombre AS carreraDestino from carrera  WHERE carrera.id_carrera = cambio_carrera.id_carrera_destino)" ),
             'cambio_carrera.fecha_solicitud AS fechaSolicitud',
             'cambio_carrera.motivo',
 
@@ -35,7 +37,7 @@ class CambioCarreraController extends Controller
 
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tipoTramite',
-            'estado.descripcion AS estado'
+            'estado.id_estado AS estado'
         ];
 
         $estudiante = DB::table('estudiante')
