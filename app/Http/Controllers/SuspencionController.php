@@ -13,7 +13,7 @@ class SuspencionController extends Controller
     public function getListaSuspenciones($idEstudiante)
     {
         $arrayCamposSelect = [
-            'estudiante.id_estudiante as idEstudiante',
+           /*  'estudiante.id_estudiante as idEstudiante',
             'estudiante.ru',
             'estudiante.ci',
             'estudiante.complemento',
@@ -21,12 +21,13 @@ class SuspencionController extends Controller
             'estudiante.materno',
             'estudiante.nombres',
             'estudiante.fecha_nacimiento AS fechaNacimiento',
-            'estudiante.sexo',
+            'estudiante.sexo', */
 
             'suspencion.id_suspencion AS idSuspencion',
             'suspencion.id_carrera AS idCarrera',
+            DB::raw("(SELECT carrera.nombre AS carrera FROm carrera WHERE carrera.id_carrera = suspencion.id_carrera)"),
             'suspencion.tiempo_solicitado AS tiempoSolicitado',
-            'suspencion.descripcion',
+            // 'suspencion.descripcion',
             'suspencion.fecha_solicitud AS fechaSolicitud',
             'suspencion.motivo',
 
@@ -35,7 +36,7 @@ class SuspencionController extends Controller
 
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tipoTramite',
-            'estado.descripcion AS estado'
+            'estado.id_estado AS estado'
         ];
 
         $estudiante = DB::table('estudiante')
@@ -45,7 +46,7 @@ class SuspencionController extends Controller
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
-            ->where( 'estudiante_tramite.id_tramite' , '=' , 3 ) // FIXME: Dato quemado el tipo de tramite.
+            ->where('estudiante_tramite.id_tramite' , '=' , 3 ) // FIXME: Dato quemado el tipo de tramite.
             ->get();
 
         return response()->json([
