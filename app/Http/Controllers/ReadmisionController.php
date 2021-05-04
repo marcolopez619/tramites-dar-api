@@ -25,12 +25,9 @@ class ReadmisionController extends Controller
 
             'readmision.id_readmision AS idReadmision',
             'readmision.id_carrera AS idCarrera',
-             DB::raw('(SELECT nombre from carrera c where c.id_carrera = readmision.id_carrera)'),
+             DB::raw('(SELECT nombre from carrera c where c.id_carrera = readmision.id_carrera) AS carrera'),
             'readmision.fecha_solicitud AS fechaSolicitudReadmision',
             'readmision.motivo',
-            'readmision.id_suspencion AS idSuspencion',
-
-
 
             'estudiante_tramite.fecha AS fechaProceso',
             'estudiante_tramite.observaciones',
@@ -49,6 +46,7 @@ class ReadmisionController extends Controller
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_tramite.id_tramite' , '=' , 4 ) // FIXME: Dato quemado el tipo de tramite.
             ->distinct()
+            ->orderBy( 'readmision.id_readmision' , 'DESC' )
             ->get();
 
 
