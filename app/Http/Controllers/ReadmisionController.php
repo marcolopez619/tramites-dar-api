@@ -13,7 +13,7 @@ class ReadmisionController extends Controller
     public function getListaReadmisiones($idEstudiante)
     {
         $arrayCamposSelect = [
-            'estudiante.id_estudiante as idEstudiante',
+            /* 'estudiante.id_estudiante as idEstudiante',
             'estudiante.ru',
             'estudiante.ci',
             'estudiante.complemento',
@@ -21,23 +21,24 @@ class ReadmisionController extends Controller
             'estudiante.materno',
             'estudiante.nombres',
             'estudiante.fecha_nacimiento AS fechaNacimiento',
-            'estudiante.sexo',
+            'estudiante.sexo', */
 
             'readmision.id_readmision AS idReadmision',
             'readmision.id_carrera AS idCarrera',
-            'readmision.fecha_solicitud AS fechaSolicitud',
+             DB::raw('(SELECT nombre from carrera c where c.id_carrera = readmision.id_carrera)'),
+            'readmision.fecha_solicitud AS fechaSolicitudReadmision',
             'readmision.motivo',
             'readmision.id_suspencion AS idSuspencion',
+
+
 
             'estudiante_tramite.fecha AS fechaProceso',
             'estudiante_tramite.observaciones',
 
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tipoTramite',
-            'estado.descripcion AS estado'
+            'estado.id_estado AS estado'
         ];
-
-
 
         $dataComplementaria = DB::table('estudiante')
             ->join('readmision', 'readmision.id_estudiante', '=', 'estudiante.id_estudiante')
@@ -47,12 +48,31 @@ class ReadmisionController extends Controller
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_tramite.id_tramite' , '=' , 4 ) // FIXME: Dato quemado el tipo de tramite.
+            ->distinct()
             ->get();
 
+
         if (!$dataComplementaria->isEmpty()) {
+
             //** Busca la suspencion de la readmision encontrada
-            $readmision = Readmision::find( $dataComplementaria[ 0 ]->idReadmision )->suspencion;
-            $dataComplementaria[ 0 ]->readmisioin = $readmision;
+            foreach ($dataComplementaria as $item) {
+
+                $suspencion = Readmision::find( $item->idReadmision )->suspencion;
+
+                // Renombra los keys a camelCase
+                $suspencion = [
+                    'idSuspencion'     => $suspencion->id_suspencion,
+                    'idCarrera'        => $suspencion->id_carrera,
+                    'tiempoSolicitado' => $suspencion->tiempo_solicitado,
+                    'descripcion'      => $suspencion->descripcion,
+                    'fechaSolicitud'   => $suspencion->fecha_solicitud,
+                    'motivo'           => $suspencion->motivo,
+                    'idEstudiante'     => $suspencion->id_estudiante,
+                ];
+
+                $item->suspencion = [ $suspencion ];
+            }
+
         }
 
         return response()->json([
