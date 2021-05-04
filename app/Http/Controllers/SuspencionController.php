@@ -47,6 +47,7 @@ class SuspencionController extends Controller
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where('estudiante_tramite.id_tramite' , '=' , 3 ) // FIXME: Dato quemado el tipo de tramite.
+            ->distinct()
             ->get();
 
         return response()->json([
@@ -65,7 +66,7 @@ class SuspencionController extends Controller
             'tiempo_solicitado' => $request->input( 'tiempoSolicitado'),
             'descripcion'       => $request->input( 'descripcion'),
             'fecha_solicitud'   => date('Y-m-d H:i:s'),
-            'motivo'            => $request->input('motivo'),
+            'motivo'            => $request->input('idMotivo'), // FIXME: vincular el idMotivo en la BD con la tabla respectiva.
             'id_estudiante'     => $request->input('idEstudiante'),
         ];
 
@@ -80,6 +81,8 @@ class SuspencionController extends Controller
             'fecha'         => date('Y-m-d H:i:s'),
             'observaciones' => $request->input('observaciones')
         ];
+
+        // TODO: FALTA INSERTAR EL MOTIDO EN LA TABLA DE MOTIVOS QUE SE DEBE CREAR.
 
         // Retorna un booleano como respuesta de insercion
         $estudianteTramite = EstudianteTramite::insert($dataEstudianteTramite);
