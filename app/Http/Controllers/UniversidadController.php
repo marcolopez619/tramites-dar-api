@@ -15,13 +15,15 @@ class UniversidadController extends Controller
 
         $selectColumns = [
             'carrera.id_carrera as idCarrera',
-            'carrera.nombre as carrera',
-            'carrera.estado as estado'
+            'carrera.nombre',
+            'carrera.estado'
         ];
 
-        $listaCarreras = DB::table( 'carrera' )
+        $listaCarreras = DB::table( 'universidad' )
+        ->join( 'facultad', 'facultad.id_universidad', '=' , 'universidad.id_universidad' )
+        ->join( 'carrera', 'carrera.id_facultad', '=' , 'facultad.id_facultad' )
         ->select( $selectColumns )
-        ->where( 'carrera.id_universidad', '=', $idUniversidad )->where( 'carrera.estado', '=', 1 )
+        ->where( 'universidad.id_universidad', '=', $idUniversidad )->where( 'carrera.estado', '=', 1 )
         ->orderBy( 'carrera.nombre', 'ASC' )
         ->get();
 
@@ -137,10 +139,12 @@ class UniversidadController extends Controller
 
 
 
-    public function getFacultadesYcarreras($idUniversidad){
+    public function getAllInformation($idUniversidad){
 
         $selectColumns = [
             "universidad.id_universidad AS idUniversidad",
+            "universidad.nombre AS universidad",
+            "universidad.estado AS estadoUniversidad",
 
             "facultad.id_facultad AS idFacultad",
             "facultad.nombre AS facultad",

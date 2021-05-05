@@ -32,6 +32,7 @@ use App\Http\Controllers\HabilitacionTramiteController;
 Route::get( '/universidad' , [UniversidadController::class, 'getListUniversidad' ]);
 Route::post( '/universidad' , [UniversidadController::class, 'addUniversidad' ]);
 Route::patch( '/universidad' , [UniversidadController::class, 'updateUniversidad' ]);
+Route::get( '/universidad/{idUniversidad}/all' , [UniversidadController::class, 'getAllInformation' ]);
 
 //** FACULTADES **/
 Route::post( '/facultad' , [UniversidadController::class, 'addFacultad' ]);
@@ -42,8 +43,6 @@ Route::get( '/carrera/{idUniversidad}' , [UniversidadController::class, 'getList
 Route::post( '/carrera' , [UniversidadController::class, 'addCarrera' ]);
 Route::patch( '/carrera' , [UniversidadController::class, 'updateCarrera' ]);
 
-//** FACULTADES Y CARRERAS **/
-Route::get( '/carrera/{idUniversidad}' , [UniversidadController::class, 'getFacultadesYcarreras' ]);
 
 
 //** ENTIDADES **/
