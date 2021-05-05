@@ -67,7 +67,8 @@ class TraspasosController extends Controller
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_tramite.id_tramite' , '=' , 6 ) // FIXME: Dato quemado el tipo de tramite.
-
+            ->distinct()
+            ->orderBy( 'traspaso.id_traspaso', 'DESC' )
             ->get();
 
         return response()->json([
