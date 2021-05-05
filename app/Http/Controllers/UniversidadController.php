@@ -11,11 +11,44 @@ use Illuminate\Support\Facades\DB;
 
 class UniversidadController extends Controller
 {
+    public function getListaCarreras($idUniversidad){
+
+        $selectColumns = [
+            'carrera.id_carrera as idCarrera',
+            'carrera.nombre as carrera',
+            'carrera.estado as estado'
+        ];
+
+        $listaCarreras = DB::table( 'carrera' )
+        ->select( $selectColumns )
+        ->where( 'carrera.id_universidad', '=', $idUniversidad )->where( 'carrera.estado', '=', 1 )
+        ->orderBy( 'carrera.nombre', 'ASC' )
+        ->get();
+
+        return response()->json( [
+            'data'    => $listaCarreras->isEmpty() ? null : $listaCarreras,
+            'message' => $listaCarreras->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
     public function getListUniversidad(){
         $listaUniversidades = Universidad::all();
 
+        $listaUniversidadesRenamedKeys = array();
+
+        foreach ($listaUniversidades as $item) {
+            $newData = [
+                'idUniversidad' => $item->id_universidad,
+                'nombre' => $item->nombre,
+                'estado' => $item->estado
+            ];
+
+            array_push( $listaUniversidadesRenamedKeys, $newData );
+        }
+
         return response()->json( [
-            'data'    => $listaUniversidades,
+            'data'    => $listaUniversidadesRenamedKeys,
             'message' => 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ], Response::HTTP_OK );

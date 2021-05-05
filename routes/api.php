@@ -38,11 +38,12 @@ Route::post( '/facultad' , [UniversidadController::class, 'addFacultad' ]);
 Route::patch( '/facultad' , [UniversidadController::class, 'updateFacultad' ]);
 
 //** CARRERAS **/
+Route::get( '/carrera/{idUniversidad}' , [UniversidadController::class, 'getListaCarreras' ]);
 Route::post( '/carrera' , [UniversidadController::class, 'addCarrera' ]);
 Route::patch( '/carrera' , [UniversidadController::class, 'updateCarrera' ]);
 
 //** FACULTADES Y CARRERAS **/
-Route::get( '/carreras/{idUniversidad}' , [UniversidadController::class, 'getFacultadesYcarreras' ]);
+Route::get( '/carrera/{idUniversidad}' , [UniversidadController::class, 'getFacultadesYcarreras' ]);
 
 
 //** ENTIDADES **/
