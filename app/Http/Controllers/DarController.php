@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class DarController extends Controller
 {
-    public function getSolicitudesPorAtender(){
+    public function getTramitesPorAtender(){
         $selectColumn = [
             'estudiante.id_estudiante AS idEstudiante',
             'estudiante.paterno',
@@ -42,5 +42,9 @@ class DarController extends Controller
             'message' => $listaSolicitudes->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ]);
+    }
+
+    public function getDetalleTramite(){
+
     }
 }
