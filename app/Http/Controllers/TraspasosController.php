@@ -95,7 +95,7 @@ class TraspasosController extends Controller
         ];
 
         // Retorna un booleano como respuesta de insercion
-        $nuevoTraspaso = Traspaso::insert($arrayDataTraspaso);
+        $nuevoTraspaso = Traspaso::create($arrayDataTraspaso);
 
         $dataEstudianteTramite = [
             'id_estudiante' => $request->input('idEstudiante'),
@@ -103,7 +103,8 @@ class TraspasosController extends Controller
             'id_estado'     => $request->input('idEstado'),
             'id_entidad'    => $request->input('idEntidad'),
             'fecha'         => date('Y-m-d H:i:s'),
-            'observaciones' => $request->input('observaciones')
+            'observaciones' => $request->input('observaciones'),
+            'id_tipo_tramite'=> $nuevoTraspaso->id_traspaso
         ];
 
         // Retorna un booleano como respuesta de insercion

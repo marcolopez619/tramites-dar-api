@@ -71,7 +71,7 @@ class SuspencionController extends Controller
         ];
 
         // Retorna un booleano como respuesta de insercion
-        $nuevoCambioCarrera = Suspencion::insert($arrayDataSuspencion);
+        $nuevaSuspencion = Suspencion::create($arrayDataSuspencion);
 
         $dataEstudianteTramite = [
             'id_estudiante' => $request->input('idEstudiante'),
@@ -79,7 +79,8 @@ class SuspencionController extends Controller
             'id_estado'     => $request->input('idEstado'),
             'id_entidad'    => $request->input('idEntidad'),
             'fecha'         => date('Y-m-d H:i:s'),
-            'observaciones' => $request->input('observaciones')
+            'observaciones' => $request->input('observaciones'),
+            'id_tipo_tramite'=> $nuevaSuspencion->id_suspencion
         ];
 
         // TODO: FALTA INSERTAR EL MOTIDO EN LA TABLA DE MOTIVOS QUE SE DEBE CREAR.
@@ -89,7 +90,7 @@ class SuspencionController extends Controller
 
         return response()->json([
             'data'    => [
-                'Suspencion'        => $nuevoCambioCarrera,
+                'Suspencion'        => $nuevaSuspencion,
                 'EstudianteTramite' => $estudianteTramite
             ],
             'message' => 'INSERCION CORRECTA',

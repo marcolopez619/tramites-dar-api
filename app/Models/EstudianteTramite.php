@@ -11,6 +11,6 @@ class EstudianteTramite extends Model
 
     public $timestamps = false;
     protected $table = 'estudiante_tramite';
-    protected $fillable = ['fecha' , 'observaciones'];
+    protected $fillable = ['fecha' , 'observaciones', 'id_tipo_tramite'];
     protected $primaryKey = 'id_estudiante_tramite';
 }

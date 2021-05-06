@@ -71,8 +71,7 @@ class AnulacionController extends Controller
             'id_estudiante'   => $request->input('idEstudiante'),
         ];
 
-        // Retorna un booleano como respuesta de insercion
-        $nuevaAnulacion = Anulacion::insert($arrayDataAnulacion);
+        $nuevaAnulacion = Anulacion::create($arrayDataAnulacion);
 
         $dataEstudianteTramite = [
             'id_estudiante' => $request->input('idEstudiante'),
@@ -80,7 +79,8 @@ class AnulacionController extends Controller
             'id_estado'     => $request->input('idEstado'),
             'id_entidad'    => $request->input('idEntidad'),
             'fecha'         => date('Y-m-d H:i:s'),
-            'observaciones' => $request->input('observaciones')
+            'observaciones' => $request->input('observaciones'),
+            'id_tipo_tramite'=> $nuevaAnulacion->id_anulacion
         ];
 
         // Retorna un booleano como respuesta de insercion

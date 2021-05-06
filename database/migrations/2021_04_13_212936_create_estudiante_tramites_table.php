@@ -21,6 +21,7 @@ class CreateEstudianteTramitesTable extends Migration
             $table->integer( 'id_entidad' );
             $table->date( 'fecha' );
             $table->string( 'observaciones' )->nullable();
+            $table->integer( 'id_tipo_tramite' )->nullable(false);
 
             $table->foreign( 'id_estudiante' )->references( 'id_estudiante' )->on( 'estudiante' )->onDelete( 'cascade' );
             $table->foreign( 'id_tramite' )->references( 'id_tramite' )->on( 'tramite' )->onDelete( 'cascade' );

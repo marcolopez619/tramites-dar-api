@@ -99,3 +99,4 @@ Route::post( '/traspaso', [ TraspasosController::class, 'addTraspaso' ] );
 //** MODULO DEL DAR **/
 
 Route::get( '/dar', [ DarController::class, 'getTramitesPorAtender' ] );
+Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );

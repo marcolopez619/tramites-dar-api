@@ -93,7 +93,7 @@ class ReadmisionController extends Controller
         ];
 
         // Retorna un booleano como respuesta de insercion
-        $nuevaReadmision = Readmision::insert($arrayDataReadmision);
+        $nuevaReadmision = Readmision::create($arrayDataReadmision);
 
         $dataEstudianteTramite = [
             'id_estudiante' => $request->input('idEstudiante'),
@@ -101,7 +101,8 @@ class ReadmisionController extends Controller
             'id_estado'     => $request->input('idEstado'),
             'id_entidad'    => $request->input('idEntidad'),
             'fecha'         => date('Y-m-d H:i:s'),
-            'observaciones' => $request->input('observaciones')
+            'observaciones' => $request->input('observaciones'),
+            'id_tipo_tramite'=> $nuevaReadmision->id_readmision
         ];
 
         // Retorna un booleano como respuesta de insercion

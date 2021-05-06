@@ -11,7 +11,7 @@ class Readmision extends Model
 
     public $timestamps = false;
     protected $table = 'readmision';
-    protected $fillable = ['id_carrera', 'fecha_solicitud', 'motivo' ];
+    protected $fillable = ['id_carrera', 'fecha_solicitud', 'motivo', 'id_suspencion', 'id_estudiante' ];
     protected $primaryKey = 'id_readmision';
 
     public function suspencion(){

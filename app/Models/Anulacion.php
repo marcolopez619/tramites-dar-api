@@ -11,6 +11,6 @@ class Anulacion extends Model
 
     public $timestamps = false;
     protected $table = 'anulacion';
-    protected $fillable = ['fecha_solicitud', 'motivo' ];
+    protected $fillable = ['fecha_solicitud', 'motivo', 'id_estudiante' ];
     protected $primaryKey = 'id_anulacion';
 }

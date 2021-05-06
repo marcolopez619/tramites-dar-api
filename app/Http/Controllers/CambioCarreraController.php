@@ -71,7 +71,7 @@ class CambioCarreraController extends Controller
         ];
 
         // Retorna un booleano como respuesta de insercion
-        $nuevoCambioCarrera = CambioCarrera::insert($arrayDataCambioCarrera);
+        $nuevoCambioCarrera = CambioCarrera::create($arrayDataCambioCarrera);
 
         $dataEstudianteTramite = [
             'id_estudiante' => $request->input('idEstudiante'),
@@ -79,7 +79,8 @@ class CambioCarreraController extends Controller
             'id_estado'     => $request->input('idEstado'),
             'id_entidad'    => $request->input('idEntidad'),
             'fecha'         => date('Y-m-d H:i:s'),
-            'observaciones' => $request->input('observaciones')
+            'observaciones' => $request->input('observaciones'),
+            'id_tipo_tramite'=> $nuevoCambioCarrera->id_cambio_carrera
         ];
 
         // Retorna un booleano como respuesta de insercion
