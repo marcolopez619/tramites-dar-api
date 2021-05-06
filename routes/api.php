@@ -13,6 +13,7 @@ use App\Http\Controllers\ReadmisionController;
 use App\Http\Controllers\SuspencionController;
 use App\Http\Controllers\UniversidadController;
 use App\Http\Controllers\CambioCarreraController;
+use App\Http\Controllers\DarController;
 use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\HabilitacionTramiteController;
 
@@ -90,3 +91,11 @@ Route::post( '/transferencia', [ TransferenciaController::class, 'addTransferenc
 //** TRASPASOS **/
 Route::get( '/traspaso/{idEstudiante}', [ TraspasosController::class, 'getListaTraspaso' ] );
 Route::post( '/traspaso', [ TraspasosController::class, 'addTraspaso' ] );
+
+
+
+
+
+//** MODULO DEL DAR **/
+
+Route::get( '/dar', [ DarController::class, 'getSolicitudesPorAtender' ] );
