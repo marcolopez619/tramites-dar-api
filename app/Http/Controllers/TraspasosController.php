@@ -50,6 +50,12 @@ class TraspasosController extends Controller
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tipoTramite', */
 
+            DB::raw("( SELECT floor(random() * ( 2021 - 1990 + 1) + 1990) AS anioIngreso )"),
+            DB::raw("( SELECT floor(random() * 100 + 1)::int AS materiasAprobadas )"),
+            DB::raw("( SELECT floor(random() * 100 + 1)::int AS materiasReprobadas )"),
+            // DB::raw("( SELECT floor( materiasAprobadas / materiasReprobadas ) AS promedio )"),
+
+            'tramite.descripcion AS tipoTramite',
             'estado.id_estado AS estado'
         ];
 
@@ -62,7 +68,7 @@ class TraspasosController extends Controller
 
             ->join('traspaso', 'traspaso.id_estudiante', '=', 'estudiante.id_estudiante')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
-            // ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
