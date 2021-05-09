@@ -43,10 +43,6 @@ class TransferenciaController extends Controller
 
 
         $dataComplementaria = DB::table('estudiante')
-
-            ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante' )
-            ->join('carrera', 'carrera.id_carrera', '=', 'estudiante_carrera.id_carrera' )
-
             ->join('transferencia', 'transferencia.id_estudiante', '=', 'estudiante.id_estudiante')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
@@ -54,7 +50,7 @@ class TransferenciaController extends Controller
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_tramite.id_tramite' , '=' , 5 ) // FIXME: Dato quemado el tipo de tramite.
-
+            ->distinct()
             ->get();
 
         return response()->json([
