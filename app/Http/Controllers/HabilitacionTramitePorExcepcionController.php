@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class HabilitacionTramitePorExcepcionController extends Controller
 {
-    public function getListaHabilitacionTramitePorExcepcion($idEstudiante){
+    public function getListaHabilitacionTramitePorExcepcion(){
 
         $queryTiempoPermitido = "(SELECT replace( (select habilitacion_tramite_por_excepcion.fecha_final::timestamp - habilitacion_tramite_por_excepcion.fecha_inicial::timestamp from habilitacion_tramite_por_excepcion)::varchar , 'days', 'dias' ) AS tiempo)";
 
@@ -19,11 +19,11 @@ class HabilitacionTramitePorExcepcionController extends Controller
 
             'estudiante.ci',
             'estudiante.complemento',
-            DB::raw( "( SELECT e.paterno || ' ' || e.materno || ' ' || e.nombres AS nombreCompleto FROM estudiante e where e.id_estudiante = $idEstudiante)" ),
+            DB::raw( "( SELECT e.paterno || ' ' || e.materno || ' ' || e.nombres AS nombreCompleto FROM estudiante e )" ),
 
             'carrera.nombre as carrera',
             DB::raw( "$queryTiempoPermitido" ),
-
+            'habilitacion_tramite_por_excepcion.id_habilitacion_por_excepcion AS idHabilitacionPorExcepcion',
             'habilitacion_tramite_por_excepcion.fecha_inicial AS fechaInicial',
             'habilitacion_tramite_por_excepcion.fecha_final AS fechaFinal',
 
@@ -38,7 +38,7 @@ class HabilitacionTramitePorExcepcionController extends Controller
                                 ->join( 'habilitacion_tramite_por_excepcion', 'habilitacion_tramite_por_excepcion.id_estudiante' , '=' , 'estudiante.id_estudiante' )
                                 ->join( 'tramite', 'tramite.id_tramite', '=' , 'habilitacion_tramite_por_excepcion.id_tramite')
                                 ->select( $selectColumns )
-                                ->where( 'habilitacion_tramite_por_excepcion.id_estudiante', '=', $idEstudiante )
+                                // ->where( 'habilitacion_tramite_por_excepcion.id_estudiante', '=', $idEstudiante )
                                 ->distinct()
                                 ->orderBy( 'habilitacion_tramite_por_excepcion.fecha_inicial' , 'DESC' )
                                 ->get();
