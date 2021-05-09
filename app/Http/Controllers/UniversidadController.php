@@ -11,19 +11,18 @@ use Illuminate\Support\Facades\DB;
 
 class UniversidadController extends Controller
 {
-    public function getListaCarreras($idUniversidad){
+    public function getListaCarreras($idFacultad){
 
         $selectColumns = [
             'carrera.id_carrera as idCarrera',
             'carrera.nombre',
-            'carrera.estado'
+            'carrera.estado',
+            'carrera.id_facultad as idFacultad'
         ];
 
-        $listaCarreras = DB::table( 'universidad' )
-        ->join( 'facultad', 'facultad.id_universidad', '=' , 'universidad.id_universidad' )
-        ->join( 'carrera', 'carrera.id_facultad', '=' , 'facultad.id_facultad' )
+        $listaCarreras = DB::table( 'carrera' )
         ->select( $selectColumns )
-        ->where( 'universidad.id_universidad', '=', $idUniversidad )->where( 'carrera.estado', '=', 1 )
+        ->where( 'carrera.id_facultad', '=', $idFacultad )
         ->orderBy( 'carrera.nombre', 'ASC' )
         ->get();
 
@@ -83,7 +82,7 @@ class UniversidadController extends Controller
 
     public function addFacultad( Request $request ){
 
-        $universidad = Universidad::find( $request->input('id_universidad') );
+        $universidad = Universidad::find( $request->input('idUniversidad') );
         $facultad = new Facultad();
         $facultad->nombre = $request->input('nombre');
         $facultad->estado = $request->input('estado');
@@ -94,6 +93,29 @@ class UniversidadController extends Controller
             'message' => 'INSERCION CORRECTA',
             'error'   => null
         ], Response::HTTP_CREATED );
+    }
+
+    public function getListaFacultades($idUniversidad){
+
+        $selectColumns = [
+            'facultad.id_facultad AS idFacultad',
+            'facultad.nombre',
+            'facultad.estado',
+            'facultad.id_universidad AS idUniversidad'
+        ];
+
+        $listaFacultades = DB::table('facultad')
+            ->select($selectColumns)
+            ->where( 'facultad.id_universidad', '=' , $idUniversidad )
+            ->orderBy('facultad.nombre', 'ASC')
+            ->get();
+
+        return response()->json([
+            'data'    => $listaFacultades->isEmpty() ? null : $listaFacultades,
+            'message' => $listaFacultades->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK);
+
     }
 
     public function updateFacultad(Request $request ){
