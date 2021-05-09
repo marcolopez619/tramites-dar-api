@@ -76,4 +76,41 @@ class EstudianteController extends Controller
             'error'   => null
         ]);
     }
+    public function getInformacionEstudianteByRu($ru)
+    {
+        $arrayCamposSelect = [
+            'facultad.id_facultad AS idFacultad',
+            'facultad.nombre AS facultad',
+            'carrera.id_carrera AS idCarrera',
+            'carrera.nombre AS carrera',
+            'estudiante.id_estudiante as idEstudiante',
+            'estudiante.ru',
+            'estudiante.ci',
+            'estudiante.complemento',
+            'estudiante.paterno',
+            'estudiante.materno',
+            'estudiante.nombres',
+             // DB::raw("estudiante.paterno || ' ' || estudiante.materno || ' ' || estudiante.nombres AS nombreCompleto" ),
+            'estudiante.fecha_nacimiento AS fechaNacimiento',
+            'estudiante.sexo'
+        ];
+
+        $estudiante = DB::table('estudiante')
+            ->join('estudiante_carrera', 'estudiante.id_estudiante', '=', 'estudiante_carrera.id_estudiante')
+            ->join('carrera', 'estudiante_carrera.id_carrera', '=', 'carrera.id_carrera')
+            ->join('facultad', 'carrera.id_facultad', '=', 'facultad.id_facultad')
+            ->select( $arrayCamposSelect )
+            ->where('estudiante.ru', '=', $ru)
+            ->get();
+
+            if ( !$estudiante->isEmpty() ) {
+                $estudiante[ 0 ]->nombreCompleto = $estudiante[ 0 ]->paterno.' '.$estudiante[ 0 ]->materno.' '.$estudiante[ 0 ]->nombres;
+            }
+
+        return response()->json([
+            'data'    => $estudiante->isEmpty() ? null : $estudiante,
+            'message' => $estudiante->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ]);
+    }
 }

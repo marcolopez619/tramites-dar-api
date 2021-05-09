@@ -73,6 +73,7 @@ Route::get( '/habilitacion/excepcion', [ HabilitacionTramitePorExcepcionControll
 //** ESTUDIANTE **/
 Route::post( '/estudiante', [EstudianteController::class, 'addEstudiante' ] );
 Route::get( '/estudiante/{idEstudiante}', [EstudianteController::class, 'getInformacionEstudiante' ] );
+Route::get( '/estudiante/search/{ru}', [EstudianteController::class, 'getInformacionEstudianteByRu' ] );
 
 
 //** ANULACIONES **/
