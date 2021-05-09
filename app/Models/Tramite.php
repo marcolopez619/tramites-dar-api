@@ -21,4 +21,8 @@ class Tramite extends Model
     public function estudiante(){
         return $this->belongsToMany( Estudiante::class , 'estudiante_tramite' , 'id_estudiante', 'id_tramite' );
     }
+
+    public function habilitacionTramitePorExcepcion(){
+        return $this->hasMany( HabilitacionTramitePorExcepcion::class, 'id_tramite');
+    }
 }

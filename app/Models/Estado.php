@@ -17,4 +17,8 @@ class Estado extends Model
     public function estudianteTramite(){
         return $this->hasMany( EstudianteTramite::class , 'id_estado' );
     }
+
+    public function habilitacionTramitePorExcepcion(){
+        return $this->hasMany( HabilitacionTramitePorExcepcion::class, 'id_estado');
+    }
 }

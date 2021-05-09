@@ -16,6 +16,7 @@ use App\Http\Controllers\CambioCarreraController;
 use App\Http\Controllers\DarController;
 use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\HabilitacionTramiteController;
+use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,10 +60,13 @@ Route::post( '/tramite', [ TramiteController::class, 'addTramite' ] );
 Route::patch( '/tramite', [ TramiteController::class, 'updateTramite' ] );
 
 
-//** HABILITACION DE TRAMITES **/
+//** HABILITACION DE TRAMITES EN RANGO DE FECHAS **/
 Route::get( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'getListHabilitacionTramite' ] );
 Route::post( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'addHabilitacionTramite' ] );
 Route::patch( '/habilitacion/tramite', [ HabilitacionTramiteController::class, 'updateHabilitacionTramite' ] );
+
+//** HABILITACION DE TRAMITE DEL ESTUDIANTE POR EXCEPCION **/
+Route::post( '/habilitacion/excepcion', [ HabilitacionTramitePorExcepcionController::class, 'addHabilitacionTramitePorExcepcion' ] );
 
 
 //** ESTUDIANTE **/
@@ -102,3 +106,7 @@ Route::post( '/traspaso', [ TraspasosController::class, 'addTraspaso' ] );
 
 Route::get( '/dar', [ DarController::class, 'getTramitesPorAtender' ] );
 Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
+
+
+
+
