@@ -67,6 +67,7 @@ Route::patch( '/habilitacion/tramite', [ HabilitacionTramiteController::class, '
 
 //** HABILITACION DE TRAMITE DEL ESTUDIANTE POR EXCEPCION **/
 Route::post( '/habilitacion/excepcion', [ HabilitacionTramitePorExcepcionController::class, 'addHabilitacionTramitePorExcepcion' ] );
+Route::get( '/habilitacion/excepcion/{idEstudiante}', [ HabilitacionTramitePorExcepcionController::class, 'getListaHabilitacionTramitePorExcepcion' ] );
 
 
 //** ESTUDIANTE **/
