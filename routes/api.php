@@ -31,6 +31,7 @@ use App\Http\Controllers\HabilitacionTramiteController;
 
 //** UNIVERSIDAD **/
 Route::get( '/universidad' , [UniversidadController::class, 'getListUniversidad' ]);
+Route::get( '/universidad/{idUniversidad}/carreras' , [UniversidadController::class, 'getListaCarrerasByIdUniversidad' ]);
 Route::post( '/universidad' , [UniversidadController::class, 'addUniversidad' ]);
 Route::patch( '/universidad' , [UniversidadController::class, 'updateUniversidad' ]);
 Route::get( '/universidad/{idUniversidad}/all' , [UniversidadController::class, 'getAllInformation' ]);

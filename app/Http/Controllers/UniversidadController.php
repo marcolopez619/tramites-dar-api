@@ -56,6 +56,34 @@ class UniversidadController extends Controller
 
     }
 
+    public function getListaCarrerasByIdUniversidad($idUniversidad){
+
+        $selectColumns = [
+            'universidad.id_universidad as idUniversidad',
+            'facultad.id_facultad as idFacultad',
+            'facultad.nombre as facultad',
+            'facultad.estado as estadoFacultad',
+            'carrera.id_carrera as idCarrera',
+            'carrera.nombre as carrera',
+            'carrera.estado as estadoCarrera'
+        ];
+
+        $listaCarreras = DB::table( 'universidad' )
+        ->join( 'facultad', 'facultad.id_universidad', '=' , 'universidad.id_universidad' )
+        ->join( 'carrera', 'carrera.id_facultad', '=' , 'facultad.id_facultad' )
+        ->select( $selectColumns )
+        ->where( 'universidad.id_universidad', '=', $idUniversidad )
+        ->orderBy( 'carrera.nombre', 'ASC' )
+        ->get();
+
+        return response()->json( [
+            'data'    => $listaCarreras->isEmpty() ? null : $listaCarreras,
+            'message' => $listaCarreras->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
+
     public function addUniversidad(Request $request){
         $univCreada = Universidad::create( $request->all() );
 
