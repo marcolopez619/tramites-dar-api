@@ -13,16 +13,15 @@ class HabilitacionTramitePorExcepcionController extends Controller
 {
     public function getListaHabilitacionTramitePorExcepcion(){
 
-        $queryTiempoPermitido = "(SELECT replace( (select habilitacion_tramite_por_excepcion.fecha_final::timestamp - habilitacion_tramite_por_excepcion.fecha_inicial::timestamp from habilitacion_tramite_por_excepcion)::varchar , 'days', 'dias' ) AS tiempo)";
-
         $selectColumns = [
 
             'estudiante.ci',
             'estudiante.complemento',
-            DB::raw( "( SELECT e.paterno || ' ' || e.materno || ' ' || e.nombres AS nombreCompleto FROM estudiante e )" ),
+            'estudiante.paterno',
+            'estudiante.materno',
+            'estudiante.nombres',
 
             'carrera.nombre as carrera',
-            DB::raw( "$queryTiempoPermitido" ),
             'habilitacion_tramite_por_excepcion.id_habilitacion_por_excepcion AS idHabilitacionPorExcepcion',
             'habilitacion_tramite_por_excepcion.fecha_inicial AS fechaInicial',
             'habilitacion_tramite_por_excepcion.fecha_final AS fechaFinal',
@@ -42,6 +41,15 @@ class HabilitacionTramitePorExcepcionController extends Controller
                                 ->distinct()
                                 ->orderBy( 'habilitacion_tramite_por_excepcion.fecha_inicial' , 'DESC' )
                                 ->get();
+
+
+        if (!$listaHabilitacionesPorExcepcion->isEmpty() ) {
+
+            foreach ($listaHabilitacionesPorExcepcion as $element) {
+                $element->nombrecompleto = $element->paterno.' '.$element->materno.' '.$element->nombres;
+                $element->tiempo         = (strtotime($element->fechaFinal) - strtotime($element->fechaInicial))/60/60/24 + 1;
+            }
+        }
 
         return response()->json( [
             'data'    => empty( $listaHabilitacionesPorExcepcion ) ? null :  $listaHabilitacionesPorExcepcion,
