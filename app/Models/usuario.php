@@ -11,7 +11,7 @@ class usuario extends Model
 
     public $timestamps = false;
     protected $table = 'usuario';
-    protected $fillable = ['nombre', 'password', 'celular', 'estado'];
+    protected $fillable = ['nombre', 'password', 'celular', 'estado', 'id_universidad'];
     protected $primaryKey = 'id_usuario';
 
     public function perfil(){

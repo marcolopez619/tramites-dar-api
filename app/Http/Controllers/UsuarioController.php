@@ -15,11 +15,12 @@ class UsuarioController extends Controller
 
         $idPerfil = $request->input( 'idPerfil' );
 
-        $nuevoUsuario = new usuario();
-        $nuevoUsuario->nombre = $request->input( 'nombre' );
-        $nuevoUsuario->password = $request->input( 'password' ); // TODO: faltaria encriptar el password
-        $nuevoUsuario->celular = $request->input( 'celular' );
-        $nuevoUsuario->estado = $request->input( 'estado' );
+        $nuevoUsuario                 = new usuario();
+        $nuevoUsuario->nombre         = $request->input( 'nombre' );
+        $nuevoUsuario->password       = $request->input( 'password' );  // TODO: faltaria encriptar el password
+        $nuevoUsuario->celular        = $request->input( 'celular' );
+        $nuevoUsuario->estado         = $request->input( 'estado' );
+        $nuevoUsuario->id_universidad = 1 ; // FIXME: Dato quemado, que hace referencia a la UATF
         $nuevoUsuario->save();
 
         $nuevoUsuario->perfil()->attach( $idPerfil );
