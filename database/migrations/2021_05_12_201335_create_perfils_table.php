@@ -16,7 +16,6 @@ class CreatePerfilsTable extends Migration
         Schema::create('perfil', function (Blueprint $table) {
             $table->id('id_perfil');
             $table->string('nombre')->nullable( false );
-            $table->integer('id_usuario')->nullable( false );
         });
     }
 

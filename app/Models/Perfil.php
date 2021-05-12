@@ -12,7 +12,7 @@ class Perfil extends Model
 
     public $timestamps = false;
     protected $table = 'perfil';
-    protected $fillable = ['nombre', 'id_usuario' ];
+    protected $fillable = ['nombre' ];
     protected $primaryKey = 'id_perfil';
 
     public function modulo(){
