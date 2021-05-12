@@ -4,8 +4,11 @@ use App\Models\Traspaso;
 use Illuminate\Http\Request;
 use App\Models\CambioCarrera;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DarController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EntidadController;
 use App\Http\Controllers\TramiteController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AnulacionController;
 use App\Http\Controllers\TraspasosController;
 use App\Http\Controllers\EstudianteController;
@@ -13,7 +16,6 @@ use App\Http\Controllers\ReadmisionController;
 use App\Http\Controllers\SuspencionController;
 use App\Http\Controllers\UniversidadController;
 use App\Http\Controllers\CambioCarreraController;
-use App\Http\Controllers\DarController;
 use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
@@ -110,5 +112,11 @@ Route::get( '/dar', [ DarController::class, 'getTramitesPorAtender' ] );
 Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
 
 
+//** USUARIOS Y PERFILES **/
+Route::post( '/usuario', [ UsuarioController::class, 'addUsuario' ] );
+Route::get( '/usuario', [ UsuarioController::class, 'getListaUsuarios' ] );
+Route::get( '/usuario/{idUsuario}', [ UsuarioController::class, 'getusuario' ] );
 
+//** LOGIN DEL SISTEMA **/
+Route::post( '/login', [ LoginController::class, 'inicializarContexto' ] );
 
