@@ -22,8 +22,25 @@ class LoginController extends Controller
             'usuario.id_usuario as idUsuario',
             'usuario.nombre',
             'usuario.celular',
-            'usuario.estado',
+            'usuario.estado'
+        ];
 
+        $datosUsuario = DB::table( 'usuario' )
+            ->select( $selectColumns )
+            ->where( 'usuario.nombre', '=', $userName )
+            ->where( 'usuario.password', '=', $password )
+            ->get();
+
+        if ( $datosUsuario->isEmpty() ) {
+            return response()->json( [
+                'data'    => null,
+                'message' => 'USUARIO O CONTRASEÑA INCORRECTA',
+                'error'   => null
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+
+        $selectColumns = [
             'perfil.id_perfil as idPerfil',
             'perfil.nombre as nombrePerfil',
 
@@ -31,11 +48,10 @@ class LoginController extends Controller
             'modulo.nombre as nombreModulo',
 
             'recurso.id_recurso as idRecurso',
-            'recurso.ruta',
-
+            'recurso.ruta'
         ];
 
-        $listaUsuarios = DB::table( 'usuario' )
+        $listaRecursos = DB::table( 'usuario' )
         ->join( 'usuario_perfil', 'usuario_perfil.id_usuario' ,'=', 'usuario.id_usuario' )
         ->join( 'perfil', 'perfil.id_perfil' ,'=', 'usuario_perfil.id_perfil' )
         ->join( 'perfil_modulo', 'perfil_modulo.id_perfil' ,'=', 'perfil.id_perfil' )
@@ -46,9 +62,12 @@ class LoginController extends Controller
         ->where( 'usuario.password', '=', $password )
         ->get();
 
+        // Une la data del usuario con la lista de recursos //
+        $datosUsuario[ 0 ]->recursos = $listaRecursos;
+
         return response()->json( [
-            'data'    => $listaUsuarios->isEmpty() ? null : $listaUsuarios,
-            'message' => $listaUsuarios->isEmpty() ? 'USUARIO O CONTRASEÑA INCORRECTA' : 'SESION INICIADA CORRECTAMENTE',
+            'data'    => $datosUsuario,
+            'message' => 'SESION INICIADA CORRECTAMENTE',
             'error'   => null
         ], Response::HTTP_OK );
     }
