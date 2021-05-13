@@ -19,6 +19,7 @@ use App\Http\Controllers\CambioCarreraController;
 use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
+use App\Http\Controllers\PerfilController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,10 +113,15 @@ Route::get( '/dar', [ DarController::class, 'getTramitesPorAtender' ] );
 Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
 
 
-//** USUARIOS Y PERFILES **/
+//** USUARIOS **/
 Route::post( '/usuario', [ UsuarioController::class, 'addUsuario' ] );
 Route::get( '/usuario', [ UsuarioController::class, 'getListaUsuarios' ] );
 Route::get( '/usuario/{idUsuario}', [ UsuarioController::class, 'getusuario' ] );
+
+
+//**  PERFILES **//
+Route::get( '/perfiles', [ PerfilController::class, 'getListaPerfiles' ] );
+
 
 //** LOGIN DEL SISTEMA **/
 Route::post( '/login', [ LoginController::class, 'inicializarContexto' ] );
