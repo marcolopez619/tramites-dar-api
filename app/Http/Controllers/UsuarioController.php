@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Perfil;
 use App\Models\usuario;
 use Illuminate\Http\Request;
+use App\Models\UsuarioPerfil;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -85,6 +86,31 @@ class UsuarioController extends Controller
             'message' => $listaUsuarios->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ], Response::HTTP_OK );
+    }
+
+    public function updateUsuario(Request $request){
+
+        $idNuevoPerfil = $request->input( 'idPerfil' );
+
+        $usuario           = Usuario::find( $request->input( 'idUsuario' ) );
+        $usuario->nombre   = $request->input( 'nombre' );
+        $usuario->password = $request->input( 'password' ); // TODO: faltaria encriptar el password
+        $usuario->celular  = $request->input( 'celular' );
+        $usuario->estado   = $request->input( 'estado' );
+        $usuario->save();
+
+        $b = $usuario->id_usuario;
+
+        $usuarioPerfil = UsuarioPerfil::find( $usuario->id_usuario );
+        $usuarioPerfil->id_perfil = $idNuevoPerfil;
+        $usuarioPerfil->save();
+
+        return response()->json( [
+            'data'    => null,
+            'message' => 'ACTUALIZACION CORRECTA',
+            'error'   => null
+        ], Response::HTTP_OK );
+
     }
 
 }
