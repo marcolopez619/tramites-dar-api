@@ -51,7 +51,7 @@ class UsuarioController extends Controller
         ->join( 'usuario_perfil', 'usuario_perfil.id_usuario' ,'=', 'usuario.id_usuario' )
         ->join( 'perfil', 'perfil.id_perfil' ,'=', 'usuario_perfil.id_perfil' )
         ->select( $selectColumns )
-        ->where( 'usuario.estado', '=', 1 ) // FIXME: Dato quemado par mostrar los usuario activos
+        // ->where( 'usuario.estado', '=', 1 )
         ->orderBy( 'usuario.nombre', 'ASC' )
         ->get();
 
@@ -99,14 +99,12 @@ class UsuarioController extends Controller
         $usuario->estado   = $request->input( 'estado' );
         $usuario->save();
 
-        $b = $usuario->id_usuario;
-
         $usuarioPerfil = UsuarioPerfil::find( $usuario->id_usuario );
         $usuarioPerfil->id_perfil = $idNuevoPerfil;
         $usuarioPerfil->save();
 
         return response()->json( [
-            'data'    => null,
+            'data'    => $usuarioPerfil,
             'message' => 'ACTUALIZACION CORRECTA',
             'error'   => null
         ], Response::HTTP_OK );
