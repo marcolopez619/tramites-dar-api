@@ -22,7 +22,9 @@ class LoginController extends Controller
             'usuario.id_usuario as idUsuario',
             'usuario.nombre',
             'usuario.celular',
-            'usuario.estado'
+            'usuario.estado',
+            'usuario.id_estudiante as idEstudiante',
+            'usuario.id_universidad as idUniversidad'
         ];
 
         $datosUsuario = DB::table( 'usuario' )

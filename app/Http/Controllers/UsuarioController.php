@@ -21,7 +21,8 @@ class UsuarioController extends Controller
         $nuevoUsuario->password       = $request->input( 'password' );  // TODO: faltaria encriptar el password
         $nuevoUsuario->celular        = $request->input( 'celular' );
         $nuevoUsuario->estado         = $request->input( 'estado' );
-        $nuevoUsuario->id_universidad = 1 ; // FIXME: Dato quemado, que hace referencia a la UATF
+        // $nuevoUsuario->id_universidad = $request->input( 'id_estudiante' );
+        // $nuevoUsuario->id_universidad = 1 ; // FIXME: Dato quemado, que hace referencia a la UATF
         $nuevoUsuario->save();
 
         $nuevoUsuario->perfil()->attach( $idPerfil );
