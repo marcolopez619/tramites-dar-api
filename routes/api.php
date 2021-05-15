@@ -19,6 +19,7 @@ use App\Http\Controllers\CambioCarreraController;
 use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
+use App\Http\Controllers\MotivoController;
 use App\Http\Controllers\PerfilController;
 
 /*
@@ -104,6 +105,9 @@ Route::post( '/transferencia', [ TransferenciaController::class, 'addTransferenc
 Route::get( '/traspaso/{idEstudiante}', [ TraspasosController::class, 'getListaTraspaso' ] );
 Route::post( '/traspaso', [ TraspasosController::class, 'addTraspaso' ] );
 
+
+//** MOTIVOS **/
+Route::get( '/motivo', [ MotivoController::class, 'getListaMotivo' ] );
 
 
 

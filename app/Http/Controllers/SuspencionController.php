@@ -29,7 +29,11 @@ class SuspencionController extends Controller
             'suspencion.tiempo_solicitado AS tiempoSolicitado',
             // 'suspencion.descripcion',
             'suspencion.fecha_solicitud AS fechaSolicitud',
-            'suspencion.motivo',
+            // 'suspencion.motivo',
+
+            'suspencion.id_motivo as idMotivo',
+
+            'motivo.descripcion as descripcionMotivo',
 
             'estudiante_tramite.fecha AS fechaProceso',
             'estudiante_tramite.observaciones',
@@ -41,6 +45,7 @@ class SuspencionController extends Controller
 
         $estudiante = DB::table('estudiante')
             ->join('suspencion', 'suspencion.id_estudiante', '=', 'estudiante.id_estudiante')
+            ->join( 'motivo', 'motivo.id_motivo', '=', 'suspencion.id_motivo' )
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')

@@ -11,7 +11,7 @@ class Suspencion extends Model
 
     public $timestamps = false;
     protected $table = 'suspencion';
-    protected $fillable = ['id_carrera', 'tiempo_solicitado', 'descripcion', 'fecha_solicitud', 'motivo' , 'id_estudiante'];
+    protected $fillable = ['id_carrera', 'tiempo_solicitado', 'descripcion', 'fecha_solicitud', 'id_estudiante', 'id_motivo' ];
     protected $primaryKey = 'id_suspencion';
 
     public function readmision(){
