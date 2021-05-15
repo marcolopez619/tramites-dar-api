@@ -13,16 +13,6 @@ class TransferenciaController extends Controller
     public function getListaTransferencia($idEstudiante)
     {
         $arrayCamposSelect = [
-            /* 'estudiante.id_estudiante as idEstudiante',
-            'estudiante.ru',
-            'estudiante.ci',
-            'estudiante.complemento',
-            'estudiante.paterno',
-            'estudiante.materno',
-            'estudiante.nombres',
-            'estudiante.fecha_nacimiento AS fechaNacimiento',
-            'estudiante.sexo', */
-
             'transferencia.id_transferencia AS idTransferencia',
             'transferencia.id_carrera_origen AS idCarreraOrigen',
             DB::raw("( select carrera.nombre AS carreraOrigen  from carrera WHERE carrera.id_carrera = transferencia.id_carrera_origen)" ),

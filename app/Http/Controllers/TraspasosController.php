@@ -13,16 +13,6 @@ class TraspasosController extends Controller
     public function getListaTraspaso($idEstudiante)
     {
         $arrayCamposSelect = [
-            /* 'estudiante.id_estudiante as idEstudiante',
-            'estudiante.ru',
-            'estudiante.ci',
-            'estudiante.complemento',
-            'estudiante.paterno',
-            'estudiante.materno',
-            'estudiante.nombres',
-            'estudiante.fecha_nacimiento AS fechaNacimiento',
-            'estudiante.sexo', */
-
             'traspaso.id_traspaso as idTraspaso',
 
             DB::raw('(select id_universidad AS idUniversidadDestino FROM universidad WHERE id_universidad = traspaso.id_univ_destino)'),
@@ -34,7 +24,9 @@ class TraspasosController extends Controller
 
 
             'traspaso.fecha_solicitud AS fechaSolicitud',
-            'traspaso.motivo',
+            'traspaso.id_motivo as idMotivo',
+
+            'motivo.descripcion as descripcionMotivo',
 /*
             'traspaso.id_traspaso AS idTraspaso',
             'traspaso.id_carrera_destino AS idCarreraDestino',
@@ -67,6 +59,7 @@ class TraspasosController extends Controller
             // ->join('carrera', 'carrera.id_carrera', '=', 'estudiante_carrera.id_carrera' )
 
             ->join('traspaso', 'traspaso.id_estudiante', '=', 'estudiante.id_estudiante')
+            ->join( 'motivo', 'motivo.id_motivo' , '=', 'traspaso.id_motivo' )
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
@@ -96,7 +89,7 @@ class TraspasosController extends Controller
             'materias_aprobadas'  => $request->input( 'materiasAprobadas'),
             'materias_reprobadas' => $request->input( 'materiasReprobadas'),
             'fecha_solicitud'     => date('Y-m-d H:i:s'),
-            'motivo'              => $request->input('motivo'),
+            'id_motivo'           => $request->input('idMotivo'),
             'id_estudiante'       => $request->input('idEstudiante'),
         ];
 
