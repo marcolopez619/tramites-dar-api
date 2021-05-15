@@ -46,9 +46,10 @@ Route::post( '/facultad' , [UniversidadController::class, 'addFacultad' ]);
 Route::patch( '/facultad' , [UniversidadController::class, 'updateFacultad' ]);
 
 //** CARRERAS **/
-Route::get( '/carrera/{idFacultad}' , [UniversidadController::class, 'getListaCarreras' ]);
+Route::get( '/carrera' , [UniversidadController::class, 'getListaCarreras' ]);
 Route::post( '/carrera' , [UniversidadController::class, 'addCarrera' ]);
 Route::patch( '/carrera' , [UniversidadController::class, 'updateCarrera' ]);
+Route::get( '/carrera/{idFacultad}' , [UniversidadController::class, 'getListaCarrerasByIdFacultad' ]);
 
 
 

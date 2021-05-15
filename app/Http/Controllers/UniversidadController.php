@@ -11,7 +11,29 @@ use Illuminate\Support\Facades\DB;
 
 class UniversidadController extends Controller
 {
-    public function getListaCarreras($idFacultad){
+    public function getListaCarreras(){
+
+        $selectColumns = [
+            'carrera.id_carrera as idCarrera',
+            'carrera.nombre',
+            'carrera.estado',
+            'carrera.id_facultad as idFacultad'
+        ];
+
+        $listaCarreras = DB::table( 'carrera' )
+        ->select( $selectColumns )
+        ->where( 'carrera.estado', '=', 1 ) // Carreras activas
+        ->orderBy( 'carrera.nombre', 'ASC' )
+        ->get();
+
+        return response()->json( [
+            'data'    => $listaCarreras->isEmpty() ? null : $listaCarreras,
+            'message' => $listaCarreras->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
+    public function getListaCarrerasByIdFacultad($idFacultad){
 
         $selectColumns = [
             'carrera.id_carrera as idCarrera',
