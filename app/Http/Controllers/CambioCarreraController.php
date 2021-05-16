@@ -14,16 +14,6 @@ class CambioCarreraController extends Controller
     public function getListaCambioCarrera($idEstudiante)
     {
         $arrayCamposSelect = [
-            /* 'estudiante.id_estudiante as idEstudiante',
-            'estudiante.ru',
-            'estudiante.ci',
-            'estudiante.complemento',
-            'estudiante.paterno',
-            'estudiante.materno',
-            'estudiante.nombres',
-            'estudiante.fecha_nacimiento AS fechaNacimiento',
-            'estudiante.sexo', */
-
             'cambio_carrera.id_cambio_carrera AS idCambioCarrera',
             'cambio_carrera.id_carrera_origen AS idCarreraOrigen',
             DB::raw("( select carrera.nombre AS carreraOrigen  from carrera WHERE carrera.id_carrera = cambio_carrera.id_carrera_origen)" ),
