@@ -37,7 +37,6 @@ class HabilitacionTramitePorExcepcionController extends Controller
                                 ->join( 'habilitacion_tramite_por_excepcion', 'habilitacion_tramite_por_excepcion.id_estudiante' , '=' , 'estudiante.id_estudiante' )
                                 ->join( 'tramite', 'tramite.id_tramite', '=' , 'habilitacion_tramite_por_excepcion.id_tramite')
                                 ->select( $selectColumns )
-                                // ->where( 'habilitacion_tramite_por_excepcion.id_estudiante', '=', $idEstudiante )
                                 ->distinct()
                                 ->orderBy( 'habilitacion_tramite_por_excepcion.fecha_inicial' , 'DESC' )
                                 ->get();
@@ -52,8 +51,8 @@ class HabilitacionTramitePorExcepcionController extends Controller
         }
 
         return response()->json( [
-            'data'    => empty( $listaHabilitacionesPorExcepcion ) ? null :  $listaHabilitacionesPorExcepcion,
-            'message' => empty( $listaHabilitacionesPorExcepcion ) ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADO',
+            'data'    => $listaHabilitacionesPorExcepcion->isEmpty() ? null :  $listaHabilitacionesPorExcepcion,
+            'message' => $listaHabilitacionesPorExcepcion->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADO',
             'error'   => null
         ], Response::HTTP_OK );
     }

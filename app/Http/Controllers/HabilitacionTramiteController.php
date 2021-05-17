@@ -26,12 +26,13 @@ class HabilitacionTramiteController extends Controller
         $listaHabilitaciones = DB::table( 'tramite' )
                                 ->join( 'habilitacion_tramite', 'tramite.id_tramite' , '=' , 'habilitacion_tramite.id_tramite' )
                                 ->select( $selectColumns )
+                                ->where( 'habilitacion_tramite.estado', '=', 1 ) // FIXME, estado Quemado = 1 ( Activo )
                                 ->orderBy( 'habilitacion_tramite.fecha_inicial' , 'DESC' )
                                 ->get();
 
         return response()->json( [
-            'data'    => empty( $listaHabilitaciones ) ? null :  $listaHabilitaciones,
-            'message' => empty( $listaHabilitaciones ) ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADO',
+            'data'    => $listaHabilitaciones->isEmpty() ? null :  $listaHabilitaciones,
+            'message' => $listaHabilitaciones->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADO',
             'error'   => null
         ], Response::HTTP_OK );
     }
