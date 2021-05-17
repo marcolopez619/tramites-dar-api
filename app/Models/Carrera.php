@@ -21,4 +21,8 @@ class Carrera extends Model
     public function estudiante(){
         return $this->belongsToMany( Estudiante::class, 'estudiante_carrera', 'id_estudiante', 'id_carrera' );
     }
+
+    public function usuarioPerfil(){
+        return $this->hasMany( UsuarioPerfil::class, 'id_carrera' );
+    }
 }

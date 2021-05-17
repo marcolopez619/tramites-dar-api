@@ -11,6 +11,6 @@ class UsuarioPerfil extends Model
 
     public $timestamps = false;
     protected $table = 'usuario_perfil';
-    protected $fillable = ['id_usuario', 'id_perfil' ];
+    protected $fillable = ['id_usuario', 'id_perfil', 'id_carrera' ];
     protected $primaryKey = 'id_usuario_perfil';
 }

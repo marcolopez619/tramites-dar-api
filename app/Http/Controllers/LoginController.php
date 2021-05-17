@@ -24,11 +24,16 @@ class LoginController extends Controller
             'usuario.celular',
             'usuario.estado',
             'usuario.id_estudiante as idEstudiante',
-            'usuario.id_universidad as idUniversidad'
+            'usuario.id_universidad as idUniversidad',
+
+            'usuario_perfil.id_carrera as idCarrera',
+            'carrera.nombre as Carrera'
         ];
 
         $datosUsuario = DB::table( 'usuario' )
             ->select( $selectColumns )
+            ->join( 'usuario_perfil','usuario_perfil.id_usuario' ,'=', 'usuario.id_usuario' )
+            ->join( 'carrera', 'carrera.id_carrera' , '=', 'usuario_perfil.id_carrera' )
             ->where( 'usuario.nombre', '=', $userName )
             ->where( 'usuario.password', '=', $password )
             ->get();

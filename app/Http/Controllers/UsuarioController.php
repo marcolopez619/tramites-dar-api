@@ -15,6 +15,7 @@ class UsuarioController extends Controller
     public function addUsuario(Request $request){
 
         $idPerfil = $request->input( 'idPerfil' );
+        $idCarrera = $request->input( 'idCarrera' );
 
         $nuevoUsuario                 = new usuario();
         $nuevoUsuario->nombre         = $request->input( 'nombre' );
@@ -25,7 +26,7 @@ class UsuarioController extends Controller
         // $nuevoUsuario->id_universidad = 1 ; // FIXME: Dato quemado, que hace referencia a la UATF
         $nuevoUsuario->save();
 
-        $nuevoUsuario->perfil()->attach( $idPerfil );
+        $nuevoUsuario->perfil()->attach( $idPerfil, [ 'id_carrera' => $idCarrera] );
 
         return response()->json( [
             'data'    => $nuevoUsuario,
