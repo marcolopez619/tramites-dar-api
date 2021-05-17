@@ -25,9 +25,10 @@ class AnulacionController extends Controller
 
             'anulacion.id_anulacion AS idAnulacion',
             'anulacion.fecha_solicitud AS fechaSolicitud',
+            'anulacion.id_carrera_origen AS idCarreraOrigen',
+            'carrera.nombre AS carrera',
             'anulacion.motivo',
 
-            'carrera.nombre AS carrera',
 
             'estudiante_tramite.fecha AS fechaProceso',
             'estudiante_tramite.observaciones',
@@ -66,9 +67,10 @@ class AnulacionController extends Controller
     {
 
         $arrayDataAnulacion = [
-            'fecha_solicitud' => date('Y-m-d H:i:s'),
-            'motivo'          => $request->input('motivo'),
-            'id_estudiante'   => $request->input('idEstudiante'),
+            'fecha_solicitud'   => date('Y-m-d H:i:s'),
+            'motivo'            => $request->input('motivo'),
+            'id_carrera_origen' => $request->input('idCarreraOrigen'),
+            'id_estudiante'     => $request->input('idEstudiante'),
         ];
 
         $nuevaAnulacion = Anulacion::create($arrayDataAnulacion);
