@@ -39,6 +39,7 @@ class UsuarioController extends Controller
 
         $selectColumns = [
             'usuario.id_usuario as idUsuario',
+            'usuario.password as password',
             'usuario.nombre',
             'usuario.celular',
             'usuario.estado',
