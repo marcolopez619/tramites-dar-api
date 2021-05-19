@@ -14,15 +14,15 @@ class UsuarioController extends Controller
 {
     public function addUsuario(Request $request){
 
-        $idPerfil = $request->input( 'idPerfil' );
-        $idCarrera = $request->input( 'idCarrera' );
+        $idPerfil     = $request->input( 'idPerfil' );
+        $idCarrera    = $request->input( 'idCarrera' );
 
-        $nuevoUsuario                 = new usuario();
-        $nuevoUsuario->nombre         = $request->input( 'nombre' );
-        $nuevoUsuario->password       = $request->input( 'password' );  // TODO: faltaria encriptar el password
-        $nuevoUsuario->celular        = $request->input( 'celular' );
-        $nuevoUsuario->estado         = $request->input( 'estado' );
-        // $nuevoUsuario->id_universidad = $request->input( 'id_estudiante' );
+        $nuevoUsuario                = new usuario();
+        $nuevoUsuario->nombre        = $request->input( 'nombre' );
+        $nuevoUsuario->password      = $request->input( 'password' );      // TODO: faltaria encriptar el password
+        $nuevoUsuario->celular       = $request->input( 'celular' );
+        $nuevoUsuario->estado        = $request->input( 'estado' );
+        $nuevoUsuario->id_estudiante = $request->input( 'idEstudiante' );
         // $nuevoUsuario->id_universidad = 1 ; // FIXME: Dato quemado, que hace referencia a la UATF
         $nuevoUsuario->save();
 
@@ -44,9 +44,13 @@ class UsuarioController extends Controller
             'usuario.nombre',
             'usuario.celular',
             'usuario.estado',
+            'usuario.id_estudiante as idEstudiante',
 
             'perfil.id_perfil as idPerfil',
-            'perfil.nombre as nombrePerfil'
+            'perfil.nombre as nombrePerfil',
+
+            DB::raw( '(Select id_carrera as idCarrera from carrera where carrera.id_carrera = usuario_perfil.id_carrera)' ),
+            DB::raw( '(Select nombre as carrera from carrera where carrera.id_carrera = usuario_perfil.id_carrera)' )
 
         ];
 
