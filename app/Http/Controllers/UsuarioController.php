@@ -37,6 +37,18 @@ class UsuarioController extends Controller
 
     }
 
+    public function deleteUsuario(Request $request){
+
+        Usuario::destroy( $request->input('idUsuario'));
+
+        return response()->json( [
+            'data'    => null,
+            'message' => 'SE ELIMINÓ AL USUARIO CORRECTAMENTE',
+            'error'   => null
+        ], Response::HTTP_OK );
+
+    }
+
     public function getListaUsuarios(){
 
         $selectColumns = [

@@ -121,6 +121,7 @@ Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' 
 //** USUARIOS **/
 Route::post( '/usuario', [ UsuarioController::class, 'addUsuario' ] );
 Route::patch( '/usuario', [ UsuarioController::class, 'updateUsuario' ] );
+Route::delete( '/usuario', [ UsuarioController::class, 'deleteUsuario' ] );
 Route::get( '/usuario', [ UsuarioController::class, 'getListaUsuarios' ] );
 Route::get( '/usuario/{idUsuario}', [ UsuarioController::class, 'getusuario' ] );
 
