@@ -46,7 +46,11 @@ class AnulacionController extends Controller
             ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
 
-            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
+            // ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('estudiante_tramite', function ($join) {
+                $join->on( 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante'  )->on( 'estudiante_tramite.id_tipo_tramite', '=', 'anulacion.id_anulacion' );
+            })
+
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->select( $arrayCamposSelect )
