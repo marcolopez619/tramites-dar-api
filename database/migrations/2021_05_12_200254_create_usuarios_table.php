@@ -19,7 +19,8 @@ class CreateUsuariosTable extends Migration
             $table->string( 'password' )->nullable( false );
             $table->string( 'celular', 10 );
             $table->integer( 'estado' );
-            $table->integer( 'id_estudiante' )->default( -1 );
+            $table->timestamp( 'fecha_creacion' )->default( date("Y-m-d H:m:s",time()) );
+            $table->integer( 'id_estudiante' )->default( 1000 );
             $table->integer( 'id_universidad' )->default( 1 );
         });
     }

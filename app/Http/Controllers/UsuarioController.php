@@ -15,13 +15,14 @@ class UsuarioController extends Controller
     public function addUsuario(Request $request){
 
         $idPerfil     = $request->input( 'idPerfil' );
-        $idCarrera    = $request->input( 'idCarrera' );
+        $idCarrera    = $request->input( 'idCarrera' ); // $table->timestamp( 'fecha_creacion' )->default( date("Y-m-d H:m:s",time()) );
 
         $nuevoUsuario                = new usuario();
         $nuevoUsuario->nombre        = $request->input( 'nombre' );
         $nuevoUsuario->password      = $request->input( 'password' );      // TODO: faltaria encriptar el password
         $nuevoUsuario->celular       = $request->input( 'celular' );
         $nuevoUsuario->estado        = $request->input( 'estado' );
+        $nuevoUsuario->fecha_creacion= date("Y-m-d H:m:s",time());
         $nuevoUsuario->id_estudiante = $request->input( 'idEstudiante' );
         // $nuevoUsuario->id_universidad = 1 ; // FIXME: Dato quemado, que hace referencia a la UATF
         $nuevoUsuario->save();
@@ -59,7 +60,7 @@ class UsuarioController extends Controller
         ->join( 'perfil', 'perfil.id_perfil' ,'=', 'usuario_perfil.id_perfil' )
         ->select( $selectColumns )
         // ->where( 'usuario.estado', '=', 1 )
-        ->orderBy( 'usuario.nombre', 'ASC' )
+        ->orderBy( 'usuario.fecha_creacion', 'DESC' )
         ->get();
 
         return response()->json( [
