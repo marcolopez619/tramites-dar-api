@@ -6,9 +6,12 @@ use App\Models\CambioCarrera;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DarController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MotivoController;
+use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\EntidadController;
 use App\Http\Controllers\TramiteController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\DirectorController;
 use App\Http\Controllers\AnulacionController;
 use App\Http\Controllers\TraspasosController;
 use App\Http\Controllers\EstudianteController;
@@ -19,8 +22,6 @@ use App\Http\Controllers\CambioCarreraController;
 use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
-use App\Http\Controllers\MotivoController;
-use App\Http\Controllers\PerfilController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,7 +120,7 @@ Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' 
 
 //** MODULO DEL DIRECTOR **/
 
-Route::get( '/director/{idCarrera}', [ DirectorControll::class, 'getTramitesPorAtender' ] );
+Route::get( '/director/{idCarrera}', [ DirectorController::class, 'getTramitesPorAtender' ] );
 // Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
 
 
