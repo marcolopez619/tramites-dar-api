@@ -58,13 +58,13 @@ class TramiteController extends Controller
     public function updateEstadoTramite( Request $request ){
 
         // Capturamos el id del tipo de tramite del cual se quiere cambiar su estado
-        $idTipoTramite         = $request->input( 'idTipoTramite' );
-        $idEstudianteAnulacion = $request->input( 'idEstudianteAnulacion' );
-        $nuevoEstado           = $request->input( 'estado' );
+        $idTipoTramite           = $request->input( 'idTipoTramite' );
+        $idEstudianteTipoTramite = $request->input( 'idEstudianteTipoTramite' );
+        $nuevoEstado             = $request->input( 'estado' );
 
         switch ($idTipoTramite) {
             case Tipotramite::ANULACION: {
-                $estudianteAnulacion = EstudianteAnulacion::find( $idEstudianteAnulacion );
+                $estudianteAnulacion = EstudianteAnulacion::find( $idEstudianteTipoTramite );
                 $estudianteAnulacion->id_estado = $nuevoEstado;
                 $estudianteAnulacion->save();
                 break;
