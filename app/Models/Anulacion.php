@@ -11,6 +11,10 @@ class Anulacion extends Model
 
     public $timestamps = false;
     protected $table = 'anulacion';
-    protected $fillable = ['fecha_solicitud', 'motivo', 'id_carrera_origen', 'id_estudiante' ];
+    protected $fillable = ['fecha_solicitud', 'motivo', 'id_carrera_origen' ];
     protected $primaryKey = 'id_anulacion';
+
+    public function estudiante(){
+        return $this->belongsToMany( Estudiante::class, 'estudiante_anulacion',  'id_anulacion', 'id_estudiante' );
+    }
 }

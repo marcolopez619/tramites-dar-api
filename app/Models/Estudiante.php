@@ -15,7 +15,7 @@ class Estudiante extends Model
     protected $primaryKey = 'id_estudiante';
 
     public function anulacion(){
-        return $this->hasMany( Anulacion::class, 'id_estudiante' );
+        return $this->belongsToMany( Anulacion::class, 'estudiante_anulacion', 'id_estudiante', 'id_anulacion' );
     }
 
     public function cambioCarrera(){

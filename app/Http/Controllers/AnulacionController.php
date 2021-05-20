@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anulacion;
+use App\Models\Estudiante;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\EstudianteTramite;
@@ -30,32 +31,34 @@ class AnulacionController extends Controller
             'anulacion.motivo',
 
 
-            'estudiante_tramite.fecha AS fechaProceso',
-            'estudiante_tramite.observaciones',
+            'estudiante_anulacion.fecha_proceso AS fechaProceso',
+            'estudiante_anulacion.observaciones',
 
             'tramite.id_tramite AS idTramite',
-            'tramite.descripcion AS tipoTramite',
+            'tramite.descripcion AS tramite',
 
-            'estado.id_estado AS estado'
-            // 'estado.descripcion AS estado'
+            'estado.id_estado AS estado',
+            'estado.descripcion AS estado',
+
+            'entidad.id_entidad AS idEntidad',
+            'entidad.descripcion AS entidad'
         ];
 
         $estudiante = DB::table('estudiante')
-            ->join('anulacion', 'estudiante.id_estudiante', '=', 'anulacion.id_estudiante')
 
             ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('anulacion', 'anulacion.id_anulacion', '=', 'estudiante_anulacion.id_anulacion')
 
-            // ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
-            ->join('estudiante_tramite', function ($join) {
-                $join->on( 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante'  )->on( 'estudiante_tramite.id_tipo_tramite', '=', 'anulacion.id_anulacion' );
-            })
-
-            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
-            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_anulacion.id_estado', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
-            ->where( 'estudiante_tramite.id_tramite', '=' , 1 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_anulacion.id_tramite', '=' , 1 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_anulacion.activo', '=' , true )
+            ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
             ->distinct()
             ->get();
 
@@ -70,33 +73,29 @@ class AnulacionController extends Controller
     public function addAnulacion(Request $request)
     {
 
-        $arrayDataAnulacion = [
-            'fecha_solicitud'   => date('Y-m-d H:i:s'),
-            'motivo'            => $request->input('motivo'),
-            'id_carrera_origen' => $request->input('idCarreraOrigen'),
-            'id_estudiante'     => $request->input('idEstudiante'),
+        $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
+
+        $anulacion = new Anulacion();
+        $anulacion->fecha_solicitud = date('Y-m-d H:i:s');
+        $anulacion->motivo = $request->input( 'motivo' );
+        $anulacion->id_carrera_origen = $request->input( 'idCarreraOrigen' );
+        $anulacion->save();
+
+        $a = $estudiante->id_estudiante;
+
+        $dataTablaIntermedia = [
+            'id_tramite' => $request->input( 'idTramite' ),
+            'id_estado' => $request->input( 'idEstado' ),
+            'id_entidad' => $request->input( 'idEntidad' ),
+            'fecha_proceso' => date('Y-m-d H:i:s'),
+            'observaciones' => $request->input( 'observaciones' )
         ];
 
-        $nuevaAnulacion = Anulacion::create($arrayDataAnulacion);
+        $anulacion->estudiante()->attach( $estudiante->id_estudiante, $dataTablaIntermedia );
 
-        $dataEstudianteTramite = [
-            'id_estudiante' => $request->input('idEstudiante'),
-            'id_tramite'    => $request->input('idTramite'),
-            'id_estado'     => $request->input('idEstado'),
-            'id_entidad'    => $request->input('idEntidad'),
-            'fecha'         => date('Y-m-d H:i:s'),
-            'observaciones' => $request->input('observaciones'),
-            'id_tipo_tramite'=> $nuevaAnulacion->id_anulacion
-        ];
-
-        // Retorna un booleano como respuesta de insercion
-        $estudianteTramite = EstudianteTramite::insert($dataEstudianteTramite);
 
         return response()->json([
-            'data'    => [
-                'Anulacion'         => $nuevaAnulacion,
-                'EstudianteTramite' => $estudianteTramite
-            ],
+            'data'    => $anulacion,
             'message' => 'INSERCION CORRECTA',
             'error'   => null
         ], Response::HTTP_CREATED);

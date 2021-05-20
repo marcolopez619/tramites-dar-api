@@ -117,6 +117,11 @@ Route::get( '/motivo', [ MotivoController::class, 'getListaMotivo' ] );
 Route::get( '/dar', [ DarController::class, 'getTramitesPorAtender' ] );
 Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
 
+//** MODULO DEL DIRECTOR **/
+
+Route::get( '/director/{idCarrera}', [ DirectorControll::class, 'getTramitesPorAtender' ] );
+// Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
+
 
 //** USUARIOS **/
 Route::post( '/usuario', [ UsuarioController::class, 'addUsuario' ] );
