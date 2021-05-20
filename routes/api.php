@@ -63,6 +63,7 @@ Route::patch( '/entidad', [EntidadController::class, 'update' ] );
 //** TRAMITES **/
 Route::get( '/tramite', [ TramiteController::class, 'getListaTramite' ] );
 Route::post( '/tramite', [ TramiteController::class, 'addTramite' ] );
+Route::post( '/tramite/tabla/intermedia', [ TramiteController::class, 'insertDataTablaIntermedia' ] );
 Route::patch( '/tramite', [ TramiteController::class, 'updateTramite' ] );
 Route::patch( '/tramite/estado', [ TramiteController::class, 'updateEstadoTramite' ] );
 

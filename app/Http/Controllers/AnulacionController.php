@@ -81,8 +81,6 @@ class AnulacionController extends Controller
         $anulacion->id_carrera_origen = $request->input( 'idCarreraOrigen' );
         $anulacion->save();
 
-        $a = $estudiante->id_estudiante;
-
         $dataTablaIntermedia = [
             'id_tramite' => $request->input( 'idTramite' ),
             'id_estado' => $request->input( 'idEstado' ),
