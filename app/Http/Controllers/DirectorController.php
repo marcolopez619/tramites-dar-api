@@ -27,7 +27,7 @@ class DirectorController extends Controller
             'carrera.nombre AS carrera',
             'anulacion.motivo',
 
-            'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramite',
+            'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
             'estudiante_anulacion.fecha_proceso AS fechaProceso',
             'estudiante_anulacion.observaciones',
 
