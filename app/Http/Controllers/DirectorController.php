@@ -50,7 +50,7 @@ class DirectorController extends Controller
 
             ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-            ->join('entidad', 'estudiante_anulacion.id_estado', '=', 'entidad.id_entidad')
+            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
             ->where( 'estudiante_anulacion.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
             ->where( 'anulacion.id_carrera_origen', '=', $idCarrera)
