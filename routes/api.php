@@ -64,6 +64,7 @@ Route::patch( '/entidad', [EntidadController::class, 'update' ] );
 Route::get( '/tramite', [ TramiteController::class, 'getListaTramite' ] );
 Route::post( '/tramite', [ TramiteController::class, 'addTramite' ] );
 Route::patch( '/tramite', [ TramiteController::class, 'updateTramite' ] );
+Route::patch( '/tramite/estado', [ TramiteController::class, 'updateEstadoTramite' ] );
 
 
 //** HABILITACION DE TRAMITES EN RANGO DE FECHAS **/
@@ -119,7 +120,6 @@ Route::get( '/dar', [ DarController::class, 'getTramitesPorAtender' ] );
 Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
 
 //** MODULO DEL DIRECTOR **/
-
 Route::get( '/director/{idCarrera}', [ DirectorController::class, 'getTramitesPorAtender' ] );
 // Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
 
