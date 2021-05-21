@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Anulacion;
+use TipoTramite;
 use eTipoTramite;
+use App\utils\Estado;
+use App\Models\Anulacion;
 use Illuminate\Http\Request;
 use App\Models\transferencia;
 use Illuminate\Http\Response;
 use App\Models\EstudianteTramite;
 use Illuminate\Support\Facades\DB;
-use TipoTramite;
 
 class DarController extends Controller
 {
@@ -59,6 +60,7 @@ class DarController extends Controller
             ->select( $arrayCamposSelectAnulacion )
             ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
             ->where( 'estudiante_anulacion.activo', '=' , true )
+            ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
             ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
             ->distinct()
             ->get();
