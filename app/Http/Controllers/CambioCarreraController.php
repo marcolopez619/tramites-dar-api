@@ -2,42 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estudiante;
 use Illuminate\Http\Request;
 use App\Models\CambioCarrera;
 use Illuminate\Http\Response;
 use App\Models\EstudianteTramite;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\Input;
+use App\utils\Tipotramite;
 
 class CambioCarreraController extends Controller
 {
     public function getListaCambioCarrera($idEstudiante)
     {
         $arrayCamposSelect = [
+            'estudiante.id_estudiante as idEstudiante',
+            'estudiante.ru',
+            'estudiante.ci',
+            'estudiante.complemento',
+            'estudiante.paterno',
+            'estudiante.materno',
+            'estudiante.nombres',
+            'estudiante.fecha_nacimiento AS fechaNacimiento',
+
             'cambio_carrera.id_cambio_carrera AS idCambioCarrera',
             'cambio_carrera.id_carrera_origen AS idCarreraOrigen',
-            DB::raw("( select carrera.nombre AS carreraOrigen  from carrera WHERE carrera.id_carrera = cambio_carrera.id_carrera_origen)" ),
+            'carrera.nombre as carreraOrigen',
             'cambio_carrera.id_carrera_destino AS idCarreraDestino',
-            DB::raw("( select carrera.nombre AS carreraDestino from carrera  WHERE carrera.id_carrera = cambio_carrera.id_carrera_destino)" ),
-            'cambio_carrera.fecha_solicitud AS fechaSolicitud',
+            DB::raw('( select nombre as carreraDestino from carrera where carrera.id_carrera = cambio_carrera.id_carrera_destino)'),
+
+            'cambio_carrera.fecha_solicitud as fechaSolicitud',
             'cambio_carrera.motivo',
 
-            'estudiante_tramite.fecha AS fechaProceso',
-            'estudiante_tramite.observaciones',
+
+            'estudiante_anulacion.fecha_proceso AS fechaProceso',
+            'estudiante_anulacion.observaciones',
 
             'tramite.id_tramite AS idTramite',
-            'tramite.descripcion AS tipoTramite',
-            'estado.id_estado AS estado'
+            'tramite.descripcion AS tramite',
+
+            'estado.id_estado AS estado',
+            'estado.descripcion AS estado',
+
+            'entidad.id_entidad AS idEntidad',
+            'entidad.descripcion AS entidad'
         ];
 
         $estudiante = DB::table('estudiante')
-            ->join('cambio_carrera', 'estudiante.id_estudiante', '=', 'cambio_carrera.id_estudiante')
-            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
-            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
-            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+
+            ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
+            ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_anulacion.id_cambio_carrera')
+
+            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_anulacion.id_estado', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
-            ->where( 'estudiante_tramite.id_tramite' , '=' , 2 ) // FIXME: Dato quemado el tipo de tramite.
+            ->where( 'estudiante_anulacion.id_tramite', '=' , Tipotramite::CAMBIO_DE_CARRERA )
+            ->where( 'estudiante_anulacion.activo', '=' , true )
+            ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
             ->distinct()
             ->get();
 
@@ -51,38 +76,31 @@ class CambioCarreraController extends Controller
 
     public function addCambioCarrera(Request $request)
     {
+        $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
 
-        $arrayDataCambioCarrera = [
-            'id_carrera_origen'  => $request->input( 'idCarreraOrigen'),
-            'id_carrera_destino' => $request->input( 'idCarreraDestino'),
-            'fecha_solicitud'    => date('Y-m-d H:i:s'),
-            'motivo'             => $request->input('motivo'),
-            'id_estudiante'      => $request->input('idEstudiante'),
+        $cambioCarrera = new CambioCarrera();
+        $cambioCarrera->id_carrera_origen  = $request->input( 'idCarreraOrigen' );
+        $cambioCarrera->id_carrera_destino = $request->input( 'idCarreraDestino' );
+        $cambioCarrera->fecha_solicitud    = date('Y-m-d H:i:s');
+        $cambioCarrera->motivo             = $request->input( 'motivo' );
+        $cambioCarrera->convalidacion      = false;
+        $cambioCarrera->save();
+
+        $dataTablaIntermedia = [
+            'id_tramite'    => $request->input( 'idTramite' ),
+            'id_estado'     => $request->input( 'idEstado' ),
+            'id_entidad'    => $request->input( 'idEntidad' ),
+            'fecha_proceso' => date('Y-m-d H:i:s'),
+            'observaciones' => $request->input( 'observaciones' )
         ];
 
-        // Retorna un booleano como respuesta de insercion
-        $nuevoCambioCarrera = CambioCarrera::create($arrayDataCambioCarrera);
-
-        $dataEstudianteTramite = [
-            'id_estudiante' => $request->input('idEstudiante'),
-            'id_tramite'    => $request->input('idTramite'),
-            'id_estado'     => $request->input('idEstado'),
-            'id_entidad'    => $request->input('idEntidad'),
-            'fecha'         => date('Y-m-d H:i:s'),
-            'observaciones' => $request->input('observaciones'),
-            'id_tipo_tramite'=> $nuevoCambioCarrera->id_cambio_carrera
-        ];
-
-        // Retorna un booleano como respuesta de insercion
-        $estudianteTramite = EstudianteTramite::insert($dataEstudianteTramite);
+        $cambioCarrera->estudiante()->attach( $estudiante->id_estudiante, $dataTablaIntermedia);
 
         return response()->json([
-            'data'    => [
-                'CambioCarrera'     => $nuevoCambioCarrera,
-                'EstudianteTramite' => $estudianteTramite
-            ],
+            'data'    => $cambioCarrera,
             'message' => 'INSERCION CORRECTA',
             'error'   => null
         ], Response::HTTP_CREATED);
+
     }
 }

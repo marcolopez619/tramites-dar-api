@@ -18,10 +18,8 @@ class CreateCambioCarrerasTable extends Migration
             $table->integer( 'id_carrera_origen' );
             $table->integer( 'id_carrera_destino' );
             $table->date('fecha_solicitud');
+            $table->boolean('convalidacion');
             $table->string( 'motivo' );
-            $table->integer('id_estudiante');
-
-            $table->foreign('id_estudiante')->references( 'id_estudiante' )->on( 'estudiante' )->onDelete('cascade');
         });
     }
 

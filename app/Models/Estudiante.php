@@ -19,8 +19,14 @@ class Estudiante extends Model
     }
 
     public function cambioCarrera(){
-        return $this->hasMany( CambioCarrera::class, 'id_estudiante' );
+        return $this->belongsToMany( CambioCarrera::class, 'estudiante_anulacion', 'id_estudiante', 'id_cambio_carrera' );
     }
+
+
+
+
+
+
 
     public function suspencion(){
         return $this->hasMany( Suspencion::class, 'id_estudiante' );
