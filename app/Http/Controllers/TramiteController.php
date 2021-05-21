@@ -90,7 +90,35 @@ class TramiteController extends Controller
         $idEstudianteTipoTramite = $request->input( 'idEstudianteTipoTramite' );
         $nuevaFilaCreada         = null;
 
-        switch ($idTipoTramite) {
+        // 1.- BUSCA e INSERTA EN EL HISTÓRICO CORRESPONDIENTE la tupla que corresponda
+        $oldEstudianteAnulacion = EstudianteAnulacion::find( $idEstudianteTipoTramite );
+
+        // FIXME: no esta insertando en el historico el : id_cambio_carrera
+        EstudianteAnulacionHistorico::create( $oldEstudianteAnulacion->toArray() );
+
+        $dataEstudianteAnulacion = [
+            'id_tramite'    => $oldEstudianteAnulacion->id_tramite,
+            'id_estado'     => $request->input( 'idEstado' ),
+            'id_entidad'    => $request->input( 'idEntidad' ),
+            'observaciones' => $request->input( 'observaciones' ),
+            'fecha_proceso' => date('Y-m-d H:i:s'),
+            'id_estudiante' => $oldEstudianteAnulacion->id_estudiante,
+
+            // Verifica los keys referenciales, sino existes, => inserta el valor por default de esas tablas o tramites, el cual es CERO
+            'id_anulacion'      => $oldEstudianteAnulacion->id_anulacion ?? 0,
+            'id_cambio_carrera' => $oldEstudianteAnulacion->id_cambio_carrera ?? 0,
+
+            'activo'        => true,
+
+        ];
+
+        $nuevaFilaCreada = EstudianteAnulacion::create( $dataEstudianteAnulacion );
+
+        // Destruye la fila antigua de la tabla intermedia
+        $oldEstudianteAnulacion->delete();
+
+
+        /* switch ($idTipoTramite) {
 
             case Tipotramite::ANULACION:{
 
@@ -99,23 +127,6 @@ class TramiteController extends Controller
 
                 EstudianteAnulacionHistorico::create( $oldEstudianteAnulacion->toArray() );
 
-                // $oldEstudianteAnulacion->destroy();
-
-                /* // 1.- Actuailza el campo : Activo, de la tabla intermedia
-                $estudianteAnulacion = EstudianteAnulacion::find( $idEstudianteTipoTramite );
-                $estudianteAnulacion->activo = false;
-                $estudianteAnulacion->save(); */
-
-                // 2.- Inserta nueva tupla en la tabla intermedia
-                /* $dataEstudianteAnulacion = [
-                    'id_tramite'    => $request->input( 'idTramite' ),
-                    'id_estado'     => $request->input( 'idEstado' ),
-                    'id_entidad'    => $request->input( 'idEntidad' ),
-                    'observaciones' => $request->input( 'observaciones' ),
-                    'id_estudiante' => $request->input( 'idEstudiante' ),
-                    'id_anulacion'  => $request->input( 'idAnulacion' ),
-                    'activo'        => true
-                ]; */
                 $dataEstudianteAnulacion = [
                     'id_tramite'    => $oldEstudianteAnulacion->id_tramite,
                     'id_estado'     => $request->input( 'idEstado' ),
@@ -137,7 +148,7 @@ class TramiteController extends Controller
 
             case Tipotramite::CAMBIO_DE_CARRERA:{ break; }
             default: break;
-        }
+        } */
 
         return response()->json( [
             'data'    => $nuevaFilaCreada,
