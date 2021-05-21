@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class UniversidadController extends Controller
 {
+    /** Retorna todas las carreras disponibles pertenecientes a la UATF
+     * getListaCarreras
+     *
+     * @return listaCarreras
+     */
     public function getListaCarreras(){
 
         $selectColumns = [
@@ -21,7 +26,10 @@ class UniversidadController extends Controller
         ];
 
         $listaCarreras = DB::table( 'carrera' )
+        ->join( 'facultad', 'facultad.id_facultad', '=', 'carrera.id_facultad' )
+        ->join( 'universidad', 'universidad.id_universidad', '=', 'facultad.id_universidad' )
         ->select( $selectColumns )
+        ->where( 'universidad.id_universidad', '=', 2 ) // 2 = TOMAS FRIAS
         ->where( 'carrera.estado', '=', 1 ) // Carreras activas
         ->orderBy( 'carrera.nombre', 'ASC' )
         ->get();
