@@ -52,6 +52,7 @@ Route::get( '/carrera' , [UniversidadController::class, 'getListaCarreras' ]);
 Route::post( '/carrera' , [UniversidadController::class, 'addCarrera' ]);
 Route::patch( '/carrera' , [UniversidadController::class, 'updateCarrera' ]);
 Route::get( '/carrera/{idFacultad}' , [UniversidadController::class, 'getListaCarrerasByIdFacultad' ]);
+Route::get( '/carrera/transferencia/{nombreCarrera}' , [UniversidadController::class, 'getListaCarrerasTransferencia' ]);
 
 
 

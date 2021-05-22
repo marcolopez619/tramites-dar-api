@@ -41,6 +41,34 @@ class UniversidadController extends Controller
         ], Response::HTTP_OK );
     }
 
+    public function getListaCarrerasTransferencia($nombreCarrera){
+
+        $selectColumns = [
+            'carrera.id_carrera as idCarrera',
+            'carrera.nombre',
+            'carrera.estado',
+            'carrera.id_facultad as idFacultad'
+        ];
+
+        $listaCarreras = DB::table( 'carrera' )
+        ->join( 'facultad', 'facultad.id_facultad', '=', 'carrera.id_facultad' )
+        ->join( 'universidad', 'universidad.id_universidad', '=', 'facultad.id_universidad' )
+        ->select( $selectColumns )
+        ->where( 'universidad.id_universidad', '=', 2 ) // 2 = TOMAS FRIAS
+        ->where( 'carrera.estado', '=', 1 ) // Carreras activas
+        ->where( 'carrera.nombre', 'LIKE', '%'.strtoupper($nombreCarrera).'%' )
+        ->orderBy( 'carrera.nombre', 'ASC' )
+        ->get();
+
+        // $products = Product::where('name_en', 'LIKE', '%'.$search.'%')->get();
+
+        return response()->json( [
+            'data'    => $listaCarreras->isEmpty() ? null : $listaCarreras,
+            'message' => $listaCarreras->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
     public function getListaCarrerasByIdFacultad($idFacultad){
 
         $selectColumns = [
