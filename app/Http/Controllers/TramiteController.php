@@ -93,7 +93,6 @@ class TramiteController extends Controller
         // 1.- BUSCA e INSERTA EN EL HISTÓRICO CORRESPONDIENTE la tupla que corresponda
         $oldEstudianteAnulacion = EstudianteAnulacion::find( $idEstudianteTipoTramite );
 
-        // FIXME: no esta insertando en el historico el : id_cambio_carrera
         EstudianteAnulacionHistorico::create( $oldEstudianteAnulacion->toArray() );
 
         $dataEstudianteAnulacion = [
