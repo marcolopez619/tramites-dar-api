@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DirectorModel;
+use App\utils\Estado;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\utils\Tipotramite;
 
 class DirectorController extends Controller
 {
@@ -90,7 +92,7 @@ class DirectorController extends Controller
                 'entidad.descripcion AS entidad'
         ];
 
-        $estudianteCambiosCarrera = DB::table('estudiante')
+        $estudianteCambiosCarreraOrigen = DB::table('estudiante')
 
             ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
@@ -104,13 +106,32 @@ class DirectorController extends Controller
             ->where( 'estudiante_anulacion.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
             ->where( 'cambio_carrera.id_carrera_origen', '=', $idCarrera)
             ->where( 'estudiante_anulacion.activo', '=' , true )
+            ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+
+
+
+         $estudianteCambiosCarreraDestino = DB::table('estudiante')
+
+            ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
+            ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_anulacion.id_cambio_carrera')
+
+            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+            ->select( $selectColumnsCambioCarrera )
+            ->where( 'estudiante_anulacion.id_entidad', '=' , 4 ) // FIXME: DATOS QUEMADO
+            ->where( 'cambio_carrera.id_carrera_destino', '=', $idCarrera)
+            ->where( 'estudiante_anulacion.activo', '=' , true )
             ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
             ->union( $estudianteAnulaciones )
+            ->union( $estudianteCambiosCarreraOrigen )
             ->get();
 
         return response()->json([
-            'data'    => $estudianteCambiosCarrera->isEmpty() ? null : $estudianteCambiosCarrera,
-            'message' => $estudianteCambiosCarrera->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'data'    => $estudianteCambiosCarreraDestino->isEmpty() ? null : $estudianteCambiosCarreraDestino,
+            'message' => $estudianteCambiosCarreraDestino->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ]);
     }
