@@ -22,6 +22,10 @@ class Estudiante extends Model
         return $this->belongsToMany( CambioCarrera::class, 'estudiante_anulacion', 'id_estudiante', 'id_cambio_carrera' );
     }
 
+    public function transferencia(){
+        return $this->belongsToMany( CambioCarrera::class, 'estudiante_anulacion', 'id_estudiante', 'id_transferencia' );
+    }
+
 
 
 
@@ -38,10 +42,6 @@ class Estudiante extends Model
 
     public function traspaso(){
         return $this->hasMany( Traspaso::class, 'id_estudiante' );
-    }
-
-    public function transferencia(){
-        return $this->hasMany( transferencia::class, 'id_estudiante' );
     }
 
     public function carrera(){

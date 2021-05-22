@@ -22,6 +22,9 @@ class EstudianteAnulacionHistorico extends Migration
             $table->string( 'observaciones' );
             $table->integer( 'id_estudiante' );
             $table->integer( 'id_anulacion' );
+            $table->integer( 'id_cambio_carrera' );
+            $table->integer( 'id_transferencia' );
+
         });
     }
 

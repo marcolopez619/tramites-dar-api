@@ -23,10 +23,12 @@ class CreateEstudianteAnulacionModelsTable extends Migration
             $table->integer( 'id_estudiante' );
             $table->integer( 'id_anulacion' )->default( 0 );
             $table->integer( 'id_cambio_carrera' )->default( 0 );
+            $table->integer( 'id_transferencia' )->default( 0 );
 
             $table->foreign( 'id_estudiante' )->references( 'id_estudiante' )->on( 'estudiante' )->onDelete('cascade');
             $table->foreign( 'id_anulacion' )->references( 'id_anulacion' )->on( 'anulacion' )->onDelete('cascade');
             $table->foreign( 'id_cambio_carrera' )->references( 'id_cambio_carrera' )->on( 'cambio_carrera' )->onDelete('cascade');
+            $table->foreign( 'id_transferencia' )->references( 'id_transferencia' )->on( 'transferencia' )->onDelete('cascade');
 
         });
     }

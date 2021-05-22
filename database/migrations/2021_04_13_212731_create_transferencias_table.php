@@ -19,10 +19,7 @@ class CreateTransferenciasTable extends Migration
             $table->integer( 'id_carrera_destino' )->nullable( false );
             $table->date( 'fecha_solicitud' )->nullable( false );
             $table->string( 'motivo' );
-            $table->integer( 'id_estudiante' );
-
-            $table->foreign( 'id_estudiante' )->references( 'id_estudiante' )->on( 'estudiante' )->onDelete( 'cascade' );
-
+            $table->boolean( 'convalidacion' )->default( false );
         });
     }
 
