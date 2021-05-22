@@ -57,13 +57,12 @@ class CambioCarreraController extends Controller
 
             ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-            ->join('entidad', 'estudiante_anulacion.id_estado', '=', 'entidad.id_entidad')
+            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_anulacion.id_tramite', '=' , Tipotramite::CAMBIO_DE_CARRERA )
             ->where( 'estudiante_anulacion.activo', '=' , true )
             ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
-            ->distinct()
             ->get();
 
         return response()->json([
