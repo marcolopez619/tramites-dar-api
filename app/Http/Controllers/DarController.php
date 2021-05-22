@@ -66,7 +66,7 @@ class DarController extends Controller
             // ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
 
 
-            $arrayCamposSelectCambioCarrera = [
+        $arrayCamposSelectCambioCarrera = [
                 'estudiante.id_estudiante as idEstudiante',
                 'estudiante.ru',
                 'estudiante.ci',
@@ -97,7 +97,7 @@ class DarController extends Controller
                 'entidad.descripcion AS entidad'
             ];
 
-            $respCambioCarrera = DB::table('estudiante')
+        $respCambioCarrera = DB::table('estudiante')
 
                 ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
                 ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
@@ -112,13 +112,65 @@ class DarController extends Controller
                 ->where( 'estudiante_anulacion.activo', '=' , true )
                 ->where( 'estudiante_anulacion.id_cambio_carrera', '<>', 0 )
                 ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
+                ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+                //->union($respAnulacion)
+                //->get();
+
+
+        $arrayCamposSelectTransferencias = [
+                'estudiante.id_estudiante as idEstudiante',
+                'estudiante.ru',
+                'estudiante.ci',
+                'estudiante.complemento',
+                'estudiante.paterno',
+                'estudiante.materno',
+                'estudiante.nombres',
+                'estudiante.fecha_nacimiento AS fechaNacimiento',
+                'estudiante.sexo',
+
+                'transferencia.id_transferencia AS idTipoTramite',
+                'transferencia.fecha_solicitud AS fechaSolicitud',
+                'transferencia.id_carrera_origen AS idCarreraOrigen',
+                'carrera.nombre AS carrera',
+                'transferencia.motivo',
+
+                'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
+                'estudiante_anulacion.fecha_proceso AS fechaProceso',
+                'estudiante_anulacion.observaciones',
+
+                'tramite.id_tramite AS idTramite',
+                'tramite.descripcion AS tramite',
+
+                'estado.id_estado AS idEstado',
+                'estado.descripcion AS estado',
+
+                'entidad.id_entidad AS idEntidad',
+                'entidad.descripcion AS entidad'
+            ];
+
+        $respTransferencias = DB::table('estudiante')
+
+                ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
+                ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+                ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
+                ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_anulacion.id_transferencia')
+
+                ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
+                ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
+                ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+                ->select( $arrayCamposSelectTransferencias )
+                ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_anulacion.activo', '=' , true )
+                ->where( 'estudiante_anulacion.id_transferencia', '<>', 0 )
+                ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
                 ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
                 ->union($respAnulacion)
+                ->union($respCambioCarrera)
                 ->get();
 
         return response()->json([
-            'data'    => $respCambioCarrera->isEmpty() ? null : $respCambioCarrera,
-            'message' => $respCambioCarrera->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'data'    => $respTransferencias->isEmpty() ? null : $respTransferencias,
+            'message' => $respTransferencias->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ]);
 

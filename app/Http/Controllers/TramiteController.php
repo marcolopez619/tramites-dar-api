@@ -106,6 +106,7 @@ class TramiteController extends Controller
             // Verifica los keys referenciales, sino existes, => inserta el valor por default de esas tablas o tramites, el cual es CERO
             'id_anulacion'      => $oldEstudianteAnulacion->id_anulacion ?? 0,
             'id_cambio_carrera' => $oldEstudianteAnulacion->id_cambio_carrera ?? 0,
+            'id_transferencia'  => $oldEstudianteAnulacion->id_transferencia ?? 0,
 
             'activo'        => true,
 
