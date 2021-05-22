@@ -14,7 +14,7 @@ class MotivoController extends Controller
             'motivo.descripcion as descripcionMotivo'
         ];
 
-        $listaMotivos = Motivo::all( $selectColumns );
+        $listaMotivos = Motivo::all( $selectColumns )->where('idMotivo', '>', 0);
 
         return response()->json([
             'data'    => $listaMotivos->isEmpty() ? null : $listaMotivos,

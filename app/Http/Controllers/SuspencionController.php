@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estudiante;
 use App\Models\Suspencion;
+use App\utils\Tipotramite;
 use Illuminate\Http\Request;
+use App\Models\transferencia;
 use Illuminate\Http\Response;
 use App\Models\EstudianteTramite;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +16,7 @@ class SuspencionController extends Controller
     public function getListaSuspenciones($idEstudiante)
     {
         $arrayCamposSelect = [
-           /*  'estudiante.id_estudiante as idEstudiante',
+            'estudiante.id_estudiante as idEstudiante',
             'estudiante.ru',
             'estudiante.ci',
             'estudiante.complemento',
@@ -21,43 +24,51 @@ class SuspencionController extends Controller
             'estudiante.materno',
             'estudiante.nombres',
             'estudiante.fecha_nacimiento AS fechaNacimiento',
-            'estudiante.sexo', */
 
             'suspencion.id_suspencion AS idSuspencion',
             'suspencion.id_carrera AS idCarrera',
-            DB::raw("(SELECT carrera.nombre AS carrera FROm carrera WHERE carrera.id_carrera = suspencion.id_carrera)"),
+            'carrera.nombre as carrera',
             'suspencion.tiempo_solicitado AS tiempoSolicitado',
-            // 'suspencion.descripcion',
-            'suspencion.fecha_solicitud AS fechaSolicitud',
-            // 'suspencion.motivo',
+            'suspencion.descripcion as descripcionMotivo',
+            'suspencion.fecha_solicitud as fechaSolicitud',
 
-            'suspencion.id_motivo as idMotivo',
+            'motivo.descripcion',
 
-            'motivo.descripcion as descripcionMotivo',
 
-            'estudiante_tramite.fecha AS fechaProceso',
-            'estudiante_tramite.observaciones',
+            'estudiante_anulacion.fecha_proceso AS fechaProceso',
+            'estudiante_anulacion.observaciones',
 
             'tramite.id_tramite AS idTramite',
-            'tramite.descripcion AS tipoTramite',
-            'estado.id_estado AS estado'
+            'tramite.descripcion AS tramite',
+
+            'estado.id_estado AS estado',
+            'estado.descripcion AS estado',
+
+            'entidad.id_entidad AS idEntidad',
+            'entidad.descripcion AS entidad'
         ];
 
-        $estudiante = DB::table('estudiante')
-            ->join('suspencion', 'suspencion.id_estudiante', '=', 'estudiante.id_estudiante')
-            ->join( 'motivo', 'motivo.id_motivo', '=', 'suspencion.id_motivo' )
-            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante')
-            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
-            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+        $listaSuspenciones = DB::table('estudiante')
+
+            ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
+            ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('suspencion', 'suspencion.id_suspencion', '=', 'estudiante_anulacion.id_suspencion')
+            ->join('motivo', 'motivo.id_motivo', '=', 'suspencion.id_motivo')
+
+            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
-            ->where('estudiante.id_estudiante', '=', $idEstudiante)
-            ->where('estudiante_tramite.id_tramite' , '=' , 3 ) // FIXME: Dato quemado el tipo de tramite.
-            ->distinct()
+            ->where( 'estudiante.id_estudiante', '=', $idEstudiante)
+            ->where( 'estudiante_anulacion.id_tramite', '=' , Tipotramite::SUSPENCION )
+            ->where( 'estudiante_anulacion.activo', '=' , true )
+            ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
             ->get();
 
         return response()->json([
-            'data'    => $estudiante->isEmpty() ? null : $estudiante,
-            'message' => $estudiante->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'data'    => $listaSuspenciones->isEmpty() ? null : $listaSuspenciones,
+            'message' => $listaSuspenciones->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ]);
 
@@ -65,41 +76,31 @@ class SuspencionController extends Controller
 
     public function addSuspencion(Request $request)
     {
+        $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
 
-        $arrayDataSuspencion = [
-            'id_carrera'        => $request->input( 'idCarrera'),
-            'tiempo_solicitado' => $request->input( 'tiempoSolicitado'),
-            'descripcion'       => $request->input( 'descripcion'),
-            'fecha_solicitud'   => date('Y-m-d H:i:s'),
-            'motivo'            => $request->input('idMotivo'), // FIXME: vincular el idMotivo en la BD con la tabla respectiva.
-            'id_estudiante'     => $request->input('idEstudiante'),
+        $suspencion                    = new Suspencion();
+        $suspencion->id_carrera        = $request->input( 'idCarrera' );
+        $suspencion->tiempo_solicitado = $request->input( 'tiempoSolicitado' );
+        $suspencion->descripcion       = $request->input( 'descripcion' );
+        $suspencion->fecha_solicitud   = date('Y-m-d H:i:s');
+        $suspencion->id_motivo         = $request->input( 'idMotivo' );
+        $suspencion->save();
+
+        $dataTablaIntermedia = [
+            'id_tramite'    => $request->input( 'idTramite' ),
+            'id_estado'     => $request->input( 'idEstado' ),
+            'id_entidad'    => $request->input( 'idEntidad' ),
+            'fecha_proceso' => date('Y-m-d H:i:s'),
+            'observaciones' => $request->input( 'observaciones' )
         ];
 
-        // Retorna un booleano como respuesta de insercion
-        $nuevaSuspencion = Suspencion::create($arrayDataSuspencion);
-
-        $dataEstudianteTramite = [
-            'id_estudiante' => $request->input('idEstudiante'),
-            'id_tramite'    => $request->input('idTramite'),
-            'id_estado'     => $request->input('idEstado'),
-            'id_entidad'    => $request->input('idEntidad'),
-            'fecha'         => date('Y-m-d H:i:s'),
-            'observaciones' => $request->input('observaciones'),
-            'id_tipo_tramite'=> $nuevaSuspencion->id_suspencion
-        ];
-
-        // TODO: FALTA INSERTAR EL MOTIDO EN LA TABLA DE MOTIVOS QUE SE DEBE CREAR.
-
-        // Retorna un booleano como respuesta de insercion
-        $estudianteTramite = EstudianteTramite::insert($dataEstudianteTramite);
+        $suspencion->estudiante()->attach( $estudiante->id_estudiante, $dataTablaIntermedia);
 
         return response()->json([
-            'data'    => [
-                'Suspencion'        => $nuevaSuspencion,
-                'EstudianteTramite' => $estudianteTramite
-            ],
+            'data'    => $suspencion,
             'message' => 'INSERCION CORRECTA',
             'error'   => null
         ], Response::HTTP_CREATED);
+
     }
 }

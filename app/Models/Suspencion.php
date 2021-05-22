@@ -11,10 +11,14 @@ class Suspencion extends Model
 
     public $timestamps = false;
     protected $table = 'suspencion';
-    protected $fillable = ['id_carrera', 'tiempo_solicitado', 'descripcion', 'fecha_solicitud', 'id_estudiante', 'id_motivo' ];
+    protected $fillable = ['id_carrera', 'tiempo_solicitado', 'descripcion', 'fecha_solicitud', 'id_motivo' ];
     protected $primaryKey = 'id_suspencion';
 
     public function readmision(){
         return $this->hasOne( Readmision::class, 'id_suspencion' );
+    }
+
+    public function estudiante(){
+        return $this->belongsToMany( Estudiante::class, 'estudiante_anulacion', 'id_suspencion', 'id_estudiante');
     }
 }
