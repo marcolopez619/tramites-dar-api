@@ -32,6 +32,7 @@ class DarController extends Controller
             'anulacion.id_carrera_origen AS idCarreraOrigen',
             'carrera.nombre AS carrera',
             'anulacion.motivo',
+            // DB::raw('(select 0 as tiempoSolicitado)'),
 
             'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
             'estudiante_anulacion.fecha_proceso AS fechaProceso',
@@ -82,6 +83,7 @@ class DarController extends Controller
                 'cambio_carrera.id_carrera_origen AS idCarreraOrigen',
                 'carrera.nombre AS carrera',
                 'cambio_carrera.motivo',
+                // DB::raw('(select 0 as tiempoSolicitado)'),
 
                 'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
                 'estudiante_anulacion.fecha_proceso AS fechaProceso',
@@ -133,6 +135,7 @@ class DarController extends Controller
                 'transferencia.id_carrera_origen AS idCarreraOrigen',
                 'carrera.nombre AS carrera',
                 'transferencia.motivo',
+                // DB::raw('(select 0 as tiempoSolicitado)'),
 
                 'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
                 'estudiante_anulacion.fecha_proceso AS fechaProceso',
@@ -163,14 +166,68 @@ class DarController extends Controller
                 ->where( 'estudiante_anulacion.activo', '=' , true )
                 ->where( 'estudiante_anulacion.id_transferencia', '<>', 0 )
                 ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
+                ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+                // ->union($respAnulacion)
+                // ->union($respCambioCarrera)
+                // ->get();
+
+
+        $arrayCamposSelectSuspenciones = [
+                'estudiante.id_estudiante as idEstudiante',
+                'estudiante.ru',
+                'estudiante.ci',
+                'estudiante.complemento',
+                'estudiante.paterno',
+                'estudiante.materno',
+                'estudiante.nombres',
+                'estudiante.fecha_nacimiento AS fechaNacimiento',
+                'estudiante.sexo',
+
+                'suspencion.id_suspencion AS idTipoTramite',
+                'suspencion.fecha_solicitud AS fechaSolicitud',
+                'suspencion.id_carrera AS idCarreraOrigen',
+                'carrera.nombre AS carrera',
+                'suspencion.descripcion as motivo',
+                // 'suspencion.tiempo_solicitado as tiempoSolicitado', // añadi esta columna
+
+                'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
+                'estudiante_anulacion.fecha_proceso AS fechaProceso',
+                'estudiante_anulacion.observaciones',
+
+                'tramite.id_tramite AS idTramite',
+                'tramite.descripcion AS tramite',
+
+                'estado.id_estado AS idEstado',
+                'estado.descripcion AS estado',
+
+                'entidad.id_entidad AS idEntidad',
+                'entidad.descripcion AS entidad'
+            ];
+
+        $respTransSuspenciones = DB::table('estudiante')
+
+                ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
+                ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+                ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
+                ->join('suspencion', 'suspencion.id_suspencion', '=', 'estudiante_anulacion.id_suspencion')
+
+                ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
+                ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
+                ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+                ->select( $arrayCamposSelectSuspenciones )
+                ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_anulacion.activo', '=' , true )
+                ->where( 'estudiante_anulacion.id_suspencion', '<>', 0 )
+                ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
                 ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
                 ->union($respAnulacion)
                 ->union($respCambioCarrera)
+                ->union($respTransferencias)
                 ->get();
 
         return response()->json([
-            'data'    => $respTransferencias->isEmpty() ? null : $respTransferencias,
-            'message' => $respTransferencias->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'data'    => $respTransSuspenciones->isEmpty() ? null : $respTransSuspenciones,
+            'message' => $respTransSuspenciones->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ]);
 
