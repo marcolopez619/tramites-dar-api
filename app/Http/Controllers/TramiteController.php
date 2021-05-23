@@ -102,6 +102,7 @@ class TramiteController extends Controller
             'observaciones' => $request->input( 'observaciones' ),
             'fecha_proceso' => date('Y-m-d H:i:s'),
             'id_estudiante' => $oldEstudianteAnulacion->id_estudiante,
+            'activo'        => true,
 
             // Verifica los keys referenciales, sino existes, => inserta el valor por default de esas tablas o tramites, el cual es CERO
             'id_anulacion'      => $oldEstudianteAnulacion->id_anulacion ?? 0,
@@ -109,9 +110,7 @@ class TramiteController extends Controller
             'id_transferencia'  => $oldEstudianteAnulacion->id_transferencia ?? 0,
             'id_suspencion'     => $oldEstudianteAnulacion->id_suspencion ?? 0,
             'id_readmision'     => $oldEstudianteAnulacion->id_readmision ?? 0,
-
-            'activo'        => true,
-
+            'id_traspaso'       => $oldEstudianteAnulacion->id_traspaso ?? 0,
         ];
 
         $nuevaFilaCreada = EstudianteAnulacion::create( $dataEstudianteAnulacion );

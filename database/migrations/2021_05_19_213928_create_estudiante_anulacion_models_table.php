@@ -33,6 +33,7 @@ class CreateEstudianteAnulacionModelsTable extends Migration
             $table->foreign( 'id_transferencia' )->references( 'id_transferencia' )->on( 'transferencia' )->onDelete('cascade');
             $table->foreign( 'id_suspencion' )->references( 'id_suspencion' )->on( 'suspencion' )->onDelete('cascade');
             $table->foreign( 'id_readmision' )->references( 'id_readmision' )->on( 'readmision' )->onDelete('cascade');
+            $table->foreign( 'id_traspaso' )->references( 'id_traspaso' )->on( 'traspaso' )->onDelete('cascade');
 
         });
     }

@@ -12,6 +12,6 @@ class EstudianteAnulacionHistorico extends Model
     public $timestamps = false;
     protected $table = 'estudiante_anulacion_historico';
     protected $fillable = ['id_tramite', 'id_estado', 'id_entidad','fecha_proceso', 'observaciones', 'id_estudiante',
-                           'id_anulacion', 'id_cambio_carrera', 'id_transferencia', 'id_suspencion', 'id_readmision' ];
+                           'id_anulacion', 'id_cambio_carrera', 'id_transferencia', 'id_suspencion', 'id_readmision', 'id_traspaso' ];
     protected $primaryKey = 'id_estudiante_anulacion_historico';
 }

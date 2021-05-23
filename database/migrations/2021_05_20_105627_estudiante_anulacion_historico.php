@@ -26,7 +26,7 @@ class EstudianteAnulacionHistorico extends Migration
             $table->integer( 'id_transferencia' );
             $table->integer( 'id_suspencion' );
             $table->integer( 'id_readmision' );
-
+            $table->integer( 'id_traspaso' );
         });
     }
 

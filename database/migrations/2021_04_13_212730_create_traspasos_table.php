@@ -21,11 +21,9 @@ class CreateTraspasosTable extends Migration
             $table->integer( 'anio_ingreso' );
             $table->integer( 'materias_aprobadas' );
             $table->integer( 'materias_reprobadas' );
-            $table->date('fecha_solicitud');
-            $table->integer( 'id_estudiante' );
+            $table->timestamp('fecha_solicitud');
             $table->integer( 'id_motivo' );
 
-            $table->foreign('id_estudiante')->references( 'id_estudiante' )->on( 'estudiante' )->onDelete('cascade');
             $table->foreign('id_motivo')->references( 'id_motivo' )->on( 'motivo' )->onDelete('cascade');
         });
     }
