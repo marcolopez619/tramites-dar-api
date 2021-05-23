@@ -30,16 +30,17 @@ class Estudiante extends Model
         return $this->belongsToMany( Suspencion::class, 'estudiante_anulacion', 'id_estudiante', 'id_suspencion' );
     }
 
-
-
-
-
-
-
-
     public function readmision(){
-        return $this->hasMany( Readmision::class, 'id_estudiante' );
+        return $this->belongsToMany( Readmision::class, 'estudiante_anulacion', 'id_estudiante', 'id_readmision' );
     }
+
+
+
+
+
+
+
+
 
     public function traspaso(){
         return $this->hasMany( Traspaso::class, 'id_estudiante' );
