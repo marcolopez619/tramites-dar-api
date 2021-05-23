@@ -84,6 +84,7 @@ class TraspasosController extends Controller
         $traspaso                      = new Traspaso();
         $traspaso->id_univ_destino     = $request->input( 'idUnivDestino' );
         $traspaso->id_carrera_destino  = $request->input( 'idCarreraDestino' );
+        $traspaso->id_carrera_origen   = $request->input( 'idCarreraOrigen' );
         $traspaso->descripcion         = $request->input( 'descripcion' );
         $traspaso->anio_ingreso        = $request->input( 'anioIngreso' );
         $traspaso->materias_aprobadas  = $request->input( 'materiasAprobadas' );

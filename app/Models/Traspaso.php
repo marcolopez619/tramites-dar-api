@@ -11,7 +11,7 @@ class Traspaso extends Model
 
     public $timestamps = false;
     protected $table = 'traspaso';
-    protected $fillable = ['id_univ_destino', 'id_carrera_destino', 'descripcion', 'anio_ingreso', 'materias_aprobadas', 'materias_reprobadas', 'fecha_solicitud', 'id_motivo' ];
+    protected $fillable = ['id_univ_destino', 'id_carrera_destino', 'descripcion', 'anio_ingreso', 'materias_aprobadas', 'materias_reprobadas', 'fecha_solicitud', 'id_motivo', 'id_carrera_origen' ];
     protected $primaryKey = 'id_traspaso';
 
     public function estudiante(){

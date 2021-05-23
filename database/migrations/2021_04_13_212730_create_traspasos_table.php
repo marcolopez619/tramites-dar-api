@@ -17,6 +17,7 @@ class CreateTraspasosTable extends Migration
             $table->id( 'id_traspaso' );
             $table->integer( 'id_univ_destino' );
             $table->integer( 'id_carrera_destino' );
+            $table->integer( 'id_carrera_origen' );
             $table->string( 'descripcion' );
             $table->integer( 'anio_ingreso' );
             $table->integer( 'materias_aprobadas' );
