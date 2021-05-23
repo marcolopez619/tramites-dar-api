@@ -15,6 +15,6 @@ class CambioCarrera extends Model
     protected $primaryKey = 'id_cambio_carrera';
 
     public function estudiante(){
-        return $this->belongsToMany( Estudiante::class, 'estudiante_anulacion',  'id_cambio_carrera', 'id_estudiante' );
+        return $this->belongsToMany( Estudiante::class, 'estudiante_tramite',  'id_cambio_carrera', 'id_estudiante' );
     }
 }

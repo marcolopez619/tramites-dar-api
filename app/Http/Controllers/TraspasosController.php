@@ -38,8 +38,8 @@ class TraspasosController extends Controller
             'motivo.descripcion as motivo',
 
 
-            'estudiante_anulacion.fecha_proceso AS fechaProceso',
-            'estudiante_anulacion.observaciones',
+            'estudiante_tramite.fecha_proceso AS fechaProceso',
+            'estudiante_tramite.observaciones',
 
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tramite',
@@ -55,18 +55,18 @@ class TraspasosController extends Controller
 
             ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-            ->join('traspaso', 'traspaso.id_traspaso', '=', 'estudiante_anulacion.id_traspaso')
+            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('traspaso', 'traspaso.id_traspaso', '=', 'estudiante_tramite.id_traspaso')
             ->join('motivo', 'motivo.id_motivo', '=', 'traspaso.id_motivo')
 
-            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
             ->where( 'estudiante.id_estudiante', '=', $idEstudiante)
-            ->where( 'estudiante_anulacion.id_tramite', '=' , Tipotramite::TRASPASO_UNIVERSIDAD )
-            ->where( 'estudiante_anulacion.activo', '=' , true )
-            ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
+            ->where( 'estudiante_tramite.id_tramite', '=' , Tipotramite::TRASPASO_UNIVERSIDAD )
+            ->where( 'estudiante_tramite.activo', '=' , true )
+            ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC')
             ->get();
 
         return response()->json([

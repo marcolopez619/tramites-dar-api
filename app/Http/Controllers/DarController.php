@@ -34,9 +34,9 @@ class DarController extends Controller
             'anulacion.motivo',
             // DB::raw('(select 0 as tiempoSolicitado)'),
 
-            'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-            'estudiante_anulacion.fecha_proceso AS fechaProceso',
-            'estudiante_anulacion.observaciones',
+            'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+            'estudiante_tramite.fecha_proceso AS fechaProceso',
+            'estudiante_tramite.observaciones',
 
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tramite',
@@ -52,19 +52,19 @@ class DarController extends Controller
 
             ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-            ->join('anulacion', 'anulacion.id_anulacion', '=', 'estudiante_anulacion.id_anulacion')
+            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('anulacion', 'anulacion.id_anulacion', '=', 'estudiante_tramite.id_anulacion')
 
-            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelectAnulacion )
-            ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
-            ->where( 'estudiante_anulacion.activo', '=' , true )
-            ->where( 'estudiante_anulacion.id_anulacion', '<>', 0 )
-            ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO );
+            ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.activo', '=' , true )
+            ->where( 'estudiante_tramite.id_anulacion', '<>', 0 )
+            ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO );
 
-            // ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+            // ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
 
 
         $arrayCamposSelectCambioCarrera = [
@@ -85,9 +85,9 @@ class DarController extends Controller
                 'cambio_carrera.motivo',
                 // DB::raw('(select 0 as tiempoSolicitado)'),
 
-                'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-                'estudiante_anulacion.fecha_proceso AS fechaProceso',
-                'estudiante_anulacion.observaciones',
+                'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+                'estudiante_tramite.fecha_proceso AS fechaProceso',
+                'estudiante_tramite.observaciones',
 
                 'tramite.id_tramite AS idTramite',
                 'tramite.descripcion AS tramite',
@@ -103,18 +103,18 @@ class DarController extends Controller
 
                 ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
                 ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-                ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-                ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_anulacion.id_cambio_carrera')
+                ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+                ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_tramite.id_cambio_carrera')
 
-                ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-                ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-                ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+                ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+                ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+                ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectCambioCarrera )
-                ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
-                ->where( 'estudiante_anulacion.activo', '=' , true )
-                ->where( 'estudiante_anulacion.id_cambio_carrera', '<>', 0 )
-                ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
-                ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.activo', '=' , true )
+                ->where( 'estudiante_tramite.id_cambio_carrera', '<>', 0 )
+                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
                 //->union($respAnulacion)
                 //->get();
 
@@ -137,9 +137,9 @@ class DarController extends Controller
                 'transferencia.motivo',
                 // DB::raw('(select 0 as tiempoSolicitado)'),
 
-                'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-                'estudiante_anulacion.fecha_proceso AS fechaProceso',
-                'estudiante_anulacion.observaciones',
+                'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+                'estudiante_tramite.fecha_proceso AS fechaProceso',
+                'estudiante_tramite.observaciones',
 
                 'tramite.id_tramite AS idTramite',
                 'tramite.descripcion AS tramite',
@@ -155,18 +155,18 @@ class DarController extends Controller
 
                 ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
                 ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-                ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-                ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_anulacion.id_transferencia')
+                ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+                ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_tramite.id_transferencia')
 
-                ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-                ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-                ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+                ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+                ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+                ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectTransferencias )
-                ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
-                ->where( 'estudiante_anulacion.activo', '=' , true )
-                ->where( 'estudiante_anulacion.id_transferencia', '<>', 0 )
-                ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
-                ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.activo', '=' , true )
+                ->where( 'estudiante_tramite.id_transferencia', '<>', 0 )
+                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
                 // ->union($respAnulacion)
                 // ->union($respCambioCarrera)
                 // ->get();
@@ -190,9 +190,9 @@ class DarController extends Controller
                 'suspencion.descripcion as motivo',
                 // 'suspencion.tiempo_solicitado as tiempoSolicitado', // añadi esta columna
 
-                'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-                'estudiante_anulacion.fecha_proceso AS fechaProceso',
-                'estudiante_anulacion.observaciones',
+                'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+                'estudiante_tramite.fecha_proceso AS fechaProceso',
+                'estudiante_tramite.observaciones',
 
                 'tramite.id_tramite AS idTramite',
                 'tramite.descripcion AS tramite',
@@ -208,18 +208,18 @@ class DarController extends Controller
 
                 ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
                 ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-                ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-                ->join('suspencion', 'suspencion.id_suspencion', '=', 'estudiante_anulacion.id_suspencion')
+                ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+                ->join('suspencion', 'suspencion.id_suspencion', '=', 'estudiante_tramite.id_suspencion')
 
-                ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-                ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-                ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+                ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+                ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+                ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectSuspenciones )
-                ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
-                ->where( 'estudiante_anulacion.activo', '=' , true )
-                ->where( 'estudiante_anulacion.id_suspencion', '<>', 0 )
-                ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
-                ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.activo', '=' , true )
+                ->where( 'estudiante_tramite.id_suspencion', '<>', 0 )
+                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
                 // ->union($respAnulacion)
                 //->union($respCambioCarrera)
                 //->union($respTransferencias)
@@ -244,9 +244,9 @@ class DarController extends Controller
                 'readmision.motivo',
                 // 'readmision.tiempo_solicitado as tiempoSolicitado', // añadi esta columna
 
-                'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-                'estudiante_anulacion.fecha_proceso AS fechaProceso',
-                'estudiante_anulacion.observaciones',
+                'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+                'estudiante_tramite.fecha_proceso AS fechaProceso',
+                'estudiante_tramite.observaciones',
 
                 'tramite.id_tramite AS idTramite',
                 'tramite.descripcion AS tramite',
@@ -262,18 +262,18 @@ class DarController extends Controller
 
                 ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
                 ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-                ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-                ->join('readmision', 'readmision.id_readmision', '=', 'estudiante_anulacion.id_readmision')
+                ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+                ->join('readmision', 'readmision.id_readmision', '=', 'estudiante_tramite.id_readmision')
 
-                ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-                ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-                ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+                ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+                ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+                ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectReadmisiones )
-                ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
-                ->where( 'estudiante_anulacion.activo', '=' , true )
-                ->where( 'estudiante_anulacion.id_readmision', '<>', 0 )
-                ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
-                ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.activo', '=' , true )
+                ->where( 'estudiante_tramite.id_readmision', '<>', 0 )
+                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
 
 
 
@@ -295,9 +295,9 @@ class DarController extends Controller
                 DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = traspaso.id_motivo)'),
                 // 'traspaso.tiempo_solicitado as tiempoSolicitado', // añadi esta columna
 
-                'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-                'estudiante_anulacion.fecha_proceso AS fechaProceso',
-                'estudiante_anulacion.observaciones',
+                'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+                'estudiante_tramite.fecha_proceso AS fechaProceso',
+                'estudiante_tramite.observaciones',
 
                 'tramite.id_tramite AS idTramite',
                 'tramite.descripcion AS tramite',
@@ -313,18 +313,18 @@ class DarController extends Controller
 
                 ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
                 ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-                ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-                ->join('traspaso', 'traspaso.id_traspaso', '=', 'estudiante_anulacion.id_traspaso')
+                ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+                ->join('traspaso', 'traspaso.id_traspaso', '=', 'estudiante_tramite.id_traspaso')
 
-                ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-                ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-                ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+                ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+                ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+                ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectTraspasos )
-                ->where( 'estudiante_anulacion.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
-                ->where( 'estudiante_anulacion.activo', '=' , true )
-                ->where( 'estudiante_anulacion.id_traspaso', '<>', 0 )
-                ->where( 'estudiante_anulacion.id_estado', '<>' , Estado::FINALIZADO )
-                ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
+                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.activo', '=' , true )
+                ->where( 'estudiante_tramite.id_traspaso', '<>', 0 )
+                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC')
                 ->union($respAnulacion)
                 ->union($respCambioCarrera)
                 ->union($respTransferencias)

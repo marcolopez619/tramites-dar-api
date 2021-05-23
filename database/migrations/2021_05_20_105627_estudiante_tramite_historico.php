@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class EstudianteAnulacionHistorico extends Migration
+class EstudianteTramiteHistorico extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class EstudianteAnulacionHistorico extends Migration
      */
     public function up()
     {
-        Schema::create('estudiante_anulacion_historico', function (Blueprint $table) {
-            $table->id('id_estudiante_anulacion_historico');
+        Schema::create('estudiante_tramite_historico', function (Blueprint $table) {
+            $table->id('id_estudiante_tramite_historico');
             $table->integer( 'id_tramite' )->nullable( false );
             $table->integer( 'id_estado' )->nullable( false );
             $table->integer( 'id_entidad' )->nullable( false );
@@ -37,6 +37,6 @@ class EstudianteAnulacionHistorico extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estudiante_anulacion_historico');
+        Schema::dropIfExists('estudiante_tramite_historico');
     }
 }

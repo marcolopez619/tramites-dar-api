@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEstudianteAnulacionModelsTable extends Migration
+class CreateEstudianteTramiteModelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateEstudianteAnulacionModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('estudiante_anulacion', function (Blueprint $table) {
-            $table->id('id_estudiante_anulacion');
+        Schema::create('estudiante_tramite', function (Blueprint $table) {
+            $table->id('id_estudiante_tramite');
             $table->integer( 'id_tramite' )->nullable( false );
             $table->integer( 'id_estado' )->nullable( false );
             $table->integer( 'id_entidad' )->nullable( false );
@@ -45,6 +45,6 @@ class CreateEstudianteAnulacionModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estudiante_anulacion');
+        Schema::dropIfExists('estudiante_tramite');
     }
 }

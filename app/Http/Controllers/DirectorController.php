@@ -29,9 +29,9 @@ class DirectorController extends Controller
             'carrera.nombre AS carrera',
             'anulacion.motivo',
 
-            'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-            'estudiante_anulacion.fecha_proceso AS fechaProceso',
-            'estudiante_anulacion.observaciones',
+            'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+            'estudiante_tramite.fecha_proceso AS fechaProceso',
+            'estudiante_tramite.observaciones',
 
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tramite',
@@ -47,16 +47,16 @@ class DirectorController extends Controller
 
             ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-            ->join('anulacion', 'anulacion.id_anulacion', '=', 'estudiante_anulacion.id_anulacion')
+            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('anulacion', 'anulacion.id_anulacion', '=', 'estudiante_tramite.id_anulacion')
 
-            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $selectColumnsAnulaciones )
-            ->where( 'estudiante_anulacion.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
             ->where( 'anulacion.id_carrera_origen', '=', $idCarrera)
-            ->where( 'estudiante_anulacion.activo', '=' , true );
+            ->where( 'estudiante_tramite.activo', '=' , true );
 
 
 
@@ -78,9 +78,9 @@ class DirectorController extends Controller
                 'carrera.nombre AS carrera',
                 'cambio_carrera.motivo',
 
-                'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-                'estudiante_anulacion.fecha_proceso AS fechaProceso',
-                'estudiante_anulacion.observaciones',
+                'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+                'estudiante_tramite.fecha_proceso AS fechaProceso',
+                'estudiante_tramite.observaciones',
 
                 'tramite.id_tramite AS idTramite',
                 'tramite.descripcion AS tramite',
@@ -95,34 +95,34 @@ class DirectorController extends Controller
         $estudianteCambiosCarreraOrigen = DB::table('estudiante')
             ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-            ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_anulacion.id_cambio_carrera')
+            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_tramite.id_cambio_carrera')
 
-            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $selectColumnsCambioCarrera )
-            ->where( 'estudiante_anulacion.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
             ->where( 'cambio_carrera.id_carrera_origen', '=', $idCarrera)
-            ->where( 'estudiante_anulacion.activo', '=' , true )
-            ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+            ->where( 'estudiante_tramite.activo', '=' , true )
+            ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
 
 
 
         $estudianteCambiosCarreraDestino = DB::table('estudiante')
             ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-            ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-            ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_anulacion.id_cambio_carrera')
+            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_tramite.id_cambio_carrera')
 
-            ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-            ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-            ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+            ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+            ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $selectColumnsCambioCarrera )
-            ->where( 'estudiante_anulacion.id_entidad', '=' , 4 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.id_entidad', '=' , 4 ) // FIXME: DATOS QUEMADO
             ->where( 'cambio_carrera.id_carrera_destino', '=', $idCarrera)
-            ->where( 'estudiante_anulacion.activo', '=' , true )
-            ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+            ->where( 'estudiante_tramite.activo', '=' , true )
+            ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
             // ->union( $estudianteAnulaciones )
             // ->union( $estudianteCambiosCarreraOrigen )
             // ->get();
@@ -146,9 +146,9 @@ class DirectorController extends Controller
             'carrera.nombre AS carrera',
             'transferencia.motivo',
 
-            'estudiante_anulacion.id_estudiante_anulacion as idEstudianteTipoTramiteTablaIntermedia',
-            'estudiante_anulacion.fecha_proceso AS fechaProceso',
-            'estudiante_anulacion.observaciones',
+            'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
+            'estudiante_tramite.fecha_proceso AS fechaProceso',
+            'estudiante_tramite.observaciones',
 
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tramite',
@@ -163,17 +163,17 @@ class DirectorController extends Controller
         $estudianteTransferenciasOrigen = DB::table('estudiante')
         ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
         ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-        ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-        ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_anulacion.id_transferencia')
+        ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+        ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_tramite.id_transferencia')
 
-        ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-        ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-        ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+        ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+        ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+        ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
         ->select( $selectColumnsTransferencia )
-        ->where( 'estudiante_anulacion.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
+        ->where( 'estudiante_tramite.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
         ->where( 'transferencia.id_carrera_origen', '=', $idCarrera)
-        ->where( 'estudiante_anulacion.activo', '=' , true )
-        ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC');
+        ->where( 'estudiante_tramite.activo', '=' , true )
+        ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
         //->union( $estudianteAnulaciones )
         //->union( $estudianteCambiosCarreraOrigen )
         //->union( $estudianteCambiosCarreraDestino )
@@ -182,17 +182,17 @@ class DirectorController extends Controller
         $estudianteTransferenciasDestino = DB::table('estudiante')
         ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
         ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
-        ->join('estudiante_anulacion', 'estudiante_anulacion.id_estudiante', '=', 'estudiante.id_estudiante' )
-        ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_anulacion.id_transferencia')
+        ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+        ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_tramite.id_transferencia')
 
-        ->join('tramite', 'estudiante_anulacion.id_tramite', '=', 'tramite.id_tramite')
-        ->join('estado', 'estudiante_anulacion.id_estado', '=', 'estado.id_estado')
-        ->join('entidad', 'estudiante_anulacion.id_entidad', '=', 'entidad.id_entidad')
+        ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+        ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+        ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
         ->select( $selectColumnsTransferencia )
-        ->where( 'estudiante_anulacion.id_entidad', '=' , 4 ) // FIXME: DATOS QUEMADO
+        ->where( 'estudiante_tramite.id_entidad', '=' , 4 ) // FIXME: DATOS QUEMADO
         ->where( 'transferencia.id_carrera_destino', '=', $idCarrera)
-        ->where( 'estudiante_anulacion.activo', '=' , true )
-        ->orderBy( 'estudiante_anulacion.fecha_proceso' , 'DESC')
+        ->where( 'estudiante_tramite.activo', '=' , true )
+        ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC')
         ->union( $estudianteAnulaciones )
         ->union( $estudianteCambiosCarreraOrigen )
         ->union( $estudianteCambiosCarreraDestino )

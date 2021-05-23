@@ -15,6 +15,6 @@ class Traspaso extends Model
     protected $primaryKey = 'id_traspaso';
 
     public function estudiante(){
-        return $this->belongsToMany( Estudiante::class, 'estudiante_anulacion', 'id_traspaso', 'id_estudiante');
+        return $this->belongsToMany( Estudiante::class, 'estudiante_tramite', 'id_traspaso', 'id_estudiante');
     }
 }

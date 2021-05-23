@@ -19,6 +19,6 @@ class Readmision extends Model
     }
 
     public function estudiante(){
-        return $this->belongsToMany( Estudiante::class, 'estudiante_anulacion', 'id_readmision', 'id_estudiante');
+        return $this->belongsToMany( Estudiante::class, 'estudiante_tramite', 'id_readmision', 'id_estudiante');
     }
 }

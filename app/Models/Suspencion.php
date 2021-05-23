@@ -19,6 +19,6 @@ class Suspencion extends Model
     }
 
     public function estudiante(){
-        return $this->belongsToMany( Estudiante::class, 'estudiante_anulacion', 'id_suspencion', 'id_estudiante');
+        return $this->belongsToMany( Estudiante::class, 'estudiante_tramite', 'id_suspencion', 'id_estudiante');
     }
 }

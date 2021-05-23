@@ -15,6 +15,6 @@ class transferencia extends Model
     protected $primaryKey = 'id_transferencia';
 
     public function estudiante(){
-        return $this->belongsToMany( Estudiante::class, 'estudiante_anulacion',  'id_transferencia', 'id_estudiante' );
+        return $this->belongsToMany( Estudiante::class, 'estudiante_tramite',  'id_transferencia', 'id_estudiante' );
     }
 }

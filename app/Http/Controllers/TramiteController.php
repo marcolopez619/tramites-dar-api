@@ -8,10 +8,10 @@ use App\utils\Tipotramite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use App\Models\EstudianteAnulacion;
+use App\Models\EstudianteTramite;
 
 use App\Models\HabilitacionTramite;
-use App\Models\EstudianteAnulacionHistorico;
+use App\Models\EstudianteTramiteHistorico;
 
 class TramiteController extends Controller
 {
@@ -65,7 +65,7 @@ class TramiteController extends Controller
 
         switch ($idTipoTramite) {
             case Tipotramite::ANULACION: {
-                $estudianteAnulacion = EstudianteAnulacion::find( $idEstudianteTipoTramite );
+                $estudianteAnulacion = EstudianteTramite::find( $idEstudianteTipoTramite );
                 $estudianteAnulacion->id_estado = $nuevoEstado;
                 $estudianteAnulacion->save();
                 break;
@@ -91,9 +91,9 @@ class TramiteController extends Controller
         $nuevaFilaCreada         = null;
 
         // 1.- BUSCA e INSERTA EN EL HISTÓRICO CORRESPONDIENTE la tupla que corresponda
-        $oldEstudianteAnulacion = EstudianteAnulacion::find( $idEstudianteTipoTramite );
+        $oldEstudianteAnulacion = EstudianteTramite::find( $idEstudianteTipoTramite );
 
-        EstudianteAnulacionHistorico::create( $oldEstudianteAnulacion->toArray() );
+        EstudianteTramiteHistorico::create( $oldEstudianteAnulacion->toArray() );
 
         $dataEstudianteAnulacion = [
             'id_tramite'    => $oldEstudianteAnulacion->id_tramite,
@@ -113,7 +113,7 @@ class TramiteController extends Controller
             'id_traspaso'       => $oldEstudianteAnulacion->id_traspaso ?? 0,
         ];
 
-        $nuevaFilaCreada = EstudianteAnulacion::create( $dataEstudianteAnulacion );
+        $nuevaFilaCreada = EstudianteTramite::create( $dataEstudianteAnulacion );
 
         // Destruye la fila antigua de la tabla intermedia
         $oldEstudianteAnulacion->delete();
@@ -124,9 +124,9 @@ class TramiteController extends Controller
             case Tipotramite::ANULACION:{
 
                 // 1.- BUSCA e INSERTA EN EL HISTÓRICO CORRESPONDIENTE la tupla que corresponda
-                $oldEstudianteAnulacion = EstudianteAnulacion::find( $idEstudianteTipoTramite );
+                $oldEstudianteAnulacion = EstudianteTramite::find( $idEstudianteTipoTramite );
 
-                EstudianteAnulacionHistorico::create( $oldEstudianteAnulacion->toArray() );
+                EstudianteTramiteHistorico::create( $oldEstudianteAnulacion->toArray() );
 
                 $dataEstudianteAnulacion = [
                     'id_tramite'    => $oldEstudianteAnulacion->id_tramite,
@@ -139,7 +139,7 @@ class TramiteController extends Controller
                     'activo'        => true
                 ];
 
-                $nuevaFilaCreada = EstudianteAnulacion::create( $dataEstudianteAnulacion );
+                $nuevaFilaCreada = EstudianteTramite::create( $dataEstudianteAnulacion );
 
                 // Destruye la fila antigua de la tabla intermedia
                 $oldEstudianteAnulacion->delete();
