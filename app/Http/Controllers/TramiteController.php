@@ -108,6 +108,7 @@ class TramiteController extends Controller
             'id_cambio_carrera' => $oldEstudianteAnulacion->id_cambio_carrera ?? 0,
             'id_transferencia'  => $oldEstudianteAnulacion->id_transferencia ?? 0,
             'id_suspencion'     => $oldEstudianteAnulacion->id_suspencion ?? 0,
+            'id_readmision'     => $oldEstudianteAnulacion->id_readmision ?? 0,
 
             'activo'        => true,
 
