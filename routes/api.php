@@ -22,6 +22,7 @@ use App\Http\Controllers\CambioCarreraController;
 use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
+use App\Http\Controllers\SeguimientoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +113,9 @@ Route::post( '/traspaso', [ TraspasosController::class, 'addTraspaso' ] );
 
 //** MOTIVOS **/
 Route::get( '/motivo', [ MotivoController::class, 'getListaMotivo' ] );
+
+//** SEGUIMIENTO **/
+Route::get( '/seguimiento/tipo/{idTipoTramite}/tramite/{idTramite}', [ SeguimientoController::class, 'getSeguimientoTramite' ] );
 
 
 

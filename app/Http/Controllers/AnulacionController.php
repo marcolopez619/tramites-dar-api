@@ -6,7 +6,7 @@ use App\Models\Anulacion;
 use App\Models\Estudiante;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\EstudianteTramite;
+use App\utils\Tipotramite;
 use Illuminate\Support\Facades\DB;
 
 class AnulacionController extends Controller
@@ -56,7 +56,7 @@ class AnulacionController extends Controller
             ->join('entidad', 'estudiante_tramite.id_estado', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
-            ->where( 'estudiante_tramite.id_tramite', '=' , 1 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.id_tramite', '=' , Tipotramite::ANULACION )
             ->where( 'estudiante_tramite.activo', '=' , true )
             ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC')
             ->distinct()
