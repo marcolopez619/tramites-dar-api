@@ -13,4 +13,8 @@ class PeriodoGestion extends Model
     protected $table = 'periodo_gestion';
     protected $fillable = [ 'id_periodo', 'id_gestion', 'estado'];
     protected $primaryKey = 'id_periodo_gestion';
+
+    public function habilitacionTramite(){
+        return $this->hasMany( HabilitacionTramite::class, 'id_periodo_gestion' );
+    }
 }
