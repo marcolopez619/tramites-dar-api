@@ -60,6 +60,7 @@ Route::get( '/carrera/transferencia/{nombreCarrera}' , [UniversidadController::c
 //** PERIODOS Y GESTIONES **/
 Route::get( '/periodo', [PeriodoGestionController::class, 'getAllPeriodos'] );
 Route::get( '/periodo/activo', [PeriodoGestionController::class, 'getPeriodoActivo'] );
+Route::patch( '/periodo', [PeriodoGestionController::class, 'updatePeriodoToActivo'] );
 
 
 //** ENTIDADES **/

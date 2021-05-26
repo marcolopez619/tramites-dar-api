@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreatePeriodoGestionsTable extends Migration
 {
@@ -18,6 +19,7 @@ class CreatePeriodoGestionsTable extends Migration
             $table->integer( 'id_periodo' );
             $table->integer( 'id_gestion' );
             $table->boolean( 'estado' );
+            $table->timestamp( 'fecha_modificacion' )->default( DB::raw( 'NOW()' ));
         });
     }
 

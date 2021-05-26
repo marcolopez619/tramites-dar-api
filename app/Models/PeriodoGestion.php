@@ -11,7 +11,7 @@ class PeriodoGestion extends Model
 
     public $timestamps = false;
     protected $table = 'periodo_gestion';
-    protected $fillable = [ 'id_periodo', 'id_gestion', 'estado'];
+    protected $fillable = [ 'id_periodo', 'id_gestion', 'estado', 'fecha_modificacion'];
     protected $primaryKey = 'id_periodo_gestion';
 
     public function habilitacionTramite(){
