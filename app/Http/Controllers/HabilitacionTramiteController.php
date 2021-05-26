@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\utils\Estado;
 use App\Models\Tramite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\PeriodoGestion;
 use Illuminate\Support\Facades\DB;
 use App\Models\HabilitacionTramite;
 
@@ -20,13 +22,15 @@ class HabilitacionTramiteController extends Controller
             'habilitacion_tramite.fecha_inicial AS fechaInicial',
             'habilitacion_tramite.fecha_final AS fechaFinal',
             'habilitacion_tramite.estado',
-            'habilitacion_tramite.gestion'
+            DB::raw(" ( select CONCAT( periodo_gestion.id_periodo, '/', periodo_gestion.id_gestion) AS gestion FROM periodo_gestion where periodo_gestion.estado = true) ")
         ];
 
         $listaHabilitaciones = DB::table( 'tramite' )
                                 ->join( 'habilitacion_tramite', 'tramite.id_tramite' , '=' , 'habilitacion_tramite.id_tramite' )
+                                ->join( 'periodo_gestion', 'periodo_gestion.id_periodo_gestion', '=', 'habilitacion_tramite.id_periodo_gestion' )
                                 ->select( $selectColumns )
-                                ->where( 'habilitacion_tramite.estado', '=', 1 ) // FIXME, estado Quemado = 1 ( Activo )
+                                // ->where( 'periodo_gestion.estado', '=', true )
+                                // ->where( 'habilitacion_tramite.estado', '=', Estado::ACTIVADO )
                                 ->orderBy( 'habilitacion_tramite.fecha_inicial' , 'DESC' )
                                 ->get();
 
@@ -38,15 +42,14 @@ class HabilitacionTramiteController extends Controller
     }
 
     public function addHabilitacionTramite( Request $request ){
-        // $nuevaHabilitacion = HabilitacionTramite::create( $request->all() );
         $tramite = Tramite::find( $request->input( 'idTramite' ) );
 
-        $nuevaHabilitacion = new HabilitacionTramite();
-        $nuevaHabilitacion->fecha_inicial = $request->input( 'fechaInicial' );
-        $nuevaHabilitacion->fecha_final = $request->input( 'fechaFinal' );
-        $nuevaHabilitacion->estado = $request->input( 'estado' );
-        $nuevaHabilitacion->gestion = $request->input( 'gestion' );
-        $nuevaHabilitacionCreada = $tramite->habilitacionTramite()->save( $nuevaHabilitacion );
+        $nuevaHabilitacion                     = new HabilitacionTramite();
+        $nuevaHabilitacion->fecha_inicial      = $request->input( 'fechaInicial' );
+        $nuevaHabilitacion->fecha_final        = $request->input( 'fechaFinal' );
+        $nuevaHabilitacion->estado             = $request->input( 'estado' );
+        $nuevaHabilitacion->id_periodo_gestion = $request->input( 'idPeriodoGestion' );
+        $nuevaHabilitacionCreada               = $tramite->habilitacionTramite()->save( $nuevaHabilitacion );
 
         return response()->json( [
             'data'    => $nuevaHabilitacionCreada,
@@ -62,11 +65,11 @@ class HabilitacionTramiteController extends Controller
 
         if( !empty($habilitacion ) )
         {
-            $habilitacion->fecha_inicial = $request->input( 'fechaInicial' );
-            $habilitacion->fecha_final   = $request->input( 'fechaFinal' );
-            $habilitacion->estado        = $request->input( 'estado' );
-            $habilitacion->gestion       = $request->input( 'gestion' );
-            $habilitacion->id_tramite    = $request->input( 'idTramite' );
+            $habilitacion->fecha_inicial      = $request->input( 'fechaInicial' );
+            $habilitacion->fecha_final        = $request->input( 'fechaFinal' );
+            $habilitacion->estado             = $request->input( 'estado' );
+            $habilitacion->id_tramite         = $request->input( 'idTramite' );
+            $habilitacion->id_periodo_gestion = $request->input( 'idPeriodoGestion' );
             $habilitacion->save();
 
             return response()->json( [

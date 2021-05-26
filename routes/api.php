@@ -17,12 +17,13 @@ use App\Http\Controllers\TraspasosController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\ReadmisionController;
 use App\Http\Controllers\SuspencionController;
+use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\UniversidadController;
 use App\Http\Controllers\CambioCarreraController;
 use App\Http\Controllers\TransferenciaController;
+use App\Http\Controllers\PeriodoGestionController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
-use App\Http\Controllers\SeguimientoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +56,9 @@ Route::patch( '/carrera' , [UniversidadController::class, 'updateCarrera' ]);
 Route::get( '/carrera/{idFacultad}' , [UniversidadController::class, 'getListaCarrerasByIdFacultad' ]);
 Route::get( '/carrera/transferencia/{nombreCarrera}' , [UniversidadController::class, 'getListaCarrerasTransferencia' ]);
 
+
+//** PERIODOS Y GESTIONES **/
+Route::get( '/periodo/activo', [PeriodoGestionController::class, 'getPeriodoActivo'] );
 
 
 //** ENTIDADES **/
