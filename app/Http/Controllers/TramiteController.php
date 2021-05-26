@@ -84,6 +84,25 @@ class TramiteController extends Controller
 
     }
 
+    public function verificarHabilitacionTramite($idTramite){
+
+        $selectColumns = [
+            DB::raw("(SELECT true AS istramitehabilitado  FROM habilitacion_tramite where CURRENT_DATE BETWEEN fecha_inicial::date AND fecha_final::date AND estado = 1 and id_tramite = $idTramite)")
+        ];
+
+        $resp = DB::table( 'habilitacion_tramite' )
+        ->select( $selectColumns )
+        ->get();
+
+        $resp = [ 'isTramiteHabilitado' => $resp[ 0 ]->istramitehabilitado !== null ];
+
+        return response()->json( [
+            'data'    => $resp,
+            'message' => 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
     public function insertDataTablaIntermedia( Request $request ){
 
         $idTipoTramite           = $request->input( 'idTipoTramite' );
