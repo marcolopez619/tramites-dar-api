@@ -11,6 +11,6 @@ class HabilitacionTramitePorExcepcion extends Model
 
     public $timestamps = false;
     protected $table = 'habilitacion_tramite_por_excepcion';
-    protected $fillable = ['fecha_inicial', 'fecha_final', 'id_estudiante', 'id_tramite', 'id_estado' ];
+    protected $fillable = ['fecha_habilitacion', 'fecha_regularizacion', 'motivo', 'id_estudiante', 'id_tramite', 'id_estado', 'id_periodo_gestion'];
     protected $primaryKey = 'id_habilitacion_por_excepcion';
 }

@@ -17,4 +17,8 @@ class PeriodoGestion extends Model
     public function habilitacionTramite(){
         return $this->hasMany( HabilitacionTramite::class, 'id_periodo_gestion' );
     }
+
+    public function habilitacionTramiteExcepcion(){
+        return $this->hasMany( habilitacionTramiteExcepcion::class, 'id_periodo_gestion' );
+    }
 }
