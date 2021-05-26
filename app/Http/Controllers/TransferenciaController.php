@@ -40,7 +40,7 @@ class TransferenciaController extends Controller
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tramite',
 
-            'estado.id_estado AS estado',
+            'estado.id_estado AS idEstado',
             'estado.descripcion AS estado',
 
             'entidad.id_entidad AS idEntidad',
