@@ -17,7 +17,7 @@ class CreateCambioCarrerasTable extends Migration
             $table->id( 'id_cambio_carrera' );
             $table->integer( 'id_carrera_origen' );
             $table->integer( 'id_carrera_destino' );
-            $table->date('fecha_solicitud');
+            $table->timestamp('fecha_solicitud');
             $table->boolean('convalidacion');
             $table->string( 'motivo' );
         });

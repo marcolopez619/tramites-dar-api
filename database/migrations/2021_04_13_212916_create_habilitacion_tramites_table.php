@@ -15,8 +15,8 @@ class CreateHabilitacionTramitesTable extends Migration
     {
         Schema::create('habilitacion_tramite', function (Blueprint $table) {
             $table->id( 'id_hab_tramite' );
-            $table->date( 'fecha_inicial' );
-            $table->date( 'fecha_final' );
+            $table->timestamp( 'fecha_inicial' );
+            $table->timestamp( 'fecha_final' );
             $table->integer( 'estado' );
             $table->integer( 'id_tramite' );
             $table->integer( 'id_periodo_gestion' );

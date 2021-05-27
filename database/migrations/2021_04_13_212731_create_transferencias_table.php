@@ -17,7 +17,7 @@ class CreateTransferenciasTable extends Migration
             $table->id( 'id_transferencia' );
             $table->integer( 'id_carrera_origen' )->nullable( false );
             $table->integer( 'id_carrera_destino' )->nullable( false );
-            $table->date( 'fecha_solicitud' )->nullable( false );
+            $table->timestamp( 'fecha_solicitud' )->nullable( false );
             $table->string( 'motivo' );
             $table->boolean( 'convalidacion' )->default( false );
         });

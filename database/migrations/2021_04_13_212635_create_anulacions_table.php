@@ -15,7 +15,7 @@ class CreateAnulacionsTable extends Migration
     {
         Schema::create('anulacion', function (Blueprint $table) {
             $table->id('id_anulacion');
-            $table->date('fecha_solicitud');
+            $table->timestamp('fecha_solicitud');
             $table->string( 'motivo' );
             $table->integer('id_carrera_origen')->nullable( false );
         });

@@ -16,7 +16,7 @@ class CreateReadmisionsTable extends Migration
         Schema::create('readmision', function (Blueprint $table) {
             $table->id( 'id_readmision' );
             $table->integer( 'id_carrera' );
-            $table->date('fecha_solicitud');
+            $table->timestamp('fecha_solicitud');
             $table->string( 'motivo' );
             $table->integer( 'id_suspencion' ); //* llave foranea
 
