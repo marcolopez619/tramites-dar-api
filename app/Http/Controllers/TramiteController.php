@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\utils\Estado;
 use App\Models\Tramite;
 use App\Models\Estudiante;
 use App\utils\Tipotramite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use App\Models\EstudianteTramite;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\HabilitacionTramite;
 use App\Models\EstudianteTramiteHistorico;
+use App\Models\HabilitacionTramitePorExcepcion;
 
 class TramiteController extends Controller
 {
@@ -84,7 +86,7 @@ class TramiteController extends Controller
 
     }
 
-    public function verificarHabilitacionTramite($idTramite){
+    public function verificarHabilitacionTramite($idTramite, $idEstudiante){
 
         $selectColumns = [
             DB::raw("(SELECT true AS istramitehabilitado  FROM habilitacion_tramite where CURRENT_DATE BETWEEN fecha_inicial::date AND fecha_final::date AND estado = 1 and id_tramite = $idTramite)")
@@ -94,10 +96,23 @@ class TramiteController extends Controller
         ->select( $selectColumns )
         ->get();
 
-        $resp = [ 'isTramiteHabilitado' => ( empty( $respQuery ) ) ? null: $respQuery[ 0 ]->istramitehabilitado !== null ];
+        // $isTramiteHabilitado = [ 'isTramiteHabilitado' => ( empty( $respQuery ) ) ? null: $respQuery[ 0 ]->istramitehabilitado !== null ];
+        $isTramiteHabilitado = ( empty( $respQuery ) ) ? null: $respQuery[ 0 ]->istramitehabilitado !== null;
+
+        if ( ! $isTramiteHabilitado ) {
+
+            // 1.- Ir a consultar a la tabla : Habilitacion_tramite_por_excepcion, con el idEstudiante, para ver si posee una excepcion para hablitar el boton de nueva solicitud
+            $respHabilitacionExcepcion = HabilitacionTramitePorExcepcion::select( '*' )
+                                        ->where( 'id_tramite', '=', $idTramite )
+                                        ->where( 'id_estudiante', '=', $idEstudiante )
+                                        ->where( 'id_estado', '=', Estado::ACTIVADO )
+                                        ->get();
+            // 2.- Si Existe en la tabla anterior, => se habilita el tramite ( true ), sino se lo desabilita ( false )
+            $isTramiteHabilitado = !$respHabilitacionExcepcion->isEmpty();
+        }
 
         return response()->json( [
-            'data'    => $resp,
+            'data'    => [ 'isTramiteHabilitado' => $isTramiteHabilitado ],
             'message' => 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ], Response::HTTP_OK );
