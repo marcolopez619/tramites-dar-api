@@ -90,11 +90,11 @@ class TramiteController extends Controller
             DB::raw("(SELECT true AS istramitehabilitado  FROM habilitacion_tramite where CURRENT_DATE BETWEEN fecha_inicial::date AND fecha_final::date AND estado = 1 and id_tramite = $idTramite)")
         ];
 
-        $resp = DB::table( 'habilitacion_tramite' )
+        $respQuery = DB::table( 'habilitacion_tramite' )
         ->select( $selectColumns )
         ->get();
 
-        $resp = [ 'isTramiteHabilitado' => $resp[ 0 ]->istramitehabilitado !== null ];
+        $resp = [ 'isTramiteHabilitado' => ( empty( $respQuery ) ) ? null: $respQuery[ 0 ]->istramitehabilitado !== null ];
 
         return response()->json( [
             'data'    => $resp,
