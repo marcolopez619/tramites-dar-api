@@ -102,4 +102,21 @@ class CambioCarreraController extends Controller
         ], Response::HTTP_CREATED);
 
     }
+
+    public function updateCambioCarrera(Request $request)
+    {
+        $idCambioCarrera = $request->input( 'idCambioCarrera' );
+        $convalidacion = $request->input( 'convalidacion' );
+
+        $cambioCarrera = CambioCarrera::find( $idCambioCarrera );
+        $cambioCarrera->convalidacion = $convalidacion;
+        $cambioCarrera->save();
+
+        return response()->json([
+            'data'    => null,
+            'message' => 'ACTUALIZACION CORRECTA',
+            'error'   => null
+        ], Response::HTTP_OK);
+
+    }
 }
