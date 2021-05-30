@@ -218,12 +218,37 @@ class UniversidadController extends Controller
     }
 
     public function addCarrera( Request $request ){
+        // Verificar si una carrera existe dos veces
         $facultad = Facultad::find( $request->input('idFacultad'));
+        $nombreNuevaCarrera = strtoupper( trim( $request->input('nombre') ) );
+
+        // Verifica si ya existe la carrera nueva a crear
+        $universidad = Universidad::find( $facultad->id_universidad );
+
+        $selectColumns = [
+            DB::raw("(select distinct count( * ) from carrera c where c.nombre = '".$nombreNuevaCarrera. "' and c.id_facultad in ( select id_facultad from facultad f where f.id_universidad = $universidad->id_universidad ) )")
+        ];
+
+        $resp = DB::table('carrera')
+            ->select( $selectColumns )
+            ->get();
+
+        if ( $resp[ 0 ]->count >= 1 ) {
+            // El nombre de la carrera es repetida, => mostramos un mensaje al usuario
+            return response()->json( [
+                'data'    => null,
+                'message' => "LA CARRERA: '$nombreNuevaCarrera' YA SE ENCUENTRA REGISTRADA",
+                'error'   => null
+            ], Response::HTTP_BAD_REQUEST );
+        }
+
+
 
         $carrera = new Carrera();
         $carrera->nombre = $request->input('nombre');
         $carrera->estado = $request->input('estado');
         $carreraCreada = $facultad->carrera()->save( $carrera );
+
 
         return response()->json( [
             'data'    => $carreraCreada,
