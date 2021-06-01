@@ -16,6 +16,7 @@ class CreateUniversidadsTable extends Migration
         Schema::create('universidad', function (Blueprint $table) {
             $table->id('id_universidad');
             $table->string('nombre');
+            $table->string('sigla', 10);
             $table->integer('estado');
         });
     }

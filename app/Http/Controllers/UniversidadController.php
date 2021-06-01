@@ -92,22 +92,17 @@ class UniversidadController extends Controller
     }
 
     public function getListUniversidad(){
-        $listaUniversidades = Universidad::all();
+        $selectColumns = [
+            'id_universidad as idUniversidad',
+            'nombre',
+            'sigla',
+            'estado'
+        ];
 
-        $listaUniversidadesRenamedKeys = array();
-
-        foreach ($listaUniversidades as $item) {
-            $newData = [
-                'idUniversidad' => $item->id_universidad,
-                'nombre' => $item->nombre,
-                'estado' => $item->estado
-            ];
-
-            array_push( $listaUniversidadesRenamedKeys, $newData );
-        }
+        $listaUniversidades = Universidad::all( $selectColumns );
 
         return response()->json( [
-            'data'    => $listaUniversidadesRenamedKeys,
+            'data'    => $listaUniversidades,
             'message' => 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ], Response::HTTP_OK );

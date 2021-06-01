@@ -12,7 +12,7 @@ class Universidad extends Model
 
     public $timestamps = false;
     protected $table = 'universidad';
-    protected $fillable = [ 'nombre', 'estado' ];
+    protected $fillable = [ 'nombre', 'sigla', 'estado' ];
     protected $primaryKey = 'id_universidad';
 
     /**
