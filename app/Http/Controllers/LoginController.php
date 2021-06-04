@@ -16,11 +16,12 @@ class LoginController extends Controller
         $userName = $request->input( 'usuario' );
         $password = $request->input( 'password' );
 
-        // TODO: faltaria encriptar el password para la verificacion
-
         $selectColumns = [
             'usuario.id_usuario as idUsuario',
-            'usuario.nombre',
+            'usuario.paterno',
+            'usuario.materno',
+            'usuario.nombres',
+            'usuario.nick_name',
             'usuario.celular',
             'usuario.estado',
             'usuario.id_estudiante as idEstudiante',
@@ -34,7 +35,7 @@ class LoginController extends Controller
             ->select( $selectColumns )
             ->join( 'usuario_perfil','usuario_perfil.id_usuario' ,'=', 'usuario.id_usuario' )
             ->join( 'carrera', 'carrera.id_carrera' , '=', 'usuario_perfil.id_carrera' )
-            ->where( 'usuario.nombre', '=', $userName )
+            ->where( 'usuario.nick_name', '=', $userName )
             ->where( 'usuario.password', '=', $password )
             ->get();
 
@@ -65,7 +66,7 @@ class LoginController extends Controller
         ->join( 'modulo', 'modulo.id_modulo' ,'=', 'perfil_modulo.id_modulo' )
         ->join( 'recurso', 'recurso.id_modulo', '=', 'modulo.id_modulo' )
         ->select( $selectColumns )
-        ->where( 'usuario.nombre', '=', $userName )
+        ->where( 'usuario.nick_name', '=', $userName )
         ->where( 'usuario.password', '=', $password )
         ->get();
 

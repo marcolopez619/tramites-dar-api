@@ -15,16 +15,23 @@ class UsuarioController extends Controller
     public function addUsuario(Request $request){
 
         $idPerfil     = $request->input( 'idPerfil' );
-        $idCarrera    = $request->input( 'idCarrera' ); // $table->timestamp( 'fecha_creacion' )->default( date("Y-m-d H:m:s",time()) );
+        $idCarrera    = $request->input( 'idCarrera' );
+        $idEstudiante = $request->input( 'idEstudiante' );
 
-        $nuevoUsuario                = new usuario();
-        $nuevoUsuario->nombre        = $request->input( 'nombre' );
-        $nuevoUsuario->password      = $request->input( 'password' );      // TODO: faltaria encriptar el password
-        $nuevoUsuario->celular       = $request->input( 'celular' );
-        $nuevoUsuario->estado        = $request->input( 'estado' );
-        $nuevoUsuario->fecha_creacion= date("Y-m-d H:m:s",time());
-        $nuevoUsuario->id_estudiante = $request->input( 'idEstudiante' );
-        // $nuevoUsuario->id_universidad = 1 ; // FIXME: Dato quemado, que hace referencia a la UATF
+        // Verifica si el $idPerfil es Estudiante, si lo es => insertar en las tablas: estudiante, estudiante_carrera y finalmente en la tabla idEstudiante;
+        // Caso contrario insertar solo en la tabla Usuario.
+
+
+        $nuevoUsuario                 = new usuario();
+        $nuevoUsuario->paterno        = $request->input( 'paterno' );
+        $nuevoUsuario->materno        = $request->input( 'materno' );
+        $nuevoUsuario->nombres        = $request->input( 'nombres' );
+        $nuevoUsuario->nick_name      = $request->input( 'nickName' );
+        $nuevoUsuario->password       = $request->input( 'password' );
+        $nuevoUsuario->celular        = $request->input( 'celular' );
+        $nuevoUsuario->estado         = $request->input( 'estado' );
+        $nuevoUsuario->fecha_creacion = date("Y-m-d H:m:s",time());
+        $nuevoUsuario->id_estudiante  = $idEstudiante;
         $nuevoUsuario->save();
 
         $nuevoUsuario->perfil()->attach( $idPerfil, [ 'id_carrera' => $idCarrera] );
@@ -53,8 +60,11 @@ class UsuarioController extends Controller
 
         $selectColumns = [
             'usuario.id_usuario as idUsuario',
+            'usuario.paterno',
+            'usuario.materno',
+            'usuario.nombres',
+            'usuario.nick_name as nickName',
             'usuario.password as password',
-            'usuario.nombre',
             'usuario.celular',
             'usuario.estado',
             'usuario.id_estudiante as idEstudiante',
