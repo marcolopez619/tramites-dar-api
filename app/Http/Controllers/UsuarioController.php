@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Perfil;
+use App\Models\Estudiante;
+use App\Models\EstudianteCarrera;
+use App\utils\Perfil;
 use App\Models\usuario;
 use Illuminate\Http\Request;
 use App\Models\UsuarioPerfil;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isEmpty;
 
 class UsuarioController extends Controller
 {
@@ -20,6 +24,17 @@ class UsuarioController extends Controller
 
         // Verifica si el $idPerfil es Estudiante, si lo es => insertar en las tablas: estudiante, estudiante_carrera y finalmente en la tabla idEstudiante;
         // Caso contrario insertar solo en la tabla Usuario.
+        $existeDatosRepetidos = $this->verificarDatosRepetidos($request->input('nickName'));
+
+        if ( $existeDatosRepetidos ) {
+            return response()->json( [
+                'data'    => null,
+                'message' => 'EL NICKNAME YA SE ENCUENTRA ASIGNADO A OTRA PERSONA',
+                'error'   => null
+            ], Response::HTTP_BAD_REQUEST );
+
+            return;
+        }
 
 
         $nuevoUsuario                 = new usuario();
@@ -121,17 +136,38 @@ class UsuarioController extends Controller
     public function updateUsuario(Request $request){
 
         $idNuevoPerfil = $request->input( 'idPerfil' );
+        $idNuevaCarrera = $request->input( 'idCarrera' );
 
         $usuario           = Usuario::find( $request->input( 'idUsuario' ) );
-        $usuario->nombre   = $request->input( 'nombre' );
-        $usuario->password = $request->input( 'password' ); // TODO: faltaria encriptar el password
-        $usuario->celular  = $request->input( 'celular' );
-        $usuario->estado   = $request->input( 'estado' );
+
+        $usuario->paterno   = $request->input( 'paterno' );
+        $usuario->materno   = $request->input( 'materno' );
+        $usuario->nombres   = $request->input( 'nombres' );
+        $usuario->nick_name = $request->input( 'nickName' );
+        $usuario->password  = $request->input( 'password' );
+        $usuario->celular   = $request->input( 'celular' );
+        $usuario->estado    = $request->input( 'estado' );
         $usuario->save();
 
-        $usuarioPerfil = UsuarioPerfil::find( $usuario->id_usuario );
+        $usuarioPerfil = UsuarioPerfil::where( 'id_usuario', '=', $usuario->id_usuario )->first();
         $usuarioPerfil->id_perfil = $idNuevoPerfil;
+        $usuarioPerfil->id_carrera = $idNuevaCarrera;
         $usuarioPerfil->save();
+
+        // Verifica si el perfil es de Estudiante
+        if ($idNuevoPerfil == Perfil::ESTUDIANTE) {
+            // => Actualiza sus datos principales en la tabla estudiante
+            $estudiante = Estudiante::find( $usuario->id_estudiante );
+            $estudiante->paterno   = $request->input( 'paterno' );
+            $estudiante->materno   = $request->input( 'materno' );
+            $estudiante->nombres   = $request->input( 'nombres' );
+            $estudiante->save();
+
+            // => Actualiza la tabla: Estudiante_carrera, con la nueva carrera del estudiante
+            $estudianteCarrera = EstudianteCarrera::where( 'id_estudiante', '=', $estudiante->id_estudiante )->first();
+            $estudianteCarrera->id_carrera = $idNuevaCarrera;
+            $estudianteCarrera->save();
+        }
 
         return response()->json( [
             'data'    => $usuarioPerfil,
@@ -139,6 +175,15 @@ class UsuarioController extends Controller
             'error'   => null
         ], Response::HTTP_OK );
 
+    }
+
+    private function verificarDatosRepetidos( $pNickName ){
+        $usuario = DB::table( 'usuario'  )
+                    ->select()
+                    ->where( 'usuario.nick_name', '=', $pNickName )
+                    ->get();
+
+        return !$usuario->isEmpty();
     }
 
 }
