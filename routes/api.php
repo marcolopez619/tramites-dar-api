@@ -99,6 +99,7 @@ Route::post( '/anulacion', [ AnulacionController::class, 'addAnulacion' ] );
 
 //** CAMBIO DE CARRERA **/
 Route::get( '/cambio/{idEstudiante}', [ CambioCarreraController::class, 'getListaCambioCarrera' ] );
+Route::get( '/cambio/{idCambioCarrera}/estudiante/{idEstudiante}/', [ CambioCarreraController::class, 'getDatosParaImpresionFormularioCambioCarrera' ] );
 Route::post( '/cambio', [ CambioCarreraController::class, 'addCambioCarrera' ] );
 Route::patch( '/cambio', [ CambioCarreraController::class, 'updateCambioCarrera' ] );
 
