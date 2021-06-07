@@ -117,6 +117,7 @@ Route::post( '/transferencia', [ TransferenciaController::class, 'addTransferenc
 
 //** TRASPASOS **/
 Route::get( '/traspaso/{idEstudiante}', [ TraspasosController::class, 'getListaTraspaso' ] );
+Route::get( '/traspaso/{idTraspaso}/estudiante/{idEstudiante}', [ TraspasosController::class, 'getDatosParaImpresionFormularioTraspasoUniversidad' ] );
 Route::post( '/traspaso', [ TraspasosController::class, 'addTraspaso' ] );
 
 

@@ -77,6 +77,58 @@ class TraspasosController extends Controller
 
     }
 
+    public function getDatosParaImpresionFormularioTraspasoUniversidad($idTraspaso, $idEstudiante){
+        $arrayCamposSelect = [
+            'estudiante.id_estudiante as idEstudiante',
+            'estudiante.ru',
+            'estudiante.ci',
+            'estudiante.complemento',
+            DB::raw( "( CONCAT(estudiante.paterno, ' ', estudiante.materno, ' ', estudiante.nombres) ) as nombrecompleto"),
+
+            'traspaso.id_traspaso AS idTraspaso',
+            'traspaso.id_univ_destino AS idUnivDestino',
+            DB::raw('(select nombre as universidadDestino from universidad where universidad.id_universidad = traspaso.id_univ_destino)'),
+            'traspaso.id_carrera_destino AS idCarreraDestino',
+            DB::raw('(select nombre as carreraDestino from carrera where carrera.id_carrera = traspaso.id_carrera_destino)'),
+            'traspaso.id_carrera_origen AS idCarreraOrigen',
+            DB::raw('(select nombre as carreraOrigen from carrera where carrera.id_carrera = traspaso.id_carrera_origen)'),
+            DB::raw("(select 'F11 L100 N237' as numeroDiploma )"),
+            DB::raw("( SELECT concat( floor(random() * ( 2 - 1 + 1) + 1) , '/', '2021' ) AS periodo )"),
+            DB::raw("(SELECT round( CAST( random() * 100 as numeric ), 2 )  AS promediogeneral )"),
+            'traspaso.anio_ingreso as anioIngreso',
+
+            'traspaso.descripcion as descripcionMotivo',
+            'traspaso.materias_aprobadas as materiasAprobadas',
+            'traspaso.materias_reprobadas as materiasReprobadas',
+            'traspaso.fecha_solicitud as fechaSolicitud',
+
+            'motivo.descripcion as motivo'
+        ];
+
+        $estudiante = DB::table('estudiante')
+
+            ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
+            ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('traspaso', 'traspaso.id_traspaso', '=', 'estudiante_tramite.id_traspaso')
+            ->join('motivo', 'motivo.id_motivo', '=', 'traspaso.id_motivo')
+
+            // ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            // ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
+            // ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
+            ->select( $arrayCamposSelect )
+            ->where( 'estudiante.id_estudiante', '=', $idEstudiante)
+            ->where( 'estudiante_tramite.id_traspaso', '=', $idTraspaso )
+            ->get();
+
+        return response()->json([
+            'data'    => $estudiante->isEmpty() ? null : $estudiante->first(),
+            'message' => $estudiante->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ]);
+    }
+
+
     public function addTraspaso(Request $request)
     {
         $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
