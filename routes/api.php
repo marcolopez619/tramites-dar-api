@@ -109,6 +109,7 @@ Route::post( '/suspencion', [ SuspencionController::class, 'addSuspencion' ] );
 
 //** READMISIONES **/
 Route::get( '/readmision/{idEstudiante}', [ ReadmisionController::class, 'getListaReadmisiones' ] );
+Route::get( '/readmision/{idReadmision}/estudiante/{idEstudiante}', [ ReadmisionController::class, 'getDatosParaImpresionFormularioReadmision' ] );
 Route::post( '/readmision', [ ReadmisionController::class, 'addReadmision' ] );
 
 //** TRANSFERENCIAS **/
