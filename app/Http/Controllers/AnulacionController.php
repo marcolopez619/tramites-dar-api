@@ -53,7 +53,7 @@ class AnulacionController extends Controller
 
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
-            ->join('entidad', 'estudiante_tramite.id_estado', '=', 'entidad.id_entidad')
+            ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_tramite.id_tramite', '=' , Tipotramite::ANULACION )
