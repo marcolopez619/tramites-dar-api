@@ -71,6 +71,7 @@ Route::patch( '/entidad', [EntidadController::class, 'update' ] );
 //** TRAMITES **/
 Route::get( '/tramite', [ TramiteController::class, 'getListaTramite' ] );
 Route::get( '/tramite/verificar/habilitacion/{idTramite}/estudiante/{idEstudiante}', [ TramiteController::class, 'verificarHabilitacionTramite' ] );
+Route::get( '/tramite/{idTramite}/tipo/{idTipoTramite}', [ TramiteController::class, 'getSeguimientoTramite' ] );
 Route::post( '/tramite', [ TramiteController::class, 'addTramite' ] );
 Route::post( '/tramite/tabla/intermedia', [ TramiteController::class, 'insertDataTablaIntermedia' ] );
 Route::patch( '/tramite', [ TramiteController::class, 'updateTramite' ] );

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\HabilitacionTramite;
 use App\Models\EstudianteTramiteHistorico;
 use App\Models\HabilitacionTramitePorExcepcion;
+use App\Models\Motivo;
 
 class TramiteController extends Controller
 {
@@ -190,6 +191,59 @@ class TramiteController extends Controller
             'message' => 'INSERCIÓN CORRECTA',
             'error'   => null
         ], Response::HTTP_CREATED );
+
+    }
+
+    public function getSeguimientoTramite($idTramite, $idTipoTramite){
+        $tableName = null;
+        $tableNameId = null;
+        $motivo = null;
+
+        switch ($idTipoTramite) {
+            case Tipotramite::ANULACION           : $tableName = 'anulacion' ; $tableNameId = 'id_anulacion'; break;
+            case Tipotramite::CAMBIO_DE_CARRERA   : $tableName = 'cambio_carrera' ; $tableNameId  = 'id_cambio_carrera'; break;
+            case Tipotramite::SUSPENCION          : $tableName = 'suspencion' ; $tableNameId = 'id_suspencion';  break;
+            case Tipotramite::READMISION          : $tableName = 'readmision' ; $tableNameId = 'id_readmision'; break;
+            case Tipotramite::TRANSFERENCIA       : $tableName = 'transferencia' ; $tableNameId = 'id_transferencia'; break;
+            case Tipotramite::TRASPASO_UNIVERSIDAD: $tableName = 'traspaso' ; $tableNameId = 'id_traspaso'; break;
+            default: break;
+        }
+
+        $selectColumns = [
+            'tramite.id_tramite as idTramite',
+            'tramite.descripcion as tramite',
+
+            'estado.id_estado as idEstado',
+            'estado.descripcion as estado',
+
+            'entidad.id_entidad as idEntidad',
+            'entidad.descripcion as entidad',
+
+            'estudiante_tramite.fecha_proceso as fechaProceso',
+            'estudiante_tramite.observaciones',
+
+            ($idTipoTramite != TipoTramite::SUSPENCION && $idTipoTramite != Tipotramite::TRASPASO_UNIVERSIDAD ) ? $tableName.'.'.'motivo' : $tableName.'.'.'id_motivo as idMotivo'
+        ];
+
+        $seguimiento = DB::table( 'tramite' )
+                ->join( 'estudiante_tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite' )
+                ->join( 'estado', 'estado.id_estado', '=', 'estudiante_tramite.id_estado' )
+                ->join( 'entidad', 'entidad.id_entidad', '=', 'estudiante_tramite.id_entidad' )
+                ->join( $tableName, $tableName.'.'.$tableNameId, '=', 'estudiante_tramite'.'.'.$tableNameId )
+                ->select($selectColumns)
+                ->where('estudiante_tramite'.'.'.$tableNameId, '=', $idTramite)
+                ->get();
+
+        if ($idTipoTramite == TipoTramite::SUSPENCION || $idTipoTramite == TipoTramite::TRASPASO_UNIVERSIDAD){
+            $motivo = Motivo::find( $seguimiento[ 0 ]->idMotivo);
+            $seguimiento->first()->motivo = $motivo->descripcion;
+        }
+
+        return response()->json( [
+            'data'    => $seguimiento->isEmpty() ? null : $seguimiento->first(),
+            'message' => $seguimiento->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADO',
+            'error'   => null
+        ], Response::HTTP_OK );
 
     }
 }
