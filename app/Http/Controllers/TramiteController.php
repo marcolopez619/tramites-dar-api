@@ -98,7 +98,7 @@ class TramiteController extends Controller
         ->get();
 
         // $isTramiteHabilitado = [ 'isTramiteHabilitado' => ( empty( $respQuery ) ) ? null: $respQuery[ 0 ]->istramitehabilitado !== null ];
-        $isTramiteHabilitado = ( empty( $respQuery ) ) ? null: $respQuery[ 0 ]->istramitehabilitado !== null;
+        $isTramiteHabilitado = ( $respQuery->isEmpty() ) ? null: $respQuery[ 0 ]->istramitehabilitado !== null;
 
         if ( ! $isTramiteHabilitado ) {
 
