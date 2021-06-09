@@ -72,6 +72,44 @@ class TransferenciaController extends Controller
 
     }
 
+    public function getDatosParaImpresionFormularioTransferenciaCarrera($idTransferencia, $idEstudiante)
+    {
+        $arrayCamposSelect = [
+            'estudiante.id_estudiante as idEstudiante',
+            'estudiante.ru',
+            'estudiante.ci',
+            'estudiante.complemento',
+            DB::raw( "( CONCAT(estudiante.paterno, ' ', estudiante.materno, ' ', estudiante.nombres) ) as nombrecompleto"),
+            'carrera.nombre as carreraOrigen',
+            DB::raw('( select nombre as carreraDestino from carrera where carrera.id_carrera = transferencia.id_carrera_destino)'),
+            DB::raw("(SELECT COUNT( * ) as cantidadtraspasosrealizados FROM estudiante_tramite WHERE estudiante_tramite.id_estudiante = $idEstudiante AND estudiante_tramite.id_traspaso > 0 )"),
+            'transferencia.fecha_solicitud as fechaSolicitud',
+            'transferencia.motivo',
+            DB::raw("( SELECT floor(random() * ( 100 - 1 + 1) + 1)::integer  AS materiasAprobadas )"),
+            DB::raw("( SELECT floor(random() * ( 80 - 1 + 1) + 1)::integer  AS materiasReprobadas )"),
+            'estudiante_tramite.fecha_proceso AS fechaProceso',
+            'estudiante_tramite.observaciones'
+        ];
+
+        $estudiante = DB::table('estudiante')
+            ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
+            ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
+            ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
+            ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_tramite.id_transferencia')
+            ->select( $arrayCamposSelect )
+            ->where('estudiante.id_estudiante', '=', $idEstudiante)
+            ->where( 'estudiante_tramite.id_transferencia', '=' , $idTransferencia )
+            ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC')
+            ->get();
+
+        return response()->json([
+            'data'    => $estudiante->isEmpty() ? null : $estudiante->first(),
+            'message' => $estudiante->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ]);
+
+    }
+
     public function addTransferencia(Request $request)
     {
 

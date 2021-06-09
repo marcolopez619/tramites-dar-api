@@ -115,6 +115,7 @@ Route::post( '/readmision', [ ReadmisionController::class, 'addReadmision' ] );
 
 //** TRANSFERENCIAS **/
 Route::get( '/transferencia/{idEstudiante}', [ TransferenciaController::class, 'getListaTransferencia' ] );
+Route::get( '/transferencia/{idTransferencia}/estudiante/{idEstudiante}/', [ TransferenciaController::class, 'getDatosParaImpresionFormularioTransferenciaCarrera' ] );
 Route::post( '/transferencia', [ TransferenciaController::class, 'addTransferencia' ] );
 
 //** TRASPASOS **/
