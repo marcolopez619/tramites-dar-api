@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DirectorModel;
+use App\utils\Entidad;
 use App\utils\Estado;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -54,9 +55,10 @@ class DirectorController extends Controller
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $selectColumnsAnulaciones )
-            ->where( 'estudiante_tramite.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_ORIGEN )
             ->where( 'anulacion.id_carrera_origen', '=', $idCarrera)
             ->where( 'estudiante_tramite.activo', '=' , true );
+
 
 
 
@@ -102,7 +104,7 @@ class DirectorController extends Controller
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $selectColumnsCambioCarrera )
-            ->where( 'estudiante_tramite.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_ORIGEN )
             ->where( 'cambio_carrera.id_carrera_origen', '=', $idCarrera)
             ->where( 'estudiante_tramite.activo', '=' , true )
             ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
@@ -170,14 +172,11 @@ class DirectorController extends Controller
         ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
         ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
         ->select( $selectColumnsTransferencia )
-        ->where( 'estudiante_tramite.id_entidad', '=' , 3 ) // FIXME: DATOS QUEMADO
+        ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_ORIGEN )
         ->where( 'transferencia.id_carrera_origen', '=', $idCarrera)
         ->where( 'estudiante_tramite.activo', '=' , true )
         ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
-        //->union( $estudianteAnulaciones )
-        //->union( $estudianteCambiosCarreraOrigen )
-        //->union( $estudianteCambiosCarreraDestino )
-        //->get();
+
 
         $estudianteTransferenciasDestino = DB::table('estudiante')
         ->join('estudiante_carrera', 'estudiante_carrera.id_estudiante', '=' , 'estudiante.id_estudiante')
@@ -189,7 +188,7 @@ class DirectorController extends Controller
         ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
         ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
         ->select( $selectColumnsTransferencia )
-        ->where( 'estudiante_tramite.id_entidad', '=' , 4 ) // FIXME: DATOS QUEMADO
+        ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_DESTINO )
         ->where( 'transferencia.id_carrera_destino', '=', $idCarrera)
         ->where( 'estudiante_tramite.activo', '=' , true )
         ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC')
