@@ -136,11 +136,12 @@ Route::get( '/seguimiento/tipo/{idTipoTramite}/tramite/{idTramite}', [ Seguimien
 //** MODULO DEL DAR **/
 
 Route::get( '/dar', [ DarController::class, 'getTramitesPorAtender' ] );
+Route::get( '/dar/tramites/atendidos', [ DarController::class, 'getTramitesAtendidos' ] );
 Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
 
 //** MODULO DEL DIRECTOR **/
 Route::get( '/director/{idCarrera}', [ DirectorController::class, 'getTramitesPorAtender' ] );
-// Route::get( '/dar/detalle/tramite', [ DarController::class, 'getDetalleTramite' ] );
+Route::get( '/director/{idCarrera}/tramites/atendidos', [ DirectorController::class, 'getTramitesAtendidos' ] );
 
 
 //** USUARIOS **/
