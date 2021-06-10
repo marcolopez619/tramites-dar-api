@@ -10,11 +10,14 @@ use Illuminate\Http\Request;
 use App\Models\transferencia;
 use Illuminate\Http\Response;
 use App\Models\EstudianteTramite;
+use App\utils\Entidad;
 use Illuminate\Support\Facades\DB;
 
 class DarController extends Controller
 {
     public function getTramitesPorAtender(){
+
+        $arrayEstadosParaNoMostrar = [ Estado::RECHAZADO, Estado::FINALIZADO ];
 
         $arrayCamposSelectAnulacion = [
             'estudiante.id_estudiante as idEstudiante',
@@ -59,12 +62,11 @@ class DarController extends Controller
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelectAnulacion )
-            ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::ENCARGADO_DAR )
             ->where( 'estudiante_tramite.activo', '=' , true )
             ->where( 'estudiante_tramite.id_anulacion', '<>', 0 )
-            ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO );
-
-            // ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
+            ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar );
+            // ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO );
 
 
         $arrayCamposSelectCambioCarrera = [
@@ -110,13 +112,12 @@ class DarController extends Controller
                 ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
                 ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectCambioCarrera )
-                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::ENCARGADO_DAR )
                 ->where( 'estudiante_tramite.activo', '=' , true )
                 ->where( 'estudiante_tramite.id_cambio_carrera', '<>', 0 )
-                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
+                //->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
                 ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
-                //->union($respAnulacion)
-                //->get();
 
 
         $arrayCamposSelectTransferencias = [
@@ -162,14 +163,12 @@ class DarController extends Controller
                 ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
                 ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectTransferencias )
-                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::ENCARGADO_DAR )
                 ->where( 'estudiante_tramite.activo', '=' , true )
                 ->where( 'estudiante_tramite.id_transferencia', '<>', 0 )
-                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
+                // ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
                 ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
-                // ->union($respAnulacion)
-                // ->union($respCambioCarrera)
-                // ->get();
 
 
         $arrayCamposSelectSuspenciones = [
@@ -215,15 +214,12 @@ class DarController extends Controller
                 ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
                 ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectSuspenciones )
-                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::ENCARGADO_DAR )
                 ->where( 'estudiante_tramite.activo', '=' , true )
                 ->where( 'estudiante_tramite.id_suspencion', '<>', 0 )
-                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
+                //->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
                 ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
-                // ->union($respAnulacion)
-                //->union($respCambioCarrera)
-                //->union($respTransferencias)
-                //->get();
 
 
         $arrayCamposSelectReadmisiones = [
@@ -269,10 +265,11 @@ class DarController extends Controller
                 ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
                 ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectReadmisiones )
-                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::ENCARGADO_DAR )
                 ->where( 'estudiante_tramite.activo', '=' , true )
                 ->where( 'estudiante_tramite.id_readmision', '<>', 0 )
-                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
+                // ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
                 ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
 
 
@@ -320,10 +317,11 @@ class DarController extends Controller
                 ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
                 ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
                 ->select( $arrayCamposSelectTraspasos )
-                ->where( 'estudiante_tramite.id_entidad', '=' , 2 ) // FIXME: DATOS QUEMADO
+                ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::ENCARGADO_DAR )
                 ->where( 'estudiante_tramite.activo', '=' , true )
                 ->where( 'estudiante_tramite.id_traspaso', '<>', 0 )
-                ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
+                ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
+                // ->where( 'estudiante_tramite.id_estado', '<>' , Estado::FINALIZADO )
                 ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC')
                 ->union($respAnulacion)
                 ->union($respCambioCarrera)
@@ -339,4 +337,5 @@ class DarController extends Controller
         ]);
 
     }
+
 }
