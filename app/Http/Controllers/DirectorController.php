@@ -13,6 +13,8 @@ use App\utils\Tipotramite;
 class DirectorController extends Controller
 {
     public function getTramitesPorAtender($idCarrera){
+        $arrayEstadosParaNoMostrar = [ Estado::RECHAZADO, Estado::FINALIZADO ];
+
         $selectColumnsAnulaciones = [
             'estudiante.id_estudiante as idEstudiante',
             'estudiante.ru',
@@ -57,7 +59,8 @@ class DirectorController extends Controller
             ->select( $selectColumnsAnulaciones )
             ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_ORIGEN )
             ->where( 'anulacion.id_carrera_origen', '=', $idCarrera)
-            ->where( 'estudiante_tramite.activo', '=' , true );
+            ->where( 'estudiante_tramite.activo', '=' , true )
+            ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar );
 
 
 
@@ -107,6 +110,7 @@ class DirectorController extends Controller
             ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_ORIGEN )
             ->where( 'cambio_carrera.id_carrera_origen', '=', $idCarrera)
             ->where( 'estudiante_tramite.activo', '=' , true )
+            ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
             ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
 
 
@@ -121,13 +125,11 @@ class DirectorController extends Controller
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $selectColumnsCambioCarrera )
-            ->where( 'estudiante_tramite.id_entidad', '=' , 4 ) // FIXME: DATOS QUEMADO
+            ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_DESTINO )
             ->where( 'cambio_carrera.id_carrera_destino', '=', $idCarrera)
             ->where( 'estudiante_tramite.activo', '=' , true )
+            ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
             ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
-            // ->union( $estudianteAnulaciones )
-            // ->union( $estudianteCambiosCarreraOrigen )
-            // ->get();
 
         ///////////////////
 
@@ -175,6 +177,7 @@ class DirectorController extends Controller
         ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_ORIGEN )
         ->where( 'transferencia.id_carrera_origen', '=', $idCarrera)
         ->where( 'estudiante_tramite.activo', '=' , true )
+        ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
         ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC');
 
 
@@ -191,17 +194,13 @@ class DirectorController extends Controller
         ->where( 'estudiante_tramite.id_entidad', '=' , Entidad::DIRECTOR_CARRERA_DESTINO )
         ->where( 'transferencia.id_carrera_destino', '=', $idCarrera)
         ->where( 'estudiante_tramite.activo', '=' , true )
+        ->whereNotIn( 'estudiante_tramite.id_estado', $arrayEstadosParaNoMostrar )
         ->orderBy( 'estudiante_tramite.fecha_proceso' , 'DESC')
         ->union( $estudianteAnulaciones )
         ->union( $estudianteCambiosCarreraOrigen )
         ->union( $estudianteCambiosCarreraDestino )
         ->union( $estudianteTransferenciasOrigen )
         ->get();
-
-
-
-
-
 
         return response()->json([
             'data'    => $estudianteTransferenciasDestino->isEmpty() ? null : $estudianteTransferenciasDestino,
