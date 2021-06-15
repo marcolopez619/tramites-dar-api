@@ -52,6 +52,7 @@ class HabilitacionTramiteController extends Controller
         $nuevaHabilitacion->fecha_final        = $request->input( 'fechaFinal' );
         $nuevaHabilitacion->estado             = $request->input( 'estado' );
         $nuevaHabilitacion->id_periodo_gestion = $request->input( 'idPeriodoGestion' );
+        $nuevaHabilitacion->id_tipo_carrera    = $request->input( 'idTipoCarrera' );
         $nuevaHabilitacionCreada               = $tramite->habilitacionTramite()->save( $nuevaHabilitacion );
 
         return response()->json( [
@@ -73,6 +74,7 @@ class HabilitacionTramiteController extends Controller
             $habilitacion->estado             = $request->input( 'estado' );
             $habilitacion->id_tramite         = $request->input( 'idTramite' );
             $habilitacion->id_periodo_gestion = $request->input( 'idPeriodoGestion' );
+            $habilitacion->id_tipo_carrera    = $request->input( 'idTipoCarrera' );
             $habilitacion->save();
 
             return response()->json( [

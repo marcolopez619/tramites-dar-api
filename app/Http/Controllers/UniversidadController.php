@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Carrera;
 use App\Models\Facultad;
+use App\Models\TipoCarrera;
 use App\Models\Universidad;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -132,6 +133,21 @@ class UniversidadController extends Controller
         return response()->json( [
             'data'    => $listaCarreras->isEmpty() ? null : $listaCarreras,
             'message' => $listaCarreras->isEmpty() ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
+    public function getListaTipoCarreras(){
+        $selectColumns = [
+            'id_tipo_carrera as idTipoCarrera',
+            'descripcion as tipoCarrera'
+        ];
+
+        $listaTipoCarreras = TipoCarrera::all( $selectColumns );
+
+        return response()->json( [
+            'data'    => $listaTipoCarreras,
+            'message' => 'SE ENCONTRARON RESULTADOS',
             'error'   => null
         ], Response::HTTP_OK );
     }
