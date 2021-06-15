@@ -20,9 +20,11 @@ class CreateHabilitacionTramitesTable extends Migration
             $table->integer( 'estado' );
             $table->integer( 'id_tramite' );
             $table->integer( 'id_periodo_gestion' );
+            $table->integer( 'id_tipo_carrera' );
 
             $table->foreign( 'id_tramite' )->references( 'id_tramite' )->on( 'tramite' )->onDelete( 'cascade' );
             $table->foreign( 'id_periodo_gestion' )->references( 'id_periodo_gestion' )->on( 'periodo_gestion' )->onDelete( 'cascade' );
+            $table->foreign( 'id_tipo_carrera' )->references( 'id_tipo_carrera' )->on( 'tipo_carrera' )->onDelete( 'cascade' );
         });
     }
 

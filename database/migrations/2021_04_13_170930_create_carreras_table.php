@@ -18,7 +18,10 @@ class CreateCarrerasTable extends Migration
             $table->string('nombre');
             $table->integer('estado');
             $table->bigInteger('id_facultad');
+            $table->bigInteger('id_tipo_carrera');
+
             $table->foreign( 'id_facultad' )->references('id_facultad')->on('facultad')->onDelete('cascade');
+            $table->foreign( 'id_tipo_carrera' )->references('id_tipo_carrera')->on('tipo_carrera')->onDelete('cascade');
         });
     }
 
