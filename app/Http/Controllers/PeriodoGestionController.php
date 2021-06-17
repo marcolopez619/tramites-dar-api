@@ -38,22 +38,111 @@ class PeriodoGestionController extends Controller
         ], Response::HTTP_OK );
     }
 
+    public function addPeriodo(Request $request){
+
+        $nuevoIdPeriodo = $request->input( 'periodo' );
+        $nuevoIdGestion = $request->input( 'gestion' );
+        $nuevoEstado    = $request->input( 'estado' );
+
+        // Buscar si ya existe el periodo y gestion en la tabla
+        $resp = DB::table( 'periodo_gestion' )
+                ->select( '*' )
+                ->where( 'id_periodo', '=', $nuevoIdPeriodo )
+                ->where( 'id_gestion', '=', $nuevoIdGestion )
+                ->get();
+
+        if ( $resp->isEmpty() ) {
+            // NO existe la data que quiere introducir, => lo insertamos
+
+            $arrayDatos = [
+                'id_periodo' => $nuevoIdPeriodo,
+                'id_gestion' => $nuevoIdGestion,
+                'estado'     => $nuevoEstado
+                // 'fecha_modificacion' => date('Y-m-d H:i:s')
+            ];
+
+            $nuevoPeriodoGestion = PeriodoGestion::create( $arrayDatos );
+
+            if ( $nuevoEstado ) {
+                // SI es true, => desactiva las demas gesiontes.
+                $this->habilitarSoloUnPeriodoGestion( $nuevoPeriodoGestion->id_periodo_gestion, $nuevoEstado);
+            }
+
+        }else{
+            // Los datos YA EXISTEN => mostramos un mensaje de error.
+            return response()->json( [
+                'data'    => null,
+                'message' => 'LOS DATOS INTRODUCIDOS YA EXISTEN EN LA BASE DE DATOS',
+                'error'   => null
+            ], Response::HTTP_BAD_REQUEST );
+        }
+
+        return response()->json( [
+            'data'    => null,
+            'message' => 'SE INSERTÓ EL REGISTRO CORRECTAMENTE',
+            'error'   => null
+        ], Response::HTTP_CREATED );
+
+    }
+
     public function updatePeriodoToActivo(Request $request){
 
         //** SOLO UN PERIODO PUEDE ESTAR HABILITADO **/
 
         $idPeriodoGestion = $request->input( 'idPeriodoGestion' );
-        $nuevoEstado = $request->input( 'estado' );
+        $idPeriodo        = $request->input( 'periodo' );
+        $idGestion        = $request->input( 'gestion' );
+        $nuevoEstado      = $request->input( 'estado' );
 
-        //** TODO: OJO, FALTA VALIDAR SI POR EJEMPLO, se debe poder desabilitar la gestion, pero teniendo en cuenta q existen tramites habilitados de esa gestion.**//
+       // Buscar si ya existe el periodo y gestion en la tabla
+       $resp = DB::table( 'periodo_gestion' )
+                ->select( '*' )
+                ->where( 'id_periodo', '=', $idPeriodo )
+                ->where( 'id_gestion', '=', $idGestion )
+                ->get();
+
+        if ( $resp->isEmpty() ) {
+            // NO existe la data que quiere introducir, => lo ACTUALIZAMOS
+
+            $periodoGestion             = PeriodoGestion::find( $idPeriodoGestion );
+            $periodoGestion->id_periodo = $idPeriodo;
+            $periodoGestion->id_gestion = $idGestion;
+            $periodoGestion->estado     = $nuevoEstado;
+            $periodoGestion->save();
+
+            if ( $nuevoEstado ) {
+                // SI es true, => desactiva las demas gesiontes.
+                $this->habilitarSoloUnPeriodoGestion( $idPeriodoGestion, $nuevoEstado);
+            }
+
+        }else{
+            // Los datos YA EXISTEN => mostramos un mensaje de error.
+            return response()->json( [
+                'data'    => null,
+                'message' => 'LOS DATOS INTRODUCIDOS YA EXISTEN EN LA BASE DE DATOS',
+                'error'   => null
+            ], Response::HTTP_BAD_REQUEST );
+        }
+
+        return response()->json( [
+            'data'    => null,
+            'message' => 'SE HABILITÓ EL PERIODO SELECCIONADO CORRECTAMENTE',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
+
+
+    private function habilitarSoloUnPeriodoGestion( $idPeriodoGestionToHabilitar, $nuevoEstado ){
+        //** SOLO UN PERIODO PUEDE ESTAR HABILITADO **/
 
         // 1.- Recupera todos los periodos, sin importar si estan vigentes o no.
         $listaPeriodos =  PeriodoGestion::all();
 
         // 2. Actualizar el estado del perido seleccionado
-        $listaPeriodos->map( function ( $item ) use ( $idPeriodoGestion, $nuevoEstado ) {
+        $listaPeriodos->map( function ( $item ) use ( $idPeriodoGestionToHabilitar, $nuevoEstado ) {
 
-            if( $item->id_periodo_gestion == $idPeriodoGestion ){
+            if( $item->id_periodo_gestion == $idPeriodoGestionToHabilitar ){
                 $item->estado = true;
                 $item->fecha_modificacion = date('Y-m-d H:i:s');
             }else{
@@ -62,12 +151,7 @@ class PeriodoGestionController extends Controller
             $item->save();
         });
 
-        // 3.- Retornar respuesta
-        return response()->json( [
-            'data'    => null,
-            'message' => 'SE HABILITÓ EL PERIODO SELECCIONADO CORRECTAMENTE',
-            'error'   => null
-        ], Response::HTTP_OK );
+        return null;
     }
 
 }
