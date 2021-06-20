@@ -9,11 +9,14 @@ use Illuminate\Http\Response;
 use App\Models\PeriodoGestion;
 use Illuminate\Support\Facades\DB;
 use App\Models\HabilitacionTramite;
+use DateTime;
+use Illuminate\Support\Facades\Date;
 
 class HabilitacionTramiteController extends Controller
 {
 
     public function getListHabilitacionTramite(){
+        $this->actualizarEstadoHabiitacionTramite();
 
         $selectColumns = [
             'tramite.id_tramite AS idTramite',
@@ -34,8 +37,24 @@ class HabilitacionTramiteController extends Controller
                                 ->select( $selectColumns )
                                 // ->where( 'periodo_gestion.estado', '=', true )
                                 // ->where( 'habilitacion_tramite.estado', '=', Estado::ACTIVADO )
+                                ->where( DB::raw('( habilitacion_tramite.fecha_final::DATE )'), '>=' , DB::raw( '( CURRENT_DATE )' ) )
+                                // ->where( 'habilitacion_tramite.fecha_final', '>=' , date('Y-m-d') )
+
                                 ->orderBy( 'habilitacion_tramite.fecha_inicial' , 'DESC' )
                                 ->get();
+
+        // Verifica si ya fenecio la fecha final de hablitacion del tramite, para desabilitar el boton de edicion.
+        /* if ( !$listaHabilitaciones->isEmpty() ) {
+
+            foreach ($listaHabilitaciones as $item) {
+
+                $selectColumn = [ DB::raw("( select true as desabilitarEdicion from habilitacion_tramite ht where ht.id_hab_tramite = $item->idHabilitacionTramite and ht.fecha_final::date >= CURRENT_DATE )") ];
+
+                $resp = DB::table( 'habilitacion_tramite' )->select( $selectColumn )->get();
+
+                $item->desabilitarEdicion = $resp->first()->desabilitaredicion ?? false;
+            }
+        } */
 
         return response()->json( [
             'data'    => $listaHabilitaciones->isEmpty() ? null :  $listaHabilitaciones,
@@ -46,6 +65,19 @@ class HabilitacionTramiteController extends Controller
 
     public function addHabilitacionTramite( Request $request ){
         $tramite = Tramite::find( $request->input( 'idTramite' ) );
+
+        $fechaInicial = $request->input( 'fechaInicial' );
+        $fechaFinal = $request->input( 'fechaFinal' );
+
+        $existeChoquesIntervalos = $this->verificarIntervalosHabilitacionTramites(  $request->input( 'idTramite' ), $fechaInicial, $fechaFinal );
+
+        if ( $existeChoquesIntervalos ) {
+            return response()->json( [
+                'data'    =>null,
+                'message' => 'EL TRAMITE YA ESTA HABILITADO HASTA EL : '.( new DateTime($fechaFinal ) )->format( 'd-m-Y' ),
+                'error'   => null
+            ], Response::HTTP_BAD_REQUEST );
+        }
 
         $nuevaHabilitacion                     = new HabilitacionTramite();
         $nuevaHabilitacion->fecha_inicial      = $request->input( 'fechaInicial' );
@@ -93,6 +125,44 @@ class HabilitacionTramiteController extends Controller
             ], Response::HTTP_BAD_REQUEST );
         }
 
+
+    }
+
+    private function actualizarEstadoHabiitacionTramite(){
+        db::table( 'habilitacion_tramite' )
+                ->where( DB::raw('( habilitacion_tramite.fecha_final::DATE )'), '<' , DB::raw( '( CURRENT_DATE )' ) )
+                ->update( [ 'estado' => 0 ]);
+    }
+
+    public function verificarIntervalosHabilitacionTramites($idTipoTramite, $fechaInicial, $fechaFinal ){
+
+        $inputFechaInicial = new DateTime($fechaInicial );
+        $inputFechaFinal = new DateTime($fechaFinal );
+
+        $resp = false;
+        $resp2 = false;
+
+        $listaHabilitaciones = HabilitacionTramite::where( 'id_tramite', '=', $idTipoTramite )->where( 'estado', '=' , 1 )->get();
+
+        foreach ($listaHabilitaciones as $item) {
+
+            $fechaInicialBD = new DateTime($item->fecha_inicial );
+            $fechaFinalBD = new DateTime($item->fecha_final );
+
+
+            if ( $inputFechaInicial->format("Y-m-d") >= $fechaInicialBD->format("Y-m-d") && $inputFechaInicial->format("Y-m-d") <= $fechaFinalBD->format("Y-m-d") ) {
+                $resp = true;
+            }
+            if ( $inputFechaFinal->format("Y-m-d") >= $fechaInicialBD->format("Y-m-d") && $inputFechaFinal->format("Y-m-d") <= $fechaFinalBD->format("Y-m-d") ) {
+                $resp2 = true;
+            }
+
+            if ( $resp || $resp2) {
+                return true;
+            }
+        }
+
+        return false;
 
     }
 
