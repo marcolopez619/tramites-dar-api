@@ -37,6 +37,9 @@ class AnulacionController extends Controller
             'tramite.id_tramite AS idTramite',
             'tramite.descripcion AS tramite',
 
+            'costo.costo as costoTramite',
+            DB::raw("( select CONCAT( id_periodo, '/',  id_gestion ) as periodo from periodo_gestion where estado = true)"),
+
             'estado.id_estado AS idEstado',
             'estado.descripcion AS estado',
 
@@ -52,6 +55,7 @@ class AnulacionController extends Controller
             ->join('anulacion', 'anulacion.id_anulacion', '=', 'estudiante_tramite.id_anulacion')
 
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
+            ->join( 'costo', 'costo.id_costo', '=', 'tramite.id_costo' )
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
             ->join('entidad', 'estudiante_tramite.id_entidad', '=', 'entidad.id_entidad')
             ->select( $arrayCamposSelect )
