@@ -93,7 +93,7 @@ class TraspasosController extends Controller
             'traspaso.id_carrera_origen AS idCarreraOrigen',
             DB::raw('(select nombre as carreraOrigen from carrera where carrera.id_carrera = traspaso.id_carrera_origen)'),
             DB::raw("(select 'F11 L100 N237' as numeroDiploma )"),
-            DB::raw("( SELECT concat( floor(random() * ( 2 - 1 + 1) + 1) , '/', '2021' ) AS periodo )"),
+            // DB::raw("( SELECT concat( floor(random() * ( 2 - 1 + 1) + 1) , '/', '2021' ) AS periodo )"),
             DB::raw("(SELECT round( CAST( random() * 100 as numeric ), 2 )  AS promediogeneral )"),
             'traspaso.anio_ingreso as anioIngreso',
 
@@ -102,7 +102,10 @@ class TraspasosController extends Controller
             'traspaso.materias_reprobadas as materiasReprobadas',
             'traspaso.fecha_solicitud as fechaSolicitud',
 
-            'motivo.descripcion as motivo'
+            'motivo.descripcion as motivo',
+
+            DB::raw("(select costo as \"costoTramite\" from costo where id_costo = ".Tipotramite::TRASPASO_UNIVERSIDAD.")"),
+            DB::raw("( select CONCAT( id_periodo, '/',  id_gestion ) as periodo from periodo_gestion where estado = true)")
         ];
 
         $estudiante = DB::table('estudiante')
