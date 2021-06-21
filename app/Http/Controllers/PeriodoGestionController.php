@@ -38,6 +38,76 @@ class PeriodoGestionController extends Controller
         ], Response::HTTP_OK );
     }
 
+    public function getCalculoCompraMatriculaToGestionActual($idEstudiante){
+
+        $cantidadPeriodos = 0;
+        $cantidadGestiones = 0;
+
+        // 1.- Obtener el periodo que compró la matricula
+        $selectColumns = [
+            'matricula.id_matricula',
+            'matricula.id_periodo_gestion',
+            'matricula.id_estudiante',
+
+            'periodo_gestion.id_periodo_gestion',
+            'periodo_gestion.id_periodo',
+            'periodo_gestion.id_gestion',
+            'periodo_gestion.estado',
+        ];
+        $ultimaGestionComprada = DB::table( 'matricula' )
+                                    ->join( 'periodo_gestion', 'periodo_gestion.id_periodo_gestion', '=', 'matricula.id_periodo_gestion')
+                                    ->select( $selectColumns )
+                                    ->where( 'matricula.id_estudiante' , '=' , $idEstudiante )
+                                    ->where( 'matricula.estado' , '=' , true  )
+                                    ->get();
+
+        // 2.- Obtener la gestion vigente o activa
+        if ( !$ultimaGestionComprada->isEmpty() ) {
+
+            // Realizamos el calculo respectivo
+            $gestionVigente = PeriodoGestion::select( '*' )->where( 'estado', '=', true )->first();
+
+            $matriculaUltimaGestionComprada = $ultimaGestionComprada->first();
+            $cantidadGestiones =  ( $gestionVigente->id_gestion - $matriculaUltimaGestionComprada->id_gestion ); // Se le resta -1 por la gestion actual
+
+            if ( $matriculaUltimaGestionComprada->id_periodo == 2 ) {
+                $cantidadGestiones--; // Se le resta -1 porque su ultimo periodo fue en el segundo semtres del año
+            }
+
+
+
+            if ( $gestionVigente->id_periodo == 1 ) {
+
+                if ($cantidadGestiones == 1 ) {
+                    $cantidadPeriodos = 2;  // 1 gestion es igual a 2 periodos.
+                }else{
+                    $cantidadPeriodos = abs( ( $cantidadGestiones * 2 ) - 1 ); // Se le resta un periodo
+                }
+
+            }
+
+
+            if ($matriculaUltimaGestionComprada->id_periodo == 2) {
+                $cantidadPeriodos = ($cantidadGestiones * 2) + 1;
+            }else{
+                $cantidadPeriodos = $cantidadGestiones * 2;
+            }
+        }
+
+        $resultadoCalculo = [
+            'cantidadPeriodos' => $cantidadPeriodos,
+            'cantidadGestiones' => $cantidadGestiones,
+            'gestionInicial' => $matriculaUltimaGestionComprada->id_periodo.'/'.$matriculaUltimaGestionComprada->id_gestion,
+            'gestionFinal' => $gestionVigente->id_periodo.'/'.$gestionVigente->id_gestion
+        ];
+
+        return response()->json( [
+            'data'    => $resultadoCalculo,
+            'message' => 'CÁLCULO REALIZADO CORRECTAMENTE',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
     public function addPeriodo(Request $request){
 
         $nuevoIdPeriodo = $request->input( 'periodo' );

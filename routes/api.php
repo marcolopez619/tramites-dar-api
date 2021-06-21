@@ -63,6 +63,7 @@ Route::get( '/periodo', [PeriodoGestionController::class, 'getAllPeriodos'] );
 Route::post( '/periodo', [PeriodoGestionController::class, 'addPeriodo'] );
 Route::get( '/periodo/activo', [PeriodoGestionController::class, 'getPeriodoActivo'] );
 Route::patch( '/periodo', [PeriodoGestionController::class, 'updatePeriodoToActivo'] );
+Route::get( '/periodo/calculo/{idEstudiante}', [PeriodoGestionController::class, 'getCalculoCompraMatriculaToGestionActual'] );
 
 
 //** ENTIDADES **/
