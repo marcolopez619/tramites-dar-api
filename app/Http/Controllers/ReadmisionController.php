@@ -105,7 +105,9 @@ class ReadmisionController extends Controller
             'carrera.nombre as carrera',
             'facultad.nombre as facultad',
 
-            DB::raw("( SELECT concat( floor(random() * ( 2 - 1 + 1) + 1) , '/', '2021' ) AS periodo )"),
+            // DB::raw("( SELECT concat( floor(random() * ( 2 - 1 + 1) + 1) , '/', '2021' ) AS periodo )"),
+            DB::raw("(select costo as \"costoTramite\" from costo where id_costo = ".Tipotramite::READMISION.")"),
+            DB::raw("( select CONCAT( id_periodo, '/',  id_gestion ) as periodo from periodo_gestion where estado = true)"),
 
             'readmision.id_readmision as idReadmision',
             'readmision.fecha_solicitud as fechaSolicitud',
