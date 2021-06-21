@@ -68,6 +68,7 @@ class LoginController extends Controller
         ->select( $selectColumns )
         ->where( 'usuario.nick_name', '=', $userName )
         ->where( 'usuario.password', '=', $password )
+        ->orderBy( 'modulo.nombre', 'ASC' )
         ->get();
 
         // Une la data del usuario con la lista de recursos //
