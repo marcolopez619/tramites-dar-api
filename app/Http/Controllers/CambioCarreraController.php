@@ -84,12 +84,15 @@ class CambioCarreraController extends Controller
             'carrera.nombre as carreraOrigen',
             DB::raw('( select nombre as carreraDestino from carrera where carrera.id_carrera = cambio_carrera.id_carrera_destino)'),
             DB::raw("(SELECT COUNT( * ) as cantidadtraspasosrealizados FROM estudiante_tramite WHERE estudiante_tramite.id_estudiante = $idEstudiante AND estudiante_tramite.id_traspaso > 0 )"),
+            'cambio_carrera.id_cambio_carrera as idCambioCarrera',
             'cambio_carrera.fecha_solicitud as fechaSolicitud',
             'cambio_carrera.motivo',
             DB::raw("( SELECT floor(random() * ( 100 - 1 + 1) + 1)::integer  AS materiasAprobadas )"),
             DB::raw("( SELECT floor(random() * ( 80 - 1 + 1) + 1)::integer  AS materiasReprobadas )"),
             'estudiante_tramite.fecha_proceso AS fechaProceso',
-            'estudiante_tramite.observaciones'
+            'estudiante_tramite.observaciones',
+            DB::raw("(select costo as \"costoTramite\" from costo where id_costo = ".Tipotramite::CAMBIO_DE_CARRERA.")"),
+            DB::raw("( select CONCAT( id_periodo, '/',  id_gestion ) as periodo from periodo_gestion where estado = true)")
         ];
 
         $estudiante = DB::table('estudiante')
