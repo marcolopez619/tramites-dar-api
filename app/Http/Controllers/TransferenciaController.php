@@ -90,7 +90,7 @@ class TransferenciaController extends Controller
             DB::raw("( SELECT floor(random() * ( 80 - 1 + 1) + 1)::integer  AS materiasReprobadas )"),
             'estudiante_tramite.fecha_proceso AS fechaProceso',
             'estudiante_tramite.observaciones',
-            DB::raw("(select costo as \"costoTramite\" from costo where id_costo = ".Tipotramite::CAMBIO_DE_CARRERA.")"),
+            DB::raw("(select costo as \"costoTramite\" from costo where id_costo = ".Tipotramite::TRANSFERENCIA.")"),
             DB::raw("( select CONCAT( id_periodo, '/',  id_gestion ) as periodo from periodo_gestion where estado = true)")
         ];
 
