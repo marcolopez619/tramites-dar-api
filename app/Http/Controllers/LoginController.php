@@ -54,6 +54,7 @@ class LoginController extends Controller
 
             'modulo.id_modulo as idModulo',
             'modulo.nombre as nombreModulo',
+            'modulo.icono',
 
             'recurso.id_recurso as idRecurso',
             'recurso.ruta'
