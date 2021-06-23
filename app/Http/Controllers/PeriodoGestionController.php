@@ -164,8 +164,19 @@ class PeriodoGestionController extends Controller
         $idGestion        = $request->input( 'gestion' );
         $nuevoEstado      = $request->input( 'estado' );
 
+        $periodoGestion             = PeriodoGestion::find( $idPeriodoGestion );
+        $periodoGestion->id_periodo = $idPeriodo;
+        $periodoGestion->id_gestion = $idGestion;
+        $periodoGestion->estado     = $nuevoEstado;
+        $periodoGestion->save();
+
+        if ( $nuevoEstado ) {
+            // SI es true, => desactiva las demas gesiontes.
+            $this->habilitarSoloUnPeriodoGestion( $idPeriodoGestion, $nuevoEstado);
+        }
+
        // Buscar si ya existe el periodo y gestion en la tabla
-       $resp = DB::table( 'periodo_gestion' )
+      /*  $resp = DB::table( 'periodo_gestion' )
                 ->select( '*' )
                 ->where( 'id_periodo', '=', $idPeriodo )
                 ->where( 'id_gestion', '=', $idGestion )
@@ -192,7 +203,7 @@ class PeriodoGestionController extends Controller
                 'message' => 'LOS DATOS INTRODUCIDOS YA EXISTEN EN LA BASE DE DATOS',
                 'error'   => null
             ], Response::HTTP_BAD_REQUEST );
-        }
+        } */
 
         return response()->json( [
             'data'    => null,
