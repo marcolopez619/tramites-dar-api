@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Anulacion;
 use App\Models\Estudiante;
+use App\Models\PeriodoGestion;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\utils\Tipotramite;
@@ -28,7 +29,9 @@ class AnulacionController extends Controller
             'anulacion.fecha_solicitud AS fechaSolicitud',
             'anulacion.id_carrera_origen AS idCarreraOrigen',
             'carrera.nombre AS carrera',
-            'anulacion.motivo',
+
+            'motivo.id_motivo as idMotivo',
+            'motivo.descripcion as motivo',
 
 
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -53,6 +56,7 @@ class AnulacionController extends Controller
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
             ->join('anulacion', 'anulacion.id_anulacion', '=', 'estudiante_tramite.id_anulacion')
+            ->join( 'motivo', 'motivo.id_motivo', '=', 'anulacion.id_motivo' )
 
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join( 'costo', 'costo.id_costo', '=', 'tramite.id_costo' )
@@ -78,17 +82,19 @@ class AnulacionController extends Controller
     {
 
         $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
+        $periodoGestionActual = PeriodoGestion::select( 'id_periodo_gestion' )->where( 'periodo_gestion.estado', '=', true )->first();
 
-        $anulacion = new Anulacion();
-        $anulacion->fecha_solicitud = date('Y-m-d H:i:s');
-        $anulacion->motivo = $request->input( 'motivo' );
-        $anulacion->id_carrera_origen = $request->input( 'idCarreraOrigen' );
+        $anulacion                     = new Anulacion();
+        $anulacion->fecha_solicitud    = date('Y-m-d H:i:s');
+        $anulacion->id_carrera_origen  = $request->input( 'idCarreraOrigen' );
+        $anulacion->id_motivo          = $request->input( 'idMotivo' );
+        $anulacion->id_periodo_gestion = $periodoGestionActual->id_periodo_gestion;
         $anulacion->save();
 
         $dataTablaIntermedia = [
-            'id_tramite' => $request->input( 'idTramite' ),
-            'id_estado' => $request->input( 'idEstado' ),
-            'id_entidad' => $request->input( 'idEntidad' ),
+            'id_tramite'    => $request->input( 'idTramite' ),
+            'id_estado'     => $request->input( 'idEstado' ),
+            'id_entidad'    => $request->input( 'idEntidad' ),
             'fecha_proceso' => date('Y-m-d H:i:s'),
             'observaciones' => $request->input( 'observaciones' )
         ];
