@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Motivo;
 use App\Models\Estudiante;
 use App\Models\Readmision;
+use App\utils\Tipotramite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\PeriodoGestion;
 use App\Models\EstudianteTramite;
-use App\Models\Motivo;
 use Illuminate\Support\Facades\DB;
-use App\utils\Tipotramite;
 
 class ReadmisionController extends Controller
 {
@@ -29,7 +30,9 @@ class ReadmisionController extends Controller
             'readmision.id_carrera AS idCarrera',
             'carrera.nombre as carrera',
             'readmision.fecha_solicitud as fechaSolicitud',
-            'readmision.motivo',
+
+            'motivo.id_motivo as idMotivo',
+            'motivo.descripcion as motivo',
 
 
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -51,7 +54,7 @@ class ReadmisionController extends Controller
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
             ->join('readmision', 'readmision.id_readmision', '=', 'estudiante_tramite.id_readmision')
-            // ->join('motivo', 'motivo.id_motivo', '=', 'readmision.id_motivo')
+            ->join( 'motivo', 'motivo.id_motivo', '=', 'readmision.id_motivo' )
 
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
@@ -111,7 +114,9 @@ class ReadmisionController extends Controller
 
             'readmision.id_readmision as idReadmision',
             'readmision.fecha_solicitud as fechaSolicitud',
-            'readmision.motivo',
+
+            'motivo.id_motivo as idMotivo',
+            'motivo.descripcion as motivo'
 
         ];
 
@@ -121,6 +126,7 @@ class ReadmisionController extends Controller
             ->join('facultad', 'facultad.id_facultad', '=', 'carrera.id_facultad' )
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
             ->join('readmision', 'readmision.id_readmision', '=', 'estudiante_tramite.id_readmision')
+            ->join( 'motivo', 'motivo.id_motivo', '=', 'readmision.id_motivo' )
 
             ->select( $arrayCamposSelect )
             ->where( 'estudiante.id_estudiante', '=', $idEstudiante)
@@ -163,12 +169,14 @@ class ReadmisionController extends Controller
     {
 
         $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
+        $periodoGestionActual = PeriodoGestion::select( 'id_periodo_gestion' )->where( 'periodo_gestion.estado', '=', true )->first();
 
-        $readmision                  = new Readmision();
-        $readmision->id_carrera      = $request->input( 'idCarrera' );
-        $readmision->fecha_solicitud = date('Y-m-d H:i:s');
-        $readmision->motivo          = $request->input( 'motivo' );
-        $readmision->id_suspencion   = $request->input( 'idSuspencion' );
+        $readmision                     = new Readmision();
+        $readmision->id_carrera         = $request->input( 'idCarrera' );
+        $readmision->fecha_solicitud    = date('Y-m-d H:i:s');
+        $readmision->id_motivo          = $request->input( 'idMotivo' );
+        $readmision->id_periodo_gestion = $periodoGestionActual->id_periodo_gestion;
+        $readmision->id_suspencion      = $request->input( 'idSuspencion' );
         $readmision->save();
 
         $dataTablaIntermedia = [
