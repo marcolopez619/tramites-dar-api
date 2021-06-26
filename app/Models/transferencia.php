@@ -11,7 +11,7 @@ class transferencia extends Model
 
     public $timestamps = false;
     protected $table = 'transferencia';
-    protected $fillable = ['id_carrera_origen', 'id_carrera_destino', 'fecha_solicitud', 'motivo', 'convalidacion' ];
+    protected $fillable = ['id_carrera_origen', 'id_carrera_destino', 'fecha_solicitud', 'id_motivo', 'convalidacion' , 'id_periodo_gestion' ];
     protected $primaryKey = 'id_transferencia';
 
     public function estudiante(){

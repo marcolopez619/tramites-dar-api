@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Estudiante;
+use App\utils\Tipotramite;
 use Illuminate\Http\Request;
 use App\Models\transferencia;
 use Illuminate\Http\Response;
+use App\Models\PeriodoGestion;
 use App\Models\EstudianteTramite;
 use Illuminate\Support\Facades\DB;
-use App\utils\Tipotramite;
 
 class TransferenciaController extends Controller
 {
@@ -31,7 +32,9 @@ class TransferenciaController extends Controller
             DB::raw('( select nombre as carreraDestino from carrera where carrera.id_carrera = transferencia.id_carrera_destino)'),
 
             'transferencia.fecha_solicitud as fechaSolicitud',
-            'transferencia.motivo',
+
+            'motivo.id_motivo as idMotivo',
+            'motivo.descripcion as motivo',
 
 
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -53,6 +56,7 @@ class TransferenciaController extends Controller
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
             ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_tramite.id_transferencia')
+            ->join( 'motivo', 'motivo.id_motivo', '=', 'transferencia.id_motivo' )
 
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
@@ -85,7 +89,8 @@ class TransferenciaController extends Controller
             DB::raw("(SELECT COUNT( * ) as cantidadtraspasosrealizados FROM estudiante_tramite WHERE estudiante_tramite.id_estudiante = $idEstudiante AND estudiante_tramite.id_traspaso > 0 )"),
             'transferencia.id_transferencia as idTransferencia',
             'transferencia.fecha_solicitud as fechaSolicitud',
-            'transferencia.motivo',
+            'motivo.id_motivo as idMotivo',
+            'motivo.descripcion as motivo',
             DB::raw("( SELECT floor(random() * ( 100 - 1 + 1) + 1)::integer  AS materiasAprobadas )"),
             DB::raw("( SELECT floor(random() * ( 80 - 1 + 1) + 1)::integer  AS materiasReprobadas )"),
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -99,6 +104,7 @@ class TransferenciaController extends Controller
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
             ->join('transferencia', 'transferencia.id_transferencia', '=', 'estudiante_tramite.id_transferencia')
+            ->join( 'motivo', 'motivo.id_motivo', '=', 'transferencia.id_motivo' )
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_tramite.id_transferencia', '=' , $idTransferencia )
@@ -117,12 +123,14 @@ class TransferenciaController extends Controller
     {
 
         $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
+        $periodoGestionActual = PeriodoGestion::select( 'id_periodo_gestion' )->where( 'periodo_gestion.estado', '=', true )->first();
 
-        $transferencia = new transferencia();
+        $transferencia                     = new transferencia();
         $transferencia->id_carrera_origen  = $request->input( 'idCarreraOrigen' );
         $transferencia->id_carrera_destino = $request->input( 'idCarreraDestino' );
         $transferencia->fecha_solicitud    = date('Y-m-d H:i:s');
-        $transferencia->motivo             = $request->input( 'motivo' );
+        $transferencia->id_motivo           = $request->input( 'idMotivo' );
+        $transferencia->id_periodo_gestion = $periodoGestionActual->id_periodo_gestion;
         $transferencia->convalidacion      = false;
         $transferencia->save();
 
