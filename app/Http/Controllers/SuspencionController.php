@@ -29,7 +29,7 @@ class SuspencionController extends Controller
             'suspencion.id_carrera AS idCarrera',
             'carrera.nombre as carrera',
             'suspencion.tiempo_solicitado AS tiempoSolicitado',
-            'suspencion.descripcion as descripcionMotivo',
+            // 'suspencion.descripcion as descripcionMotivo',
             'suspencion.fecha_solicitud as fechaSolicitud',
 
             'motivo.descripcion',
@@ -85,7 +85,6 @@ class SuspencionController extends Controller
         $suspencion                    = new Suspencion();
         $suspencion->id_carrera        = $request->input( 'idCarrera' );
         $suspencion->tiempo_solicitado = $request->input( 'tiempoSolicitado' );
-        $suspencion->descripcion       = $request->input( 'descripcion' );
         $suspencion->fecha_solicitud   = date('Y-m-d H:i:s');
         $suspencion->id_motivo         = $request->input( 'idMotivo' );
         $suspencion->save();
