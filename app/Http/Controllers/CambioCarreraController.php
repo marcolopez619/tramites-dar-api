@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Estudiante;
+use App\utils\Tipotramite;
 use Illuminate\Http\Request;
 use App\Models\CambioCarrera;
 use Illuminate\Http\Response;
+use App\Models\PeriodoGestion;
 use App\Models\EstudianteTramite;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\Input;
-use App\utils\Tipotramite;
 
 class CambioCarreraController extends Controller
 {
@@ -32,7 +33,9 @@ class CambioCarreraController extends Controller
             DB::raw('( select nombre as carreraDestino from carrera where carrera.id_carrera = cambio_carrera.id_carrera_destino)'),
 
             'cambio_carrera.fecha_solicitud as fechaSolicitud',
-            'cambio_carrera.motivo',
+
+            'motivo.id_motivo as idMotivo',
+            'motivo.descripcion as motivo',
 
 
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -54,6 +57,7 @@ class CambioCarreraController extends Controller
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
             ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_tramite.id_cambio_carrera')
+            ->join( 'motivo', 'motivo.id_motivo', '=', 'cambio_carrera.id_motivo' )
 
             ->join('tramite', 'estudiante_tramite.id_tramite', '=', 'tramite.id_tramite')
             ->join('estado', 'estudiante_tramite.id_estado', '=', 'estado.id_estado')
@@ -86,7 +90,7 @@ class CambioCarreraController extends Controller
             DB::raw("(SELECT COUNT( * ) as cantidadtraspasosrealizados FROM estudiante_tramite WHERE estudiante_tramite.id_estudiante = $idEstudiante AND estudiante_tramite.id_traspaso > 0 )"),
             'cambio_carrera.id_cambio_carrera as idCambioCarrera',
             'cambio_carrera.fecha_solicitud as fechaSolicitud',
-            'cambio_carrera.motivo',
+            'motivo.descripcion as motivo',
             DB::raw("( SELECT floor(random() * ( 100 - 1 + 1) + 1)::integer  AS materiasAprobadas )"),
             DB::raw("( SELECT floor(random() * ( 80 - 1 + 1) + 1)::integer  AS materiasReprobadas )"),
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -100,6 +104,7 @@ class CambioCarreraController extends Controller
             ->join('carrera', 'carrera.id_carrera', '=' , 'estudiante_carrera.id_carrera')
             ->join('estudiante_tramite', 'estudiante_tramite.id_estudiante', '=', 'estudiante.id_estudiante' )
             ->join('cambio_carrera', 'cambio_carrera.id_cambio_carrera', '=', 'estudiante_tramite.id_cambio_carrera')
+            ->join( 'motivo', 'motivo.id_motivo', '=', 'cambio_carrera.id_motivo' )
             ->select( $arrayCamposSelect )
             ->where('estudiante.id_estudiante', '=', $idEstudiante)
             ->where( 'estudiante_tramite.id_cambio_carrera', '=' , $idCambioCarrera )
@@ -117,12 +122,14 @@ class CambioCarreraController extends Controller
     public function addCambioCarrera(Request $request)
     {
         $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
+        $periodoGestionActual = PeriodoGestion::select( 'id_periodo_gestion' )->where( 'periodo_gestion.estado', '=', true )->first();
 
         $cambioCarrera = new CambioCarrera();
         $cambioCarrera->id_carrera_origen  = $request->input( 'idCarreraOrigen' );
         $cambioCarrera->id_carrera_destino = $request->input( 'idCarreraDestino' );
         $cambioCarrera->fecha_solicitud    = date('Y-m-d H:i:s');
-        $cambioCarrera->motivo             = $request->input( 'motivo' );
+        $cambioCarrera->id_motivo          = $request->input( 'idMotivo' );
+        $cambioCarrera->id_periodo_gestion = $periodoGestionActual->id_periodo_gestion;
         $cambioCarrera->convalidacion      = false;
         $cambioCarrera->save();
 
