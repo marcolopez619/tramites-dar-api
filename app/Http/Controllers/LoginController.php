@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\utils\Estado;
 use App\Models\Perfil;
 use App\Models\usuario;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\EstudianteTramite;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
@@ -72,6 +74,20 @@ class LoginController extends Controller
         ->orderBy( 'modulo.nombre', 'ASC' )
         ->get();
 
+        // Verifica si es un estudiante el que inicia sesion para mostrar los menus permitidos en caso de estar haciendo un tramite.
+
+        // Si es un estudiante, => su idEstudiante > 0,
+        /* if ( $datosUsuario->first()->idEstudiante > 0 ) {
+
+            $tramitesEnCurso = $this->getTramitesEnCurso( $datosUsuario->first()->idEstudiante );
+
+            if ( !$tramitesEnCurso->isEmpty() ) {
+                // => filtra sus recursos, a solo aquel que que esta en curso
+                $listaRecursos = $listaRecursos->whereIn( 'idModulo', [ $tramitesEnCurso->first()->id_tramite] );
+            }
+
+        } */
+
         // Une la data del usuario con la lista de recursos //
         $datosUsuario[ 0 ]->recursos = $listaRecursos;
 
@@ -80,5 +96,19 @@ class LoginController extends Controller
             'message' => 'SESION INICIADA CORRECTAMENTE',
             'error'   => null
         ], Response::HTTP_OK );
+    }
+
+
+
+    private function getTramitesEnCurso($idEstudiante){
+
+        $estados = [ Estado::ENVIADO, Estado::APROBADO ];
+
+        $estudianteTramite = DB::table('estudiante_tramite')
+                                ->where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
+                                ->whereIn( 'estudiante_tramite.id_estado', $estados )
+                                ->get();
+
+        return $estudianteTramite;
     }
 }
