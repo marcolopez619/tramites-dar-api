@@ -28,7 +28,7 @@ class TraspasosController extends Controller
             DB::raw('(select nombre as universidadDestino from universidad where universidad.id_universidad = traspaso.id_univ_destino)'),
             'traspaso.id_carrera_destino AS idCarrera',
             DB::raw('(select nombre as carreraDestino from carrera where carrera.id_carrera = traspaso.id_carrera_destino)'),
-            'traspaso.descripcion as descripcionMotivo',
+            // 'traspaso.descripcion as descripcionMotivo',
             'traspaso.anio_ingreso as anioIngreso',
             'traspaso.materias_aprobadas as materiasAprobadas',
             'traspaso.materias_reprobadas as materiasReprobadas',
@@ -97,7 +97,7 @@ class TraspasosController extends Controller
             DB::raw("(SELECT round( CAST( random() * 100 as numeric ), 2 )  AS promediogeneral )"),
             'traspaso.anio_ingreso as anioIngreso',
 
-            'traspaso.descripcion as descripcionMotivo',
+            // 'traspaso.descripcion as descripcionMotivo',
             'traspaso.materias_aprobadas as materiasAprobadas',
             'traspaso.materias_reprobadas as materiasReprobadas',
             'traspaso.fecha_solicitud as fechaSolicitud',
@@ -140,7 +140,7 @@ class TraspasosController extends Controller
         $traspaso->id_univ_destino     = $request->input( 'idUnivDestino' );
         $traspaso->id_carrera_destino  = $request->input( 'idCarreraDestino' );
         $traspaso->id_carrera_origen   = $request->input( 'idCarreraOrigen' );
-        $traspaso->descripcion         = $request->input( 'descripcion' );
+        // $traspaso->descripcion         = $request->input( 'descripcion' );
         $traspaso->anio_ingreso        = $request->input( 'anioIngreso' );
         $traspaso->materias_aprobadas  = $request->input( 'materiasAprobadas' );
         $traspaso->materias_reprobadas = $request->input( 'materiasReprobadas' );
