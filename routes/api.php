@@ -24,6 +24,7 @@ use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\PeriodoGestionController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
+use App\Http\Controllers\ReportesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,6 +156,8 @@ Route::delete( '/usuario', [ UsuarioController::class, 'deleteUsuario' ] );
 Route::get( '/usuario', [ UsuarioController::class, 'getListaUsuarios' ] );
 Route::get( '/usuario/{idUsuario}', [ UsuarioController::class, 'getusuario' ] );
 
+//**  REPORTES **//
+Route::get( '/reporte/tramites/{idGestion}', [ ReportesController::class, 'getCantidadPorTipoTramite' ] );
 
 //**  PERFILES **//
 Route::get( '/perfiles', [ PerfilController::class, 'getListaPerfiles' ] );
