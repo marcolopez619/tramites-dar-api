@@ -158,6 +158,7 @@ Route::get( '/usuario/{idUsuario}', [ UsuarioController::class, 'getusuario' ] )
 
 //**  REPORTES **//
 Route::get( '/reporte/tramites/{idGestion}', [ ReportesController::class, 'getCantidadPorTipoTramite' ] );
+Route::get( '/reporte/tramites/{idGestion}/carrera/{idCarrera}', [ ReportesController::class, 'getCantidadPorTipoTramite' ] );
 
 //**  PERFILES **//
 Route::get( '/perfiles', [ PerfilController::class, 'getListaPerfiles' ] );

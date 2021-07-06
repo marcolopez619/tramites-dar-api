@@ -22,4 +22,17 @@ class ReportesController extends Controller
             'error'   => null
         ]);
     }
+
+    public function getCantidadPorTipoTramitePorCarrera( $idGestion, $idCarrera ){
+
+        $data = DB::select( "select * from public.p_reporte_cantidad_estudiantes_por_tramite_por_carrera( $idGestion, $idCarrera );" );
+
+        return response()->json([
+            'data'    => empty( $data ) ? null : $data,
+            'message' => empty( $data ) ? 'NO SE ENCONTRARON RESULTADOS' : 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ]);
+    }
+
+
 }
