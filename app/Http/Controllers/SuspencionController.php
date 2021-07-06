@@ -8,6 +8,7 @@ use App\utils\Tipotramite;
 use Illuminate\Http\Request;
 use App\Models\transferencia;
 use Illuminate\Http\Response;
+use App\Models\PeriodoGestion;
 use App\Models\EstudianteTramite;
 use Illuminate\Support\Facades\DB;
 
@@ -81,12 +82,14 @@ class SuspencionController extends Controller
     public function addSuspencion(Request $request)
     {
         $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
+        $periodoGestionActual = PeriodoGestion::select( 'id_periodo_gestion' )->where( 'periodo_gestion.estado', '=', true )->first();
 
         $suspencion                    = new Suspencion();
         $suspencion->id_carrera        = $request->input( 'idCarrera' );
         $suspencion->tiempo_solicitado = $request->input( 'tiempoSolicitado' );
         $suspencion->fecha_solicitud   = date('Y-m-d H:i:s');
         $suspencion->id_motivo         = $request->input( 'idMotivo' );
+        $suspencion->id_periodo_gestion = $periodoGestionActual->id_periodo_gestion;
         $suspencion->save();
 
         $dataTablaIntermedia = [

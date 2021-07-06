@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Traspaso;
 use App\Models\Estudiante;
+use App\utils\Tipotramite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\PeriodoGestion;
 use Illuminate\Support\Facades\DB;
-use App\utils\Tipotramite;
 
 class TraspasosController extends Controller
 {
@@ -135,17 +136,18 @@ class TraspasosController extends Controller
     public function addTraspaso(Request $request)
     {
         $estudiante = Estudiante::find( $request->input( 'idEstudiante' ));
+        $periodoGestionActual = PeriodoGestion::select( 'id_periodo_gestion' )->where( 'periodo_gestion.estado', '=', true )->first();
 
         $traspaso                      = new Traspaso();
         $traspaso->id_univ_destino     = $request->input( 'idUnivDestino' );
         $traspaso->id_carrera_destino  = $request->input( 'idCarreraDestino' );
         $traspaso->id_carrera_origen   = $request->input( 'idCarreraOrigen' );
-        // $traspaso->descripcion         = $request->input( 'descripcion' );
         $traspaso->anio_ingreso        = $request->input( 'anioIngreso' );
         $traspaso->materias_aprobadas  = $request->input( 'materiasAprobadas' );
         $traspaso->materias_reprobadas = $request->input( 'materiasReprobadas' );
         $traspaso->fecha_solicitud     = date('Y-m-d H:i:s');
         $traspaso->id_motivo           = $request->input( 'idMotivo' );
+        $traspaso->id_periodo_gestion = $periodoGestionActual->id_periodo_gestion;
         $traspaso->save();
 
         $dataTablaIntermedia = [
