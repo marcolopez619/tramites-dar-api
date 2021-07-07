@@ -164,4 +164,18 @@ class LoginController extends Controller
 
         return $estudianteTramite->isEmpty();
     }
+
+
+
+    private function getTramitesEnCurso($idEstudiante){
+
+        $estados = [ Estado::ENVIADO, Estado::APROBADO ];
+
+        $estudianteTramite = DB::table('estudiante_tramite')
+                                ->where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
+                                ->whereIn( 'estudiante_tramite.id_estado', $estados )
+                                ->get();
+
+        return $estudianteTramite;
+    }
 }
