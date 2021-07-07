@@ -8,9 +8,12 @@ use App\Models\usuario;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\EstudianteTramite;
+use App\Models\Tramite;
 use App\utils\Entidad;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isEmpty;
 
 class LoginController extends Controller
 {
@@ -18,6 +21,7 @@ class LoginController extends Controller
 
         $userName = $request->input( 'usuario' );
         $password = $request->input( 'password' );
+        // $tramite = null;
 
         $selectColumns = [
             'usuario.id_usuario as idUsuario',
@@ -56,13 +60,15 @@ class LoginController extends Controller
             $idEstudiante = $datosUsuario->first()->idEstudiante;
 
             if ( $idEstudiante > 0 ) {
-                $existeTramiteAprobadorPorDAR = $this->verificarExistenciaTramiteConcluido( $datosUsuario->first()->idEstudiante );
+                 $tramite = $this->verificarExistenciaTramiteConcluido( $datosUsuario->first()->idEstudiante );
+
+                 $existeTramiteAprobadorPorDAR = empty($tramite);
 
                 if ( !$existeTramiteAprobadorPorDAR) {
 
                     return response()->json( [
                         'data'    => null,
-                        'message' => 'USUARIO DESABILITADO POR HABER CONCLUIDO UN TRAMITE POR EL D.A.R.',
+                        'message' => 'USUARIO DESABILITADO POR HABER CONCLUIDO EL TRAMITE DE : '.$tramite->descripcion,
                         'error'   => null
                     ], Response::HTTP_OK);
 
@@ -104,7 +110,7 @@ class LoginController extends Controller
 
             $tramitesEnCurso = $this->getTramitesEnCurso( $datosUsuario->first()->idEstudiante );
 
-            if ( !$tramitesEnCurso->isEmpty() ) {
+            if ( !$tramitesEnCurso ) {
                 // => filtra sus recursos, a solo aquel que que esta en curso
                 // $listaRecursos = $listaRecursos->whereIn( 'idModulo', [ $tramitesEnCurso->first()->id_tramite] )->toArray();
 
@@ -167,13 +173,25 @@ class LoginController extends Controller
         $entidad = [ Entidad::ENCARGADO_DAR ];
         $estado = [ Estado::APROBADO, Estado::FINALIZADO ];
 
+        $tramite = null;
+
         $estudianteTramite = DB::table('estudiante_tramite')
                                 ->where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
                                 ->whereIn( 'estudiante_tramite.id_estado', $estado )
                                 ->whereIn( 'estudiante_tramite.id_entidad', $entidad )
                                 ->get();
 
-        return $estudianteTramite->isEmpty();
+        if ( !$estudianteTramite->isEmpty() ) {
+            $estudianteTramite =  $estudianteTramite->first();
+
+            $tramite = Tramite::find( $estudianteTramite->id_tramite );
+        }
+
+
+
+
+        return $tramite;
+        // return $estudianteTramite->isEmpty();
     }
 
 
