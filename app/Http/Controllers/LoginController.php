@@ -106,7 +106,18 @@ class LoginController extends Controller
 
             if ( !$tramitesEnCurso->isEmpty() ) {
                 // => filtra sus recursos, a solo aquel que que esta en curso
-                $listaRecursos = $listaRecursos->whereIn( 'idModulo', [ $tramitesEnCurso->first()->id_tramite] );
+                // $listaRecursos = $listaRecursos->whereIn( 'idModulo', [ $tramitesEnCurso->first()->id_tramite] )->toArray();
+
+                $arrayRecursos = [];
+
+                foreach ($listaRecursos as $item) {
+                    if ( $item->idModulo ==  $tramitesEnCurso->first()->id_tramite ) {
+                        array_push( $arrayRecursos, $item );
+                    }
+                }
+
+                $listaRecursos = $arrayRecursos;
+
             }
         }
 
@@ -154,7 +165,7 @@ class LoginController extends Controller
     private function verificarExistenciaTramiteConcluido($idEstudiante){
 
         $entidad = [ Entidad::ENCARGADO_DAR ];
-        $estado = [ Estado::APROBADO ];
+        $estado = [ Estado::APROBADO, Estado::FINALIZADO ];
 
         $estudianteTramite = DB::table('estudiante_tramite')
                                 ->where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
