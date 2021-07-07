@@ -98,6 +98,35 @@ class LoginController extends Controller
         ], Response::HTTP_OK );
     }
 
+    public function changePassword( Request $request ){
+
+        $idUsuario = $request->input( 'idUsuario' );
+        $nuevoPassword = $request->input( 'nuevoPassword' );
+
+        $usuario = usuario::find( $idUsuario );
+
+        if ( !empty($usuario ) ) {
+
+            $usuario->password = $nuevoPassword;
+            $usuario->save();
+
+            return response()->json( [
+                'data'    => $usuario,
+                'message' => 'SE CAMBIO SU PASSWORD CORRECTAMENTE, INICIE SESION NUEVAMENTE',
+                'error'   => null
+            ], Response::HTTP_OK );
+        }else {
+
+            return response()->json( [
+                'data'    => null,
+                'message' => 'NO SE ENCONTRÓ AL USUARIO, POR FAVOR VERIFIQUE',
+                'error'   => null
+            ], Response::HTTP_BAD_REQUEST );
+        }
+
+
+    }
+
 
 
     private function getTramitesEnCurso($idEstudiante){

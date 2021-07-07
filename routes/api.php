@@ -164,4 +164,5 @@ Route::get( '/perfiles', [ PerfilController::class, 'getListaPerfiles' ] );
 
 //** LOGIN DEL SISTEMA **/
 Route::post( '/login', [ LoginController::class, 'inicializarContexto' ] );
+Route::post( '/login/cambiar-contrasena', [ LoginController::class, 'changePassword' ] );
 
