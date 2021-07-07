@@ -95,8 +95,8 @@ class PeriodoGestionController extends Controller
         }
 
         $resultadoCalculo = [
-            'cantidadPeriodos' => $cantidadPeriodos,
-            'cantidadGestiones' => $cantidadGestiones,
+            'cantidadPeriodos' => abs( $cantidadPeriodos ),
+            'cantidadGestiones' => abs( $cantidadGestiones ),
             'gestionInicial' => $matriculaUltimaGestionComprada->id_periodo.'/'.$matriculaUltimaGestionComprada->id_gestion,
             'gestionFinal' => $gestionVigente->id_periodo.'/'.$gestionVigente->id_gestion
         ];

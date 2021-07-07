@@ -134,8 +134,6 @@ Route::get( '/motivo', [ MotivoController::class, 'getListaMotivo' ] );
 Route::get( '/seguimiento/tipo/{idTipoTramite}/tramite/{idTramite}', [ SeguimientoController::class, 'getSeguimientoTramite' ] );
 
 
-
-
 //** MODULO DEL DAR **/
 
 Route::get( '/dar', [ DarController::class, 'getTramitesPorAtender' ] );

@@ -25,7 +25,8 @@ class HabilitacionTramiteController extends Controller
             'habilitacion_tramite.fecha_inicial AS fechaInicial',
             'habilitacion_tramite.fecha_final AS fechaFinal',
             'habilitacion_tramite.estado',
-            DB::raw(" ( select CONCAT( periodo_gestion.id_periodo, '/', periodo_gestion.id_gestion) AS gestion FROM periodo_gestion where periodo_gestion.estado = true) "),
+            //DB::raw(" ( select CONCAT( periodo_gestion.id_periodo, '/', periodo_gestion.id_gestion) AS gestion FROM periodo_gestion where periodo_gestion.estado = true) "),
+            DB::raw(" ( select CONCAT( periodo_gestion.id_periodo, '/', periodo_gestion.id_gestion) AS gestion FROM periodo_gestion where periodo_gestion.id_periodo_gestion = habilitacion_tramite.id_periodo_gestion) "),
             'tipo_carrera.id_tipo_carrera as idTipoCarrera',
             'tipo_carrera.descripcion as tipoCarrera',
         ];
