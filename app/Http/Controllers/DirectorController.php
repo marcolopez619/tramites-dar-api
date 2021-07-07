@@ -30,7 +30,8 @@ class DirectorController extends Controller
             'anulacion.fecha_solicitud AS fechaSolicitud',
             'anulacion.id_carrera_origen AS idCarreraOrigen',
             'carrera.nombre AS carrera',
-            'anulacion.motivo',
+            //'anulacion.motivo',
+            DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = anulacion.id_motivo)'),
 
             'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -81,7 +82,8 @@ class DirectorController extends Controller
                 'cambio_carrera.fecha_solicitud AS fechaSolicitud',
                 'cambio_carrera.id_carrera_origen AS idCarreraOrigen',
                 'carrera.nombre AS carrera',
-                'cambio_carrera.motivo',
+                // 'cambio_carrera.motivo',
+                DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = cambio_carrera.id_motivo)'),
 
                 'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
                 'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -148,7 +150,8 @@ class DirectorController extends Controller
             'transferencia.fecha_solicitud AS fechaSolicitud',
             'transferencia.id_carrera_origen AS idCarreraOrigen',
             'carrera.nombre AS carrera',
-            'transferencia.motivo',
+            // 'transferencia.motivo',
+            DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = transferencia.id_motivo)'),
 
             'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -229,7 +232,8 @@ class DirectorController extends Controller
             'anulacion.fecha_solicitud AS fechaSolicitud',
             'anulacion.id_carrera_origen AS idCarreraOrigen',
             'carrera.nombre AS carrera',
-            'anulacion.motivo',
+            // 'anulacion.motivo',
+            DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = anulacion.id_motivo)'),
 
             'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
             'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -280,7 +284,8 @@ class DirectorController extends Controller
                 'cambio_carrera.fecha_solicitud AS fechaSolicitud',
                 'cambio_carrera.id_carrera_origen AS idCarreraOrigen',
                 'carrera.nombre AS carrera',
-                'cambio_carrera.motivo',
+                // 'cambio_carrera.motivo',
+                DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = cambio_carrera.id_motivo)'),
 
                 'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
                 'estudiante_tramite.fecha_proceso AS fechaProceso',
@@ -350,7 +355,8 @@ class DirectorController extends Controller
             'transferencia.fecha_solicitud AS fechaSolicitud',
             'transferencia.id_carrera_origen AS idCarreraOrigen',
             'carrera.nombre AS carrera',
-            'transferencia.motivo',
+            // 'transferencia.motivo',
+            DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = transferencia.id_motivo)'),
 
             'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
             'estudiante_tramite.fecha_proceso AS fechaProceso',
