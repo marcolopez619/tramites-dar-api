@@ -119,6 +119,21 @@ class TramiteController extends Controller
         ], Response::HTTP_OK );
     }
 
+    public function verificarExistenciaTramiteEnCurso($idEstudiante){
+
+        $estados = [ Estado::ENVIADO, Estado::APROBADO ];
+
+        $existenTramitesEnCurso = EstudianteTramite::where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
+                                                    ->whereIn( 'estudiante_tramite.id_estado', $estados )
+                                                    ->count() > 0;
+
+        return response()->json( [
+            'data'    => [ 'existenTramitesEnCurso' => $existenTramitesEnCurso ],
+            'message' => 'SE ENCONTRARON RESULTADOS',
+            'error'   => null
+        ], Response::HTTP_OK );
+    }
+
     public function insertDataTablaIntermedia( Request $request ){
 
         $idTipoTramite           = $request->input( 'idTipoTramite' );
@@ -222,7 +237,9 @@ class TramiteController extends Controller
             'estudiante_tramite.fecha_proceso as fechaProceso',
             'estudiante_tramite.observaciones',
 
-            ($idTipoTramite != TipoTramite::SUSPENCION && $idTipoTramite != Tipotramite::TRASPASO_UNIVERSIDAD ) ? $tableName.'.'.'motivo' : $tableName.'.'.'id_motivo as idMotivo'
+            $tableName.'.'.'id_motivo as idMotivo'
+
+            //($idTipoTramite != TipoTramite::SUSPENCION && $idTipoTramite != Tipotramite::TRASPASO_UNIVERSIDAD ) ? $tableName.'.'.'motivo' : $tableName.'.'.'id_motivo as idMotivo'
         ];
 
         $seguimiento = DB::table( 'tramite' )
@@ -234,10 +251,13 @@ class TramiteController extends Controller
                 ->where('estudiante_tramite'.'.'.$tableNameId, '=', $idTramite)
                 ->get();
 
-        if ($idTipoTramite == TipoTramite::SUSPENCION || $idTipoTramite == TipoTramite::TRASPASO_UNIVERSIDAD){
+        $motivo = Motivo::find( $seguimiento->first()->idMotivo );
+        $seguimiento->first()->motivo = $motivo->descripcion;
+
+        /* if ($idTipoTramite == TipoTramite::SUSPENCION || $idTipoTramite == TipoTramite::TRASPASO_UNIVERSIDAD){
             $motivo = Motivo::find( $seguimiento[ 0 ]->idMotivo);
             $seguimiento->first()->motivo = $motivo->descripcion;
-        }
+        } */
 
         return response()->json( [
             'data'    => $seguimiento->isEmpty() ? null : $seguimiento->first(),

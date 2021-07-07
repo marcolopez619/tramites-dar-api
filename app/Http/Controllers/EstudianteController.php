@@ -55,7 +55,8 @@ class EstudianteController extends Controller
             'estudiante.nombres',
              // DB::raw("estudiante.paterno || ' ' || estudiante.materno || ' ' || estudiante.nombres AS nombreCompleto" ),
             'estudiante.fecha_nacimiento AS fechaNacimiento',
-            'estudiante.sexo'
+            'estudiante.sexo',
+            DB::raw("( select encode( estudiante.fotografia, 'base64' ) as fotografia from estudiante where id_estudiante = $idEstudiante)"),
         ];
 
         $estudiante = DB::table('estudiante')
@@ -68,6 +69,7 @@ class EstudianteController extends Controller
 
             if ( !$estudiante->isEmpty() ) {
                 $estudiante[ 0 ]->nombreCompleto = $estudiante[ 0 ]->paterno.' '.$estudiante[ 0 ]->materno.' '.$estudiante[ 0 ]->nombres;
+                // $foto = stream_get_contents( $estudiante[ 0 ]->fotografia );
             }
 
         return response()->json([

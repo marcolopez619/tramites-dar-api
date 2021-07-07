@@ -24,6 +24,7 @@ use App\Http\Controllers\TransferenciaController;
 use App\Http\Controllers\PeriodoGestionController;
 use App\Http\Controllers\HabilitacionTramiteController;
 use App\Http\Controllers\HabilitacionTramitePorExcepcionController;
+use App\Http\Controllers\ReportesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,7 @@ Route::patch( '/entidad', [EntidadController::class, 'update' ] );
 Route::get( '/tramite', [ TramiteController::class, 'getListaTramite' ] );
 Route::get( '/tramite/verificar/habilitacion/{idTramite}/estudiante/{idEstudiante}', [ TramiteController::class, 'verificarHabilitacionTramite' ] );
 Route::get( '/tramite/{idTramite}/tipo/{idTipoTramite}', [ TramiteController::class, 'getSeguimientoTramite' ] );
+Route::get( '/tramite/verificar/existencia/tramite/curso/{idEstudiante}', [ TramiteController::class, 'verificarExistenciaTramiteEnCurso' ] );
 Route::post( '/tramite', [ TramiteController::class, 'addTramite' ] );
 Route::post( '/tramite/tabla/intermedia', [ TramiteController::class, 'insertDataTablaIntermedia' ] );
 Route::patch( '/tramite', [ TramiteController::class, 'updateTramite' ] );
@@ -152,6 +154,9 @@ Route::delete( '/usuario', [ UsuarioController::class, 'deleteUsuario' ] );
 Route::get( '/usuario', [ UsuarioController::class, 'getListaUsuarios' ] );
 Route::get( '/usuario/{idUsuario}', [ UsuarioController::class, 'getusuario' ] );
 
+//**  REPORTES **//
+Route::get( '/reporte/tramites/{idGestion}', [ ReportesController::class, 'getCantidadPorTipoTramite' ] );
+Route::get( '/reporte/tramites/{idGestion}/carrera/{idCarrera}', [ ReportesController::class, 'getCantidadPorTipoTramitePorCarrera' ] );
 
 //**  PERFILES **//
 Route::get( '/perfiles', [ PerfilController::class, 'getListaPerfiles' ] );
