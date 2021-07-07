@@ -8,6 +8,7 @@ use App\Models\usuario;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\EstudianteTramite;
+use App\utils\Entidad;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
@@ -42,12 +43,34 @@ class LoginController extends Controller
             ->get();
 
         if ( $datosUsuario->isEmpty() ) {
+
             return response()->json( [
                 'data'    => null,
                 'message' => 'USUARIO O CONTRASEÑA INCORRECTA',
                 'error'   => null
             ], Response::HTTP_BAD_REQUEST);
+
+        } else {
+
+            // Verifica si ya le aprobaron (Por el DAR) algun tramite que realizó anteriormente para no dejarle ingresar al sistema
+            $idEstudiante = $datosUsuario->first()->idEstudiante;
+
+            if ( $idEstudiante > 0 ) {
+                $existeTramiteAprobadorPorDAR = $this->verificarExistenciaTramiteConcluido( $datosUsuario->first()->idEstudiante );
+
+                if ( !$existeTramiteAprobadorPorDAR) {
+
+                    return response()->json( [
+                        'data'    => null,
+                        'message' => 'USUARIO DESABILITADO POR HABER CONCLUIDO UN TRAMITE POR EL D.A.R.',
+                        'error'   => null
+                    ], Response::HTTP_OK);
+
+                }
+            }
         }
+
+
 
 
         $selectColumns = [
@@ -129,15 +152,17 @@ class LoginController extends Controller
 
 
 
-    private function getTramitesEnCurso($idEstudiante){
+    private function verificarExistenciaTramiteConcluido($idEstudiante){
 
-        $estados = [ Estado::ENVIADO, Estado::APROBADO ];
+        $entidad = [ Entidad::ENCARGADO_DAR ];
+        $estado = [ Estado::APROBADO ];
 
         $estudianteTramite = DB::table('estudiante_tramite')
                                 ->where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
-                                ->whereIn( 'estudiante_tramite.id_estado', $estados )
+                                ->whereIn( 'estudiante_tramite.id_estado', $estado )
+                                ->whereIn( 'estudiante_tramite.id_entidad', $entidad )
                                 ->get();
 
-        return $estudianteTramite;
+        return $estudianteTramite->isEmpty();
     }
 }
