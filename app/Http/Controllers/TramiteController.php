@@ -90,7 +90,7 @@ class TramiteController extends Controller
     public function verificarHabilitacionTramite($idTramite, $idEstudiante){
 
         $selectColumns = [
-            DB::raw("(SELECT true AS istramitehabilitado  FROM habilitacion_tramite where CURRENT_DATE BETWEEN fecha_inicial::date AND fecha_final::date AND estado = 1 and id_tramite = $idTramite)")
+            DB::raw("(SELECT true AS istramitehabilitado  FROM habilitacion_tramite where CURRENT_DATE BETWEEN fecha_inicial::date AND fecha_final::date AND estado = 1 and id_tramite = $idTramite limit 1)")
         ];
 
         $respQuery = DB::table( 'habilitacion_tramite' )
