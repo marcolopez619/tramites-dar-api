@@ -361,7 +361,7 @@ class DarController extends Controller
             'anulacion.fecha_solicitud AS fechaSolicitud',
             'anulacion.id_carrera_origen AS idCarreraOrigen',
             'carrera.nombre AS carrera',
-            'anulacion.motivo',
+            DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = anulacion.id_motivo)'),
             // DB::raw('(select 0 as tiempoSolicitado)'),
 
             'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
@@ -410,7 +410,7 @@ class DarController extends Controller
                 'cambio_carrera.fecha_solicitud AS fechaSolicitud',
                 'cambio_carrera.id_carrera_origen AS idCarreraOrigen',
                 'carrera.nombre AS carrera',
-                'cambio_carrera.motivo',
+                DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = cambio_carrera.id_motivo)'),
                 // DB::raw('(select 0 as tiempoSolicitado)'),
 
                 'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
@@ -460,7 +460,7 @@ class DarController extends Controller
                 'transferencia.fecha_solicitud AS fechaSolicitud',
                 'transferencia.id_carrera_origen AS idCarreraOrigen',
                 'carrera.nombre AS carrera',
-                'transferencia.motivo',
+                DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = transferencia.id_motivo)'),
                 // DB::raw('(select 0 as tiempoSolicitado)'),
 
                 'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
@@ -510,7 +510,7 @@ class DarController extends Controller
                 'suspencion.fecha_solicitud AS fechaSolicitud',
                 'suspencion.id_carrera AS idCarreraOrigen',
                 'carrera.nombre AS carrera',
-                'suspencion.descripcion as motivo',
+                DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = suspencion.id_motivo)'),
                 // 'suspencion.tiempo_solicitado as tiempoSolicitado', // añadi esta columna
 
                 'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',
@@ -560,7 +560,7 @@ class DarController extends Controller
                 'readmision.fecha_solicitud AS fechaSolicitud',
                 'readmision.id_carrera AS idCarreraOrigen',
                 'carrera.nombre AS carrera',
-                'readmision.motivo',
+                DB::raw('( select descripcion as motivo from motivo where motivo.id_motivo = readmision.id_motivo)'),
                 // 'readmision.tiempo_solicitado as tiempoSolicitado', // añadi esta columna
 
                 'estudiante_tramite.id_estudiante_tramite as idEstudianteTipoTramiteTablaIntermedia',

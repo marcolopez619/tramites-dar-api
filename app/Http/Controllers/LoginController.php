@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use App\Models\EstudianteTramite;
 use App\Models\Tramite;
 use App\utils\Entidad;
+use App\utils\Tipotramite;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
@@ -21,7 +22,7 @@ class LoginController extends Controller
 
         $userName = $request->input( 'usuario' );
         $password = $request->input( 'password' );
-        // $tramite = null;
+        // $tramitesPermitidos = [ Tipotramite::SUSPENCION, Tipotramite::READMISION ];
 
         $selectColumns = [
             'usuario.id_usuario as idUsuario',
@@ -58,22 +59,29 @@ class LoginController extends Controller
 
             // Verifica si ya le aprobaron (Por el DAR) algun tramite que realizó anteriormente para no dejarle ingresar al sistema
             $idEstudiante = $datosUsuario->first()->idEstudiante;
+            $tramite = null;
+
 
             if ( $idEstudiante > 0 ) {
                  $tramite = $this->verificarExistenciaTramiteConcluido( $datosUsuario->first()->idEstudiante );
 
+                 // $esTramiteSuspencionReadmision = in_array($tramite->id_tramite, $tramitesPermitidos );
+
                  $existeTramiteAprobadorPorDAR = empty($tramite);
 
-                if ( !$existeTramiteAprobadorPorDAR) {
 
-                    return response()->json( [
-                        'data'    => null,
-                        'message' => 'USUARIO DESABILITADO POR HABER CONCLUIDO EL TRAMITE DE : '.$tramite->descripcion,
-                        'error'   => null
-                    ], Response::HTTP_OK);
+                 if ( !$existeTramiteAprobadorPorDAR ) // && !$esTramiteSuspencionReadmision) {
+                     {
+                        return response()->json( [
+                            'data'    => null,
+                            'message' => 'USUARIO DESABILITADO POR HABER CONCLUIDO EL TRAMITE DE : '.$tramite->descripcion,
+                            'error'   => null
+                        ], Response::HTTP_OK);
+                    }
 
-                }
+
             }
+
         }
 
 
@@ -105,12 +113,13 @@ class LoginController extends Controller
 
         // Verifica si es un estudiante el que inicia sesion para mostrar los menus permitidos en caso de estar haciendo un tramite.
 
+
         // Si es un estudiante, => su idEstudiante > 0,
         if ( $datosUsuario->first()->idEstudiante > 0 ) {
 
             $tramitesEnCurso = $this->getTramitesEnCurso( $datosUsuario->first()->idEstudiante );
 
-            if ( !$tramitesEnCurso ) {
+            if ( !$tramitesEnCurso->isEmpty() ) {
                 // => filtra sus recursos, a solo aquel que que esta en curso
                 // $listaRecursos = $listaRecursos->whereIn( 'idModulo', [ $tramitesEnCurso->first()->id_tramite] )->toArray();
 
@@ -203,6 +212,7 @@ class LoginController extends Controller
         $estudianteTramite = DB::table('estudiante_tramite')
                                 ->where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
                                 ->whereIn( 'estudiante_tramite.id_estado', $estados )
+                                ->orderByDesc( 'estudiante_tramite.fecha_proceso' )
                                 ->get();
 
         return $estudianteTramite;
