@@ -141,7 +141,9 @@ class TramiteController extends Controller
         $nuevaFilaCreada         = null;
 
         // 1.- BUSCA e INSERTA EN EL HISTÓRICO CORRESPONDIENTE la tupla que corresponda
-        $oldEstudianteAnulacion = EstudianteTramite::find( $idEstudianteTipoTramite );
+        $oldEstudianteAnulacion                = EstudianteTramite::find( $idEstudianteTipoTramite );
+        $oldEstudianteAnulacion->id_estado     = $request->input( 'idEstado' );
+        $oldEstudianteAnulacion->observaciones = $request->input( 'observaciones' );
 
         EstudianteTramiteHistorico::create( $oldEstudianteAnulacion->toArray() );
 
