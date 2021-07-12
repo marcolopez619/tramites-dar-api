@@ -119,9 +119,9 @@ class TramiteController extends Controller
         ], Response::HTTP_OK );
     }
 
-    public function verificarExistenciaTramiteEnCurso($idEstudiante){
+    public function verificarExistenciaTramiteEnCursoOrFinalizado($idEstudiante){
 
-        $estados = [ Estado::ENVIADO, Estado::APROBADO ];
+        $estados = [ Estado::ENVIADO, Estado::APROBADO, Estado::FINALIZADO ];
 
         $existenTramitesEnCurso = EstudianteTramite::where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
                                                     ->whereIn( 'estudiante_tramite.id_estado', $estados )
