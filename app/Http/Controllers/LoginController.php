@@ -22,6 +22,7 @@ class LoginController extends Controller
 
         $userName = $request->input( 'usuario' );
         $password = $request->input( 'password' );
+        $tramiteEnCurso = null;
         // $tramitesPermitidos = [ Tipotramite::SUSPENCION, Tipotramite::READMISION ];
 
         $selectColumns = [
@@ -56,28 +57,25 @@ class LoginController extends Controller
             ], Response::HTTP_BAD_REQUEST);
 
         } else {
-
             // Verifica si ya le aprobaron (Por el DAR) algun tramite que realizó anteriormente para no dejarle ingresar al sistema
             $idEstudiante = $datosUsuario->first()->idEstudiante;
-            $tramite = null;
-
 
             if ( $idEstudiante > 0 ) {
-                 $tramite = $this->verificarExistenciaTramiteConcluido( $datosUsuario->first()->idEstudiante );
+                 $tramiteEnCurso = $this->verificarExistenciaTramiteConcluido( $datosUsuario->first()->idEstudiante );
 
                  // $esTramiteSuspencionReadmision = in_array($tramite->id_tramite, $tramitesPermitidos );
 
-                 $existeTramiteAprobadorPorDAR = empty($tramite);
+                 /* $existeTramiteAprobadorPorDAR = empty($tramiteEnCurso);
 
 
                  if ( !$existeTramiteAprobadorPorDAR ) // && !$esTramiteSuspencionReadmision) {
                      {
                         return response()->json( [
                             'data'    => null,
-                            'message' => 'USUARIO DESABILITADO POR HABER CONCLUIDO EL TRAMITE DE : '.$tramite->descripcion,
+                            'message' => 'USUARIO DESABILITADO POR HABER CONCLUIDO EL TRAMITE DE : '.$tramiteEnCurso->descripcion,
                             'error'   => null
                         ], Response::HTTP_OK);
-                    }
+                    } */
 
 
             }
@@ -101,16 +99,16 @@ class LoginController extends Controller
         ];
 
         $listaRecursos = DB::table( 'usuario' )
-        ->join( 'usuario_perfil', 'usuario_perfil.id_usuario' ,'=', 'usuario.id_usuario' )
-        ->join( 'perfil', 'perfil.id_perfil' ,'=', 'usuario_perfil.id_perfil' )
-        ->join( 'perfil_modulo', 'perfil_modulo.id_perfil' ,'=', 'perfil.id_perfil' )
-        ->join( 'modulo', 'modulo.id_modulo' ,'=', 'perfil_modulo.id_modulo' )
-        ->join( 'recurso', 'recurso.id_modulo', '=', 'modulo.id_modulo' )
-        ->select( $selectColumns )
-        ->where( 'usuario.nick_name', '=', $userName )
-        ->where( 'usuario.password', '=', $password )
-        ->orderBy( 'modulo.nombre', 'ASC' )
-        ->get();
+            ->join( 'usuario_perfil', 'usuario_perfil.id_usuario' ,'=', 'usuario.id_usuario' )
+            ->join( 'perfil', 'perfil.id_perfil' ,'=', 'usuario_perfil.id_perfil' )
+            ->join( 'perfil_modulo', 'perfil_modulo.id_perfil' ,'=', 'perfil.id_perfil' )
+            ->join( 'modulo', 'modulo.id_modulo' ,'=', 'perfil_modulo.id_modulo' )
+            ->join( 'recurso', 'recurso.id_modulo', '=', 'modulo.id_modulo' )
+            ->select( $selectColumns )
+            ->where( 'usuario.nick_name', '=', $userName )
+            ->where( 'usuario.password', '=', $password )
+            ->orderBy( 'modulo.nombre', 'ASC' )
+            ->get();
 
         // Verifica si es un estudiante el que inicia sesion para mostrar los menus permitidos en caso de estar haciendo un tramite.
 
@@ -118,16 +116,21 @@ class LoginController extends Controller
         // Si es un estudiante, => su idEstudiante > 0,
         if ( $datosUsuario->first()->idEstudiante > 0 ) {
 
-            $tramitesEnCurso = $this->getTramitesEnCurso( $datosUsuario->first()->idEstudiante );
+            $tramitesEnCursoFinalizado = $this->getTramitesEnCursoOrFinalizados( $datosUsuario->first()->idEstudiante );
 
-            if ( !$tramitesEnCurso->isEmpty() ) {
+            if ( !$tramitesEnCursoFinalizado->isEmpty() ) {
                 // => filtra sus recursos, a solo aquel que que esta en curso
-                // $listaRecursos = $listaRecursos->whereIn( 'idModulo', [ $tramitesEnCurso->first()->id_tramite] )->toArray();
+                $array = [ $tramitesEnCursoFinalizado->first()->id_tramite ];
+
+                if( $tramitesEnCursoFinalizado->first()->id_tramite == Tipotramite::SUSPENCION){
+                    array_push( $array, Tipotramite::READMISION );
+                }
 
                 $arrayRecursos = [];
 
                 foreach ($listaRecursos as $item) {
-                    if ( $item->idModulo ==  $tramitesEnCurso->first()->id_tramite ) {
+                    // if ( $item->idModulo ==  $tramitesEnCursoFinalizado->first()->id_tramite ) {
+                    if ( in_array( $item->idModulo, $array ) ) {
                         array_push( $arrayRecursos, $item );
                     }
                 }
@@ -206,9 +209,9 @@ class LoginController extends Controller
 
 
 
-    private function getTramitesEnCurso($idEstudiante){
+    private function getTramitesEnCursoOrFinalizados($idEstudiante){
 
-        $estados = [ Estado::ENVIADO, Estado::APROBADO ];
+        $estados = [ Estado::ENVIADO, Estado::APROBADO, Estado::FINALIZADO ];
 
         $estudianteTramite = DB::table('estudiante_tramite')
                                 ->where( 'estudiante_tramite.id_estudiante', '=', $idEstudiante)
