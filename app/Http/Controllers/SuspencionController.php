@@ -33,7 +33,7 @@ class SuspencionController extends Controller
             // 'suspencion.descripcion as descripcionMotivo',
             'suspencion.fecha_solicitud as fechaSolicitud',
 
-            'motivo.descripcion',
+            'motivo.descripcion as motivo',
 
 
             'estudiante_tramite.fecha_proceso AS fechaProceso',
